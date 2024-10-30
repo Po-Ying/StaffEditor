@@ -18,5 +18,6 @@ public class InsMenu extends JPanel{
         this.add(instrumentList,BorderLayout.CENTER);
         this.add(instrumentImages,BorderLayout.NORTH);
         this.setPreferredSize(new Dimension(200,0));
+        
     }
 }

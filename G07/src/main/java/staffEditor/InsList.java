@@ -52,6 +52,7 @@ public class InsList extends JPanel {
             });
 
             this.add(instruments[i]);
+            
             this.add(new JLabel(" ")); 
         }
     }

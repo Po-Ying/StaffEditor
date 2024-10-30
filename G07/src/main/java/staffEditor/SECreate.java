@@ -6,5 +6,6 @@ public class SECreate {
 
     SECreate(){
         mainWin = new MainWindow(this);
+        
     }
 }

@@ -8,5 +8,6 @@ public class InsImages extends JPanel{
 	InsImages(InsMenu p)
 	{
 		
+		
 	}
 }

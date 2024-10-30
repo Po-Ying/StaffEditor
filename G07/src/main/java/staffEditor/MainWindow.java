@@ -26,6 +26,7 @@ public class MainWindow extends JFrame{
 	        //this.add(toolbar, BorderLayout.NORTH);
 	        this.add(InstrumentMenu, BorderLayout.EAST);
 	        //this.add(tabbedPane, BorderLayout.CENTER);
+	        
 
 	        this.setLocation(25, 50);
 	        this.setVisible(true);
