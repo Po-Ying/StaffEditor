@@ -1,4 +1,5 @@
 package staffEditor;
+
 import javax.swing.*;
 import java.awt.*;
 

@@ -1,4 +1,5 @@
 package staffEditor;
+
 import org.jfugue.player.Player;
 import java.awt.*;
 import java.awt.event.*;
