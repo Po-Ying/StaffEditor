@@ -26,7 +26,7 @@ public class Toolbar extends Panel{
 		this.setBackground(Color.darkGray);
 		
 		addfileBtn = new JButton();
-	    ImageIcon addIcon = new ImageIcon("add-file.png");
+	    ImageIcon addIcon = new ImageIcon("/images/add-file.png");
 	    addfileBtn.setIcon(addIcon);
 	    addfileBtn.setPreferredSize(new Dimension(40, 40));
 	    
