@@ -10,7 +10,7 @@ public class MainWindow extends JFrame{
 	   SECreate parent;
 	    Dimension size = new Dimension(935, 700);
 
-	    //public Toolbar toolbar;
+	    public Toolbar toolbar;
 	    public InsMenu InstrumentMenu;
 	    //public TabbedPane tabbedPane;
 
@@ -18,13 +18,13 @@ public class MainWindow extends JFrame{
 	        parent = p;
 
 	        this.setSize(size);
-	        //toolbar = new Toolbar(this);
+	        toolbar = new Toolbar(this);
 	        InstrumentMenu = new InsMenu(this);
 	        //tabbedPane = new TabbedPane(this);
 
 	        this.setLayout(new BorderLayout());
 
-	        //this.add(toolbar, BorderLayout.NORTH);
+	        this.add(toolbar, BorderLayout.NORTH);
 	        this.add(InstrumentMenu, BorderLayout.EAST);
 	        //this.add(tabbedPane, BorderLayout.CENTER);
 	        
