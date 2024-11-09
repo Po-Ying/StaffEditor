@@ -7,26 +7,26 @@ import javax.swing.*;
 
 public class MainWindow extends JFrame{
 	
-	   SECreate parent;
+	    SECreate parent;
 	    Dimension size = new Dimension(935, 700);
 
 	    public Toolbar toolbar;
-	    public InsMenu InstrumentMenu;
-	    //public TabbedPane tabbedPane;
+	    public InsMenu instrumentMenu;
+	    public TabbedPane tabbedPane;
 
 	    MainWindow(SECreate p) {
 	        parent = p;
 
 	        this.setSize(size);
 	        toolbar = new Toolbar(this);
-	        InstrumentMenu = new InsMenu(this);
-	        //tabbedPane = new TabbedPane(this);
+	        instrumentMenu = new InsMenu(this);
+	        tabbedPane = new TabbedPane(this);
 
 	        this.setLayout(new BorderLayout());
 
 	        this.add(toolbar, BorderLayout.NORTH);
-	        this.add(InstrumentMenu, BorderLayout.EAST);
-	        //this.add(tabbedPane, BorderLayout.CENTER);
+	        this.add(instrumentMenu, BorderLayout.EAST);
+	        this.add(tabbedPane, BorderLayout.CENTER);
 	        
 
 	        this.setLocation(25, 50);
@@ -38,5 +38,6 @@ public class MainWindow extends JFrame{
 	                System.exit(0);
 	            }
 	        });
+	        
 	    }
 }

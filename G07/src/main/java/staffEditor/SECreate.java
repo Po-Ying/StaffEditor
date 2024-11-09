@@ -2,7 +2,7 @@ package staffEditor;
 
 public class SECreate {
 	
-    public MainWindow mainWin;
+    MainWindow mainWin;
 
     SECreate(){
         mainWin = new MainWindow(this);

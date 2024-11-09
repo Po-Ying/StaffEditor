@@ -39,5 +39,37 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/user/Downloads/jfugue-5.0.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/barcodes-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/barcodes-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/barcodes-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/font-asian-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/forms-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/forms-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/forms-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/hyph-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/io-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/io-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/io-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/kernel-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/kernel-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/kernel-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/layout-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/layout-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/layout-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/pdfa-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/pdfa-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/pdfa-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/pdftest-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/pdftest-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/pdftest-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/sign-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/sign-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/sign-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/styled-xml-parser-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/styled-xml-parser-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/styled-xml-parser-7.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/svg-7.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/svg-7.1.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/itext/svg-7.1.3-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
