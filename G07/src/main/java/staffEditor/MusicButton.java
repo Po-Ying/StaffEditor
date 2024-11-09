@@ -10,8 +10,8 @@ public class MusicButton extends IconButton{
         imageURL   = cldr.getResource("images/music-note.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
-
-        this.setToolTipText("儲存檔案");
+        this.setToolTipText("選擇音符");
+        
 	}
 
 }

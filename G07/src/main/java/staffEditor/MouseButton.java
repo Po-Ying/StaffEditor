@@ -10,8 +10,9 @@ public class MouseButton extends IconButton{
         imageURL   = cldr.getResource("images/direct-selection.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
-
         this.setToolTipText("滑鼠");
+        
+        
 	}
 
 }
