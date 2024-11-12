@@ -31,8 +31,10 @@ public class MouseButton extends IconButton{
 		
 	private void disableRightButtons() 
 	{		
-		for (Component btn : rightPanel.getComponents()) {
-            if (btn instanceof JButton) {
+		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
                 ((JButton) btn).setEnabled(false);  
             }
         }
