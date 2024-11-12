@@ -28,14 +28,15 @@ public class TopToolbar extends JPanel {
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
 
- 
+        JPanel rightPanel = new JPanel();
+        
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(Color.DARK_GRAY);
         saveFileBtn = new SaveFileButton(this.parent);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
-        mouseBtn = new MouseButton(this.parent);
+        mouseBtn = new MouseButton(this.parent, rightPanel);
         musicBtn = new MusicButton(this.parent);
         restBtn = new RestButton(this.parent);
         tupletBtn = new TupletButton(this.parent);
@@ -53,7 +54,7 @@ public class TopToolbar extends JPanel {
         leftPanel.add(ledgerLineBtn);
 
    
-        JPanel rightPanel = new JPanel();
+        //JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setBackground(Color.DARK_GRAY);
         quarterBtn = new QuarterButton(this.parent);
