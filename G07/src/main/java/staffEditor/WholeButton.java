@@ -7,7 +7,7 @@ public class WholeButton extends IconButton{
 	public WholeButton(Toolbar p) 
 	{
 		super(p);
-        imageURL   = cldr.getResource("images/save.png");
+        imageURL   = cldr.getResource("images/whole.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 

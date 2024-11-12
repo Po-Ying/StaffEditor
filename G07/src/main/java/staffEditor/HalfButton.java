@@ -7,7 +7,7 @@ public class HalfButton extends IconButton{
 	public HalfButton(Toolbar p) 
 	{
 		super(p);
-        imageURL   = cldr.getResource("images/save.png");
+        imageURL   = cldr.getResource("images/half_note.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
