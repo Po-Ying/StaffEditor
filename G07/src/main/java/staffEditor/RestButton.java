@@ -1,18 +1,66 @@
 package staffEditor;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class RestButton extends IconButton{
+	
+	private JPanel leftPanel;
+	private JPanel rightRest;
+	private TopToolbar parentTopToolbar;
 
-	RestButton(Toolbar p) 
+	public RestButton(Toolbar p, JPanel leftPanel, JPanel rightRest, TopToolbar parentTopToolbar) 
 	{
         super(p);
-  
+        this.leftPanel = leftPanel; 
+        this.rightRest = rightRest;
+        this.parentTopToolbar = parentTopToolbar;
+        
         imageURL   = cldr.getResource("images/quarter-note-rest.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("選擇休止符");
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	enableRightButtons();
+                updateRightPanel();
+            }
+        });
+ 
+	}
+	
+	private void enableRightButtons() 
+	{		
+		for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setEnabled(true);  
+            }
+        }
+    }
+
+	public void updateRightPanel() 
+	{
+		parentTopToolbar.removeAll();
+		
+		parentTopToolbar.add(leftPanel, BorderLayout.WEST);
+        parentTopToolbar.add(rightRest, BorderLayout.EAST);
+        
+        parentTopToolbar.revalidate();
+        parentTopToolbar.repaint();
+
 	}
 
 }

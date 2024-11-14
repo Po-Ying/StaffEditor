@@ -11,11 +11,13 @@ import javax.swing.JPanel;
 public class MouseButton extends IconButton{
 	
 	private JPanel rightPanel;
+	private JPanel rightRest;
 
-	public MouseButton(Toolbar p, JPanel rightPanel) 
+	public MouseButton(Toolbar p, JPanel rightPanel, JPanel rightRest) 
 	{
 		super(p);
 		this.rightPanel = rightPanel; 
+		this.rightRest = rightRest;
         imageURL   = cldr.getResource("images/direct-selection.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
@@ -32,6 +34,14 @@ public class MouseButton extends IconButton{
 	private void disableRightButtons() 
 	{		
 		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setEnabled(false);  
+            }
+        }
+		
+		for (Component btn : rightRest.getComponents()) 
 		{
             if (btn instanceof JButton) 
             {

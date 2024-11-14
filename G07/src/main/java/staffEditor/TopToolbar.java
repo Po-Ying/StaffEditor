@@ -21,6 +21,13 @@ public class TopToolbar extends JPanel {
     SixteenthButton sixteenthBtn;
     HalfButton halfBtn;
     WholeButton wholeBtn;
+    
+    WholerestButton wholerestBtn;
+    HalfrestButton halfrestBtn;
+    QuarterrestButton quarterrestBtn;
+    EightrestButton eightrestBtn;
+    SixteenthrestButton sixteenthrestBtn;
+
 
     TopToolbar(Toolbar p) {
         parent = p;
@@ -29,6 +36,7 @@ public class TopToolbar extends JPanel {
         this.setLayout(new BorderLayout());
 
         JPanel rightPanel = new JPanel();
+        JPanel rightRest = new JPanel();
         
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -36,9 +44,9 @@ public class TopToolbar extends JPanel {
         saveFileBtn = new SaveFileButton(this.parent);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
-        mouseBtn = new MouseButton(this.parent, rightPanel);
-        musicBtn = new MusicButton(this.parent, rightPanel);
-        restBtn = new RestButton(this.parent);
+        mouseBtn = new MouseButton(this.parent, rightPanel, rightRest);
+        musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, this);
+        restBtn = new RestButton(this.parent, leftPanel, rightRest, this);
         tupletBtn = new TupletButton(this.parent);
         moduleBtn = new ModuleButton(this.parent);
         ledgerLineBtn = new LedgerLineButton(this.parent);
@@ -62,14 +70,33 @@ public class TopToolbar extends JPanel {
         sixteenthBtn = new SixteenthButton(this.parent);
         halfBtn = new HalfButton(this.parent);
         wholeBtn = new WholeButton(this.parent);
+        
+        rightRest.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        rightRest.setBackground(Color.DARK_GRAY);
+        wholerestBtn = new WholerestButton(this.parent);
+        halfrestBtn = new HalfrestButton(this.parent);
+        quarterrestBtn = new QuarterrestButton(this.parent);
+        eightrestBtn = new EightrestButton(this.parent);
+        sixteenthrestBtn = new SixteenthrestButton(this.parent);
 
         rightPanel.add(quarterBtn);
         rightPanel.add(eighthBtn);
         rightPanel.add(sixteenthBtn);
         rightPanel.add(halfBtn);
         rightPanel.add(wholeBtn);
-
+        
+        rightRest.add(wholerestBtn);
+        rightRest.add(halfrestBtn);
+        rightRest.add(quarterrestBtn);
+        rightRest.add(eightrestBtn);
+        rightRest.add(sixteenthrestBtn);
+        
         this.add(leftPanel, BorderLayout.WEST);
         this.add(rightPanel, BorderLayout.EAST);
+        
+        this.revalidate();
+        this.repaint();
+        
     }
+ 
 }
