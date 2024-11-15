@@ -11,7 +11,7 @@ public class SixteenthButton extends IconButton{
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
-        this.setToolTipText("儲存檔案");
+        this.setToolTipText("十六分音符");
 	}
 
 }

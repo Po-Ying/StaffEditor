@@ -7,11 +7,11 @@ public class EightButton extends IconButton{
 	public EightButton(Toolbar p) 
 	{
 		super(p);
-        imageURL   = cldr.getResource("images/save.png");
+        imageURL   = cldr.getResource("images/eighth_note.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
-        this.setToolTipText("儲存檔案");
+        this.setToolTipText("八分音符");
 	}
 
 }

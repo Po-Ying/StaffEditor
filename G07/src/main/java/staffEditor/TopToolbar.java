@@ -16,11 +16,11 @@ public class TopToolbar extends JPanel {
     ModuleButton moduleBtn;
     LedgerLineButton ledgerLineBtn;
 
+    WholeButton wholeBtn;
+    HalfButton halfBtn;
     QuarterButton quarterBtn;
     EightButton eighthBtn;
     SixteenthButton sixteenthBtn;
-    HalfButton halfBtn;
-    WholeButton wholeBtn;
     
     WholerestButton wholerestBtn;
     HalfrestButton halfrestBtn;
@@ -65,11 +65,11 @@ public class TopToolbar extends JPanel {
         //JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setBackground(Color.DARK_GRAY);
+        wholeBtn = new WholeButton(this.parent);
+        halfBtn = new HalfButton(this.parent);
         quarterBtn = new QuarterButton(this.parent);
         eighthBtn = new EightButton(this.parent);
         sixteenthBtn = new SixteenthButton(this.parent);
-        halfBtn = new HalfButton(this.parent);
-        wholeBtn = new WholeButton(this.parent);
         
         rightRest.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightRest.setBackground(Color.DARK_GRAY);
@@ -79,11 +79,11 @@ public class TopToolbar extends JPanel {
         eightrestBtn = new EightrestButton(this.parent);
         sixteenthrestBtn = new SixteenthrestButton(this.parent);
 
+        rightPanel.add(wholeBtn);
+        rightPanel.add(halfBtn);
         rightPanel.add(quarterBtn);
         rightPanel.add(eighthBtn);
         rightPanel.add(sixteenthBtn);
-        rightPanel.add(halfBtn);
-        rightPanel.add(wholeBtn);
         
         rightRest.add(wholerestBtn);
         rightRest.add(halfrestBtn);

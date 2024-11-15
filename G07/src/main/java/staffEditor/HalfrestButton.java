@@ -17,6 +17,6 @@ public class HalfrestButton extends IconButton {
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
-        this.setToolTipText("儲存檔案");
+        this.setToolTipText("二分休止符");
 	}
 }
