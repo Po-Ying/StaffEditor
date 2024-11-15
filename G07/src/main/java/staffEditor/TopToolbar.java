@@ -94,6 +94,14 @@ public class TopToolbar extends JPanel {
         this.add(leftPanel, BorderLayout.WEST);
         this.add(rightPanel, BorderLayout.EAST);
         
+        for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setEnabled(false);  
+            }
+        }
+        
         this.revalidate();
         this.repaint();
         
