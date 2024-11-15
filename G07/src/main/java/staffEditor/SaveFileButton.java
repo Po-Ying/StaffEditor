@@ -88,7 +88,7 @@ public class SaveFileButton extends IconButton {
     
     private void savePDF(File file) throws IOException {
         
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(file);
+        /*com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(file);
         com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
         com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdf);
 
@@ -96,7 +96,7 @@ public class SaveFileButton extends IconButton {
         document.add(new com.itextpdf.layout.element.Paragraph("Test PDF Content"));
 
         
-        document.close();
+        document.close();*/
     }
 }
 

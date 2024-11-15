@@ -69,16 +69,30 @@ class CloseTabBtn extends JButton {
         this.setOpaque(true);
         this.setRolloverEnabled(true);
 
-        this.addMouseListener(new MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() 
+        {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                JOptionPane.showConfirmDialog(
-                    null, "確定關閉頁面？", "警告",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE
-                );
-
+            public void mouseClicked(MouseEvent e) 
+            {
+            	int a=JOptionPane.showConfirmDialog(null, "確定關閉頁面？", "警告",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if(a==0)
+                    doSomething(c);
             }
         });
+        
+    }
+    public void doSomething(final Component c)
+    {
+        if(this.parent.getTabCount()==1) {
+
+            /*parent.parent.toolbar.editBar.setTypeEnable(false);
+            parent.parent.toolbar.editBar.setLengthEnable(false);*/
+
+        }
+
+        this.parent.removeTabAt(this.parent.indexOfComponent(c));
+
+
     }
 }
 

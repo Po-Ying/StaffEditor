@@ -14,46 +14,59 @@ public class InsList extends JPanel {
 
     InsList(InsMenu p) {
         parent = p;
-        this.setBackground(new Color(255,255,255));
-        this.setPreferredSize(new Dimension(0, 347));
+        this.setBackground(new Color(255, 255, 255));
+        this.setPreferredSize(new Dimension(180, 347));
+
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+
+        this.add(Box.createVerticalGlue());
+
         instruments = new JButton[instrumentNames.length];
-
         for (int i = 0; i < instrumentNames.length; i++) {
+      
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+            buttonPanel.setBackground(new Color(255, 255, 255));
+            
             instruments[i] = new JButton(instrumentNames[i]);
-            instruments[i].setForeground(new Color(0,0,0));
+            instruments[i].setForeground(new Color(0, 0, 0));
             instruments[i].setOpaque(true);
-            instruments[i].setBackground(new Color(217,217,217));
+            instruments[i].setBackground(new Color(217, 217, 217));
+            instruments[i].setMaximumSize(new Dimension(160, 50)); 
 
-          
             final int index = i;
             instruments[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
                     if (selectedButton != null) {
-                        selectedButton.setBackground(new Color(217,217,217));
-                        selectedButton.setForeground(new Color(0,0,0));
+                        selectedButton.setBackground(new Color(217, 217, 217));
+                        selectedButton.setForeground(new Color(0, 0, 0));
                     }
-                    
- 
-                    JButton clickedButton = (JButton) e.getSource();
-                    clickedButton.setBackground(new Color(168,168,168));
-                    clickedButton.setForeground(new Color(255,255,255));
-                    selectedButton = clickedButton;
 
+                    JButton clickedButton = (JButton) e.getSource();
+                    clickedButton.setBackground(new Color(168, 168, 168));
+                    clickedButton.setForeground(new Color(255, 255, 255));
+                    selectedButton = clickedButton;
 
                     System.out.println("Selected Instrument: " + instrumentNames[index]);
                     System.out.println("MIDI ID: " + instrumentMIDIIds[index]);
                     //parent.parent.MidiDevice.MIDI_Ins = instrumentMIDIIds[index];
-                    //parent.parent.MidiDevice.Octave = instrumentOctaves[index]; 
+                    //parent.parent.MidiDevice.Octave = instrumentOctaves[index];
                 }
             });
 
-            this.add(instruments[i]);
             
-            this.add(new JLabel(" ")); 
+            buttonPanel.add(Box.createHorizontalGlue());
+            buttonPanel.add(instruments[i]);
+            buttonPanel.add(Box.createHorizontalGlue());
+
+            this.add(buttonPanel);
+            this.add(Box.createVerticalStrut(10)); 
         }
+
+        
+        this.add(Box.createVerticalGlue());
     }
 }
