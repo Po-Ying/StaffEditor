@@ -5,32 +5,33 @@ import javax.swing.*;
 
 public class TopToolbar extends JPanel {
     Toolbar parent;
+    StaffPage staffPage; // 確保使用 StaffPage
 
-    SaveFileButton saveFileBtn;
-    OpenFileButton openFileBtn;
-    NewPageButton newPageBtn;
-    MouseButton mouseBtn;
-    MusicButton musicBtn;
-    RestButton restBtn;
-    TupletButton tupletBtn;
-    ModuleButton moduleBtn;
-    LedgerLineButton ledgerLineBtn;
+    private SaveFileButton saveFileBtn;
+    private OpenFileButton openFileBtn;
+    private NewPageButton newPageBtn;
+    private MouseButton mouseBtn;
+    private MusicButton musicBtn;
+    private RestButton restBtn;
+    private TupletButton tupletBtn;
+    private ModuleButton moduleBtn;
+    private LedgerLineButton ledgerLineBtn;
 
-    WholeButton wholeBtn;
-    HalfButton halfBtn;
-    QuarterButton quarterBtn;
-    EightButton eighthBtn;
-    SixteenthButton sixteenthBtn;
+    private WholeButton wholeBtn;
+    private HalfButton halfBtn;
+    private QuarterButton quarterBtn;
+    private EightButton eighthBtn;
+    private SixteenthButton sixteenthBtn;
     
-    WholerestButton wholerestBtn;
-    HalfrestButton halfrestBtn;
-    QuarterrestButton quarterrestBtn;
-    EightrestButton eightrestBtn;
-    SixteenthrestButton sixteenthrestBtn;
+    private WholerestButton wholerestBtn;
+    private HalfrestButton halfrestBtn;
+    private QuarterrestButton quarterrestBtn;
+    private EightrestButton eightrestBtn;
+    private SixteenthrestButton sixteenthrestBtn;
 
 
-    TopToolbar(Toolbar p) {
-        parent = p;
+    public TopToolbar(StaffPage staffPage) {
+        this.staffPage = staffPage;
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
@@ -67,7 +68,7 @@ public class TopToolbar extends JPanel {
         rightPanel.setBackground(Color.DARK_GRAY);
         wholeBtn = new WholeButton(this.parent);
         halfBtn = new HalfButton(this.parent);
-        quarterBtn = new QuarterButton(this.parent);
+        quarterBtn = new QuarterButton(this.parent, staffPage);
         eighthBtn = new EightButton(this.parent);
         sixteenthBtn = new SixteenthButton(this.parent);
         

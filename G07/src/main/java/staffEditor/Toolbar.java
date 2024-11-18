@@ -6,14 +6,14 @@ import javax.swing.*;
 public class Toolbar extends JPanel{
 
 	MainWindow parent;
-	
+	StaffPage staffPage;
 	TopToolbar topToolbar;
 	
 	
 	Toolbar(MainWindow p) {
 	    parent = p;
 	    
-	    topToolbar = new TopToolbar(this);
+	    topToolbar = new TopToolbar(staffPage);
 	    this.setLayout(new BorderLayout());
 	    //this.setBackground(Color.darkGray);
 	    this.add(topToolbar,BorderLayout.CENTER);

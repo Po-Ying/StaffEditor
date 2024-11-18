@@ -3,7 +3,7 @@ package staffEditor;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
-import java.util.Vector;
+import java.util.*;
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -16,16 +16,18 @@ public class StaffPage extends JScrollPane {
     static int count = 0;
     int id;
     JLabel note;
-    Vector<JLabel> notes;
-    Vector<JLabel> trash_notes;
+    
+    private Vector<JLabel> trash_notes;
+    private ArrayList<JLabel> noteLabels = new ArrayList<>();
+    private ArrayList<Note> notes = new ArrayList<>();
+    
     JButton backButton, forwardButton; 
     JComponent panel;
     
-    StaffPage(TabbedPane p) {
+    public StaffPage(TabbedPane p) {
         parent = p;
         count++;
         id = count;
-        notes = new Vector<>();
         trash_notes = new Vector<>();
 
         initPanel();
@@ -35,7 +37,6 @@ public class StaffPage extends JScrollPane {
         this.getVerticalScrollBar().setUnitIncrement(10);
     }
 
-    
     private void initPanel() {
         panel = new JComponent() {
             @Override
@@ -47,9 +48,6 @@ public class StaffPage extends JScrollPane {
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
         this.setViewportView(panel);
-
-       
-        initButtons();
     }
     
     private void drawStaff(Graphics g) {
@@ -60,7 +58,7 @@ public class StaffPage extends JScrollPane {
 
         // 載入 Bravura 字體，用於低音譜號
         Font bassClefFont = null;
-        try (InputStream is = getClass().getResourceAsStream("/fonts/Bravura.otf")) {
+        try (InputStream is = getClass().getResourceAsStream("resources/fonts/Bravura.otf")) {
             if (is != null) {
                 bassClefFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(50f);
             } else {
@@ -71,26 +69,21 @@ public class StaffPage extends JScrollPane {
             return;
         }
 
-       
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 5; j++) {
                 g.drawLine(100, 155 + j * 10 + offset, 1050, 155 + j * 10 + offset);
             }
 
-            
             if (i % 2 == 0) {
-                
                 g.setFont(new Font("Default", Font.PLAIN, 90)); 
                 g.drawString("\uD834\uDD1E", 110, 202 + offset); 
             } else {
-                
                 if (bassClefFont != null) {
                     g.setFont(bassClefFont); 
                 }
                 g.drawString("\uD834\uDD22", 125, 175 + offset); 
             }
 
-            
             for (int pos : measurePositions) {
                 g.drawLine(pos, 155 + offset, pos, 195 + offset);
             }
@@ -134,11 +127,12 @@ public class StaffPage extends JScrollPane {
         panel.add(backButton);
         panel.add(forwardButton);
     }
+
     private void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addNoteAtPosition(e.getX(), e.getY());
+                // 此處可進行音符新增的處理
             }
             
             @Override
@@ -161,15 +155,30 @@ public class StaffPage extends JScrollPane {
         });
     }
 
-    private void addNoteAtPosition(int x, int y) {
-        /*JLabel note = new JLabel(new ImageIcon("icon/quarter-note-up.png")); // 替換為真實的圖示路徑
-        note.setBounds(x - 18, y - 18, 30, 45);
-        notes.add(note);
-        panel.add(note);
-        panel.repaint();*/
+    // 修改 addNote 方法以接受音符的類型、位置 (x, y)
+    public void addNotePublic(String noteType, int x, int y) {
+        addNote(noteType, x, y);
     }
 
+    public void addNote(String noteType, int x, int y) {
+        // 創建新的音符並添加到 notes 列表
+        Note newNote = new Note(noteType, x, y);
+        notes.add(newNote);
 
+        // 創建對應的 JLabel 顯示音符
+        JLabel noteLabel = new JLabel(noteType);
+        noteLabel.setBounds(x, y, 50, 50);
+        noteLabels.add(noteLabel);
 
+        revalidate(); // 更新布局
+        repaint(); // 重新繪製畫面
+    }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        for (Note note : notes) {
+            note.draw(g); // 假設 Note 類別有一個繪製方法
+        }
+    }
 }
