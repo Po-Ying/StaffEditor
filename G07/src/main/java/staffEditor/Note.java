@@ -22,9 +22,14 @@ public class Note {
     }
 
     public void draw(Graphics g) {
-        if (noteType.equals("Quarter")) {
+        if (noteType == null) {
+            System.out.println("Warning: noteType is null, cannot draw this note.");
+            return;
+        }   
+        else if(noteType.equals("Quarter")) {
             g.setColor(Color.BLACK);
-            g.fillOval(x, y, 20, 20); // 繪製一個圓形代表四分音符
+            g.fillOval(x - 6, y - 6, 12, 12);  // 音符頭
+            g.fillRect(x + 6, y - 30, 2, 30);  // 音符桿
         }
         // 可以根據需要擴展其他音符類型
     }

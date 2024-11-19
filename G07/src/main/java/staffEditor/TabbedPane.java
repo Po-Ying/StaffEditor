@@ -13,8 +13,7 @@ public class TabbedPane extends JTabbedPane{
 	
 	TabbedPane(MainWindow p)
 	{
-        parent = p;
-
+        this.parent = p;
 
         this.setBackground(Color.white);
         this.setPreferredSize(new Dimension(40,0));
@@ -33,7 +32,6 @@ public class TabbedPane extends JTabbedPane{
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4));
         CloseTabBtn closeTabBtn = new CloseTabBtn(this,content);
         closeTabBtn.setBorder(BorderFactory.createEmptyBorder());
-
 
 
         tab.add(label, BorderLayout.WEST);

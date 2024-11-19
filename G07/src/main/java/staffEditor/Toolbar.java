@@ -12,8 +12,8 @@ public class Toolbar extends JPanel{
 	
 	Toolbar(MainWindow p) {
 	    parent = p;
-	    
-	    topToolbar = new TopToolbar(staffPage);
+
+	    topToolbar = new TopToolbar(this);
 	    this.setLayout(new BorderLayout());
 	    //this.setBackground(Color.darkGray);
 	    this.add(topToolbar,BorderLayout.CENTER);
@@ -23,4 +23,3 @@ public class Toolbar extends JPanel{
 	
 
 }
-

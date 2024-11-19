@@ -7,7 +7,7 @@ public class NewPageButton extends IconButton{
 	NewPageButton(Toolbar p) 
 	{
 		super(p);
-        imageURL   = cldr.getResource("images/add-file.png");
+        imageURL = cldr.getResource("images/add-file.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
         this.setToolTipText("新增頁面");

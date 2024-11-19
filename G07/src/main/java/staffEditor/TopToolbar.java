@@ -4,34 +4,36 @@ import java.awt.*;
 import javax.swing.*;
 
 public class TopToolbar extends JPanel {
+    TabbedPane tabbedPane;
+    StaffPage staffPage;
     Toolbar parent;
-    StaffPage staffPage; // 確保使用 StaffPage
 
-    private SaveFileButton saveFileBtn;
-    private OpenFileButton openFileBtn;
-    private NewPageButton newPageBtn;
-    private MouseButton mouseBtn;
-    private MusicButton musicBtn;
-    private RestButton restBtn;
-    private TupletButton tupletBtn;
-    private ModuleButton moduleBtn;
-    private LedgerLineButton ledgerLineBtn;
+    SaveFileButton saveFileBtn;
+    OpenFileButton openFileBtn;
+    NewPageButton newPageBtn;
+    MouseButton mouseBtn;
+    MusicButton musicBtn;
+    RestButton restBtn;
+    TupletButton tupletBtn;
+    ModuleButton moduleBtn;
+    LedgerLineButton ledgerLineBtn;
 
-    private WholeButton wholeBtn;
-    private HalfButton halfBtn;
-    private QuarterButton quarterBtn;
-    private EightButton eighthBtn;
-    private SixteenthButton sixteenthBtn;
+    WholeButton wholeBtn;
+    HalfButton halfBtn;
+    QuarterButton quarterBtn;
+    EightButton eighthBtn;
+    SixteenthButton sixteenthBtn;
     
-    private WholerestButton wholerestBtn;
-    private HalfrestButton halfrestBtn;
-    private QuarterrestButton quarterrestBtn;
-    private EightrestButton eightrestBtn;
-    private SixteenthrestButton sixteenthrestBtn;
+    WholerestButton wholerestBtn;
+    HalfrestButton halfrestBtn;
+    QuarterrestButton quarterrestBtn;
+    EightrestButton eightrestBtn;
+    SixteenthrestButton sixteenthrestBtn;
 
 
-    public TopToolbar(StaffPage staffPage) {
-        this.staffPage = staffPage;
+    TopToolbar(Toolbar p) {
+        parent = p;
+        staffPage = new StaffPage(tabbedPane);
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
@@ -107,5 +109,5 @@ public class TopToolbar extends JPanel {
         this.repaint();
         
     }
- 
+
 }

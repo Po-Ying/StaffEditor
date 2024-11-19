@@ -2,73 +2,69 @@ package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class StaffPage extends JScrollPane {
+
+    private final ArrayList<Note> notes = new ArrayList<>();
+    private final ArrayList<JLabel> noteLabels = new ArrayList<>();
+
+    private TabbedPane parent;
+    private static int count = 0;
+    private int id;
     
-    TabbedPane parent; 
-    static int count = 0;
-    int id;
-    JLabel note;
-    
-    private Vector<JLabel> trash_notes;
-    private ArrayList<JLabel> noteLabels = new ArrayList<>();
-    private ArrayList<Note> notes = new ArrayList<>();
-    
-    JButton backButton, forwardButton; 
-    JComponent panel;
-    
+    private JButton backButton, forwardButton;
+    private JComponent panel;
+
+    // 构造函数初始化面板
     public StaffPage(TabbedPane p) {
         parent = p;
         count++;
         id = count;
-        trash_notes = new Vector<>();
-
+        
         initPanel();
-        initLabels();
         initButtons();
         initMouseListeners();
+        
         this.getVerticalScrollBar().setUnitIncrement(10);
     }
 
+    // 初始化面板
     private void initPanel() {
         panel = new JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
                 drawStaff(g); 
+
+                super.paintComponent(g);
+                System.out.println("Repainting StaffPage, notes size: " + notes.size());
+                System.out.println("StaffPage instance hash(paint): " + System.identityHashCode(this));
+                System.out.println("Repainting StaffPage notes instance hash: " + System.identityHashCode(notes));
+
+                for ( Note note : notes) {
+                    note.draw(g);
+                }
             }
         };
-        
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
         this.setViewportView(panel);
     }
-    
+
+    // 绘制五线谱
     private void drawStaff(Graphics g) {
         int offset = 0;
         int[] measurePositions = {370, 600, 830, 1050}; 
-
         g.setColor(Color.BLACK);
 
-        // 載入 Bravura 字體，用於低音譜號
-        Font bassClefFont = null;
-        try (InputStream is = getClass().getResourceAsStream("resources/fonts/Bravura.otf")) {
-            if (is != null) {
-                bassClefFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(50f);
-            } else {
-                System.out.println("字體檔案未找到");
-            }
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
+        // 加载 Bravura 字体，用于低音谱号
+        Font bassClefFont = loadBassClefFont();
+        
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 5; j++) {
                 g.drawLine(100, 155 + j * 10 + offset, 1050, 155 + j * 10 + offset);
@@ -91,29 +87,23 @@ public class StaffPage extends JScrollPane {
             offset += 125;
         }
     }
-    
-    private void initLabels() {
-        JLabel staffTitle = new JLabel("Title", SwingConstants.CENTER);
-        staffTitle.setFont(new Font("標楷體", Font.PLAIN, 30));
-        staffTitle.setBounds(340, 33, 500, 75);
-        panel.add(staffTitle);
 
-        JLabel authorTitle = new JLabel("author", SwingConstants.RIGHT);
-        authorTitle.setFont(new Font("標楷體", Font.PLAIN, 17));
-        authorTitle.setBounds(750, 120, 300, 30);
-        panel.add(authorTitle);
-
-        JLabel instrumentTitle = new JLabel("Instrument", SwingConstants.LEFT);
-        instrumentTitle.setFont(new Font("標楷體", Font.PLAIN, 20));
-        instrumentTitle.setBounds(100, 100, 150, 30);
-        panel.add(instrumentTitle);
-
-        JLabel pageCount = new JLabel("-" + id + "-", SwingConstants.CENTER);
-        pageCount.setFont(new Font("標楷體", Font.PLAIN, 17));
-        pageCount.setBounds(570, 1350, 60, 30);
-        panel.add(pageCount);
+    // 加载 Bravura 字体
+    private Font loadBassClefFont() {
+        try (InputStream is = getClass().getResourceAsStream("resources/fonts/Bravura.otf")) {
+            if (is != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(50f);
+            } else {
+                System.out.println("字体文件未找到");
+                return null;
+            }
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-    
+
+    // 初始化按钮
     private void initButtons() {
         backButton = new JButton("←");
         forwardButton = new JButton("→");
@@ -128,19 +118,20 @@ public class StaffPage extends JScrollPane {
         panel.add(forwardButton);
     }
 
+    // 初始化鼠标监听器
     private void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 此處可進行音符新增的處理
+                addNote("Quarter", e.getX(), e.getY());
             }
-            
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 backButton.setVisible(!notes.isEmpty());
-                forwardButton.setVisible(!trash_notes.isEmpty());
+                forwardButton.setVisible(false); // 如有必要, trash_notes 逻辑可恢复
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
                 backButton.setVisible(false);
@@ -155,30 +146,26 @@ public class StaffPage extends JScrollPane {
         });
     }
 
-    // 修改 addNote 方法以接受音符的類型、位置 (x, y)
-    public void addNotePublic(String noteType, int x, int y) {
-        addNote(noteType, x, y);
-    }
-
+    // 添加音符
     public void addNote(String noteType, int x, int y) {
-        // 創建新的音符並添加到 notes 列表
+        if (noteType == null) {
+            System.out.println("Error: noteType is null");
+            return;
+        }
+
         Note newNote = new Note(noteType, x, y);
         notes.add(newNote);
 
-        // 創建對應的 JLabel 顯示音符
         JLabel noteLabel = new JLabel(noteType);
         noteLabel.setBounds(x, y, 50, 50);
         noteLabels.add(noteLabel);
 
-        revalidate(); // 更新布局
-        repaint(); // 重新繪製畫面
+        System.out.println("Drawing note at x=" + x + ", y=" + y + ", noteType = " + noteType);
+        System.out.println("Added note: " + newNote + ", notes.size: " + notes.size());
+        System.out.println("Adding note to StaffPage notes instance hash: " + System.identityHashCode(notes));
+
+        this.revalidate();
+        this.repaint();
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        for (Note note : notes) {
-            note.draw(g); // 假設 Note 類別有一個繪製方法
-        }
-    }
 }
