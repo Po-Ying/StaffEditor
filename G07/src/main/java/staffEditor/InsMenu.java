@@ -6,11 +6,16 @@ import java.awt.*;
 public class InsMenu extends JPanel{
 	MainWindow parent;
     InsList instrumentList;
+    CopyButton copyBtn;
+    PasteButton pasteBtn;
     
     InsMenu(MainWindow p)
     {
     	parent = p;
 
+    	
+    	copyBtn = new CopyButton(this);
+    	pasteBtn = new PasteButton(this);
     	instrumentList = new InsList(this);
     	
     	this.setBackground(Color.blue);

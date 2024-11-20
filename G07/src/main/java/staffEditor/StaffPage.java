@@ -136,11 +136,7 @@ public class StaffPage extends JScrollPane {
     }
     private void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                addNoteAtPosition(e.getX(), e.getY());
-            }
-            
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 backButton.setVisible(!notes.isEmpty());
@@ -161,13 +157,6 @@ public class StaffPage extends JScrollPane {
         });
     }
 
-    private void addNoteAtPosition(int x, int y) {
-        /*JLabel note = new JLabel(new ImageIcon("icon/quarter-note-up.png")); // 替換為真實的圖示路徑
-        note.setBounds(x - 18, y - 18, 30, 45);
-        notes.add(note);
-        panel.add(note);
-        panel.repaint();*/
-    }
 
 
 
