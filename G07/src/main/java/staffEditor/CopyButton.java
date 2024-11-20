@@ -5,13 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CopyButton extends JButton {
-    MainWindow parent;
+	InsMenu parent;
 
-    public CopyButton(MainWindow p) {
+    public CopyButton(InsMenu p) {
         parent = p;
 
         // 設定按鈕屬性
-        this.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/copy.png")));
+        this.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/copy icon.png")));
         this.setToolTipText("複製");
         this.setContentAreaFilled(false);
         this.setBorderPainted(false);

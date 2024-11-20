@@ -5,9 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PasteButton extends JButton {
-    MainWindow parent;
+    InsMenu parent;
 
-    public PasteButton(MainWindow p) {
+    public PasteButton(InsMenu p) {
         parent = p;
 
         // 設定按鈕屬性
