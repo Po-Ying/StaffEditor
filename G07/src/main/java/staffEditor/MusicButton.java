@@ -1,6 +1,7 @@
 package staffEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,6 +33,7 @@ public class MusicButton extends IconButton{
             public void mouseClicked(MouseEvent e) {
                 enableRightButtons();
                 updateRightPanel();
+                updateBtnColor();
             }
         });
         
@@ -51,13 +53,26 @@ public class MusicButton extends IconButton{
 	public void updateRightPanel() 
 	{
 		parentTopToolbar.removeAll();
-		
+
 		parentTopToolbar.add(leftPanel, BorderLayout.WEST);
         parentTopToolbar.add(rightPanel, BorderLayout.EAST);
         
         parentTopToolbar.revalidate();
         parentTopToolbar.repaint();
 
+	}
+	
+	public void updateBtnColor()
+	{
+		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 
 }

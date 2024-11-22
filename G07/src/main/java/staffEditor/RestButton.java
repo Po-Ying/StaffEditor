@@ -35,6 +35,7 @@ public class RestButton extends IconButton{
             public void mouseClicked(MouseEvent e) {
             	enableRightButtons();
                 updateRightPanel();
+                updateBtnColor();
             }
         });
  
@@ -63,4 +64,16 @@ public class RestButton extends IconButton{
 
 	}
 
+	public void updateBtnColor()
+	{
+		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
+	}
 }
