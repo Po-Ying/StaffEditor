@@ -20,7 +20,8 @@ public class Toolbar extends JPanel{
 	    this.setPreferredSize(new Dimension(0,95));
 
 	}
-	
+	public MainWindow getMainWindow() {
+        return parent;}
 
 }
 

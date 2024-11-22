@@ -2,11 +2,11 @@ package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Vector;
 import javax.swing.*;
-import java.awt.Font;
-import java.awt.FontFormatException;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -168,7 +168,17 @@ public class StaffPage extends JScrollPane {
         panel.add(note);
         panel.repaint();*/
     }
+    public BufferedImage renderToImage() {
+        int width = this.getWidth();
+        int height = this.getHeight();
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
+        Graphics2D g = image.createGraphics();
+        this.paint(g); // 繪製當前內容
+        g.dispose();
+
+        return image;
+    }
 
 
 
