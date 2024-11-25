@@ -35,10 +35,10 @@ public class TopToolbar extends JPanel {
 
 
     TopToolbar(Toolbar p) {
+        this.parent = p;
         this.parent.inputtype= staffEditor.inputType.Cursor;
         this.parent.longtype = longType.non;
 
-        this.parent = p;
         this.staffPage = this.parent.parent.staffPage;
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
@@ -46,10 +46,12 @@ public class TopToolbar extends JPanel {
 
         JPanel rightPanel = new JPanel();
         JPanel rightRest = new JPanel();
-        
         JPanel leftPanel = new JPanel();
+
+        
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(Color.DARK_GRAY);
+
         saveFileBtn = new SaveFileButton(this.parent);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
@@ -115,4 +117,33 @@ public class TopToolbar extends JPanel {
         this.repaint();
         
     }
+    public void setLengthEnable(boolean b){
+        this.halfBtn.setEnabled(b);
+        this.quarterBtn.setEnabled(b);
+        this.eighthBtn.setEnabled(b);
+        this.sixteenthBtn.setEnabled(b);
+        this.wholeBtn.setEnabled(b);
+    }
+    public void setTypeEnable(boolean b){
+        this.musicBtn.setEnabled(b);
+        this.restBtn.setEnabled(b);
+        this.mouseBtn.setEnabled(b);
+    }
+    // public void resetlongButtongroup(){
+    //     length.remove(quarterBtn);
+    //     length.remove(eighthBtn);
+    //     length.remove(sixteenthBtn);
+    //     length.remove(halfBtn);
+    //     length.remove(wholeBtn);
+    //     quarter.setSelected(false);
+    //     eighth.setSelected(false);
+    //     sixteenth.setSelected(false);
+    //     half.setSelected(false);
+    //     whole.setSelected(false);
+    //     length.add(quarterBtn);
+    //     length.add(eighthBtn);
+    //     length.add(sixteenthBtn);
+    //     length.add(halfBtn);
+    //     length.add(wholeBtn);
+    // }
 }

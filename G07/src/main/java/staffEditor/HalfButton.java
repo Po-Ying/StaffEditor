@@ -1,42 +1,63 @@
 package staffEditor;
 
 import javax.swing.*;
+import java.awt.Toolkit;
+import java.awt.Cursor;
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.awt.event.ActionListener;
+import java.net.URL; 
 
-public class HalfButton extends IconButton {
-    // private StaffPage staffPage; // 移除內部初始化 staffPage
-    
-    public HalfButton(Toolbar p, StaffPage staffPage) {
+public class HalfButton extends ToggleButton {
+    Toolbar parent;
+    ImageIcon imageIcon;
+
+    public HalfButton(Toolbar p) {
         super(p);
+        parent = p;
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("新增音符StaffPage的雜湊值: " + System.identityHashCode(staffPage));
-                staffPage.addNote("Half", e.getX(), e.getY());
-                System.out.println("音符切換為: Half");
-            }
-
-            // @Override
-            // public void mouseEntered(MouseEvent e) {
-            //     backButton.setVisible(!notes.isEmpty());
-            //     forwardButton.setVisible(false); // 如有必要, trash_notes 逻辑可恢复
-            // }
-
-            // @Override
-            // public void mouseExited(MouseEvent e) {
-            //     backButton.setVisible(false);
-            //     forwardButton.setVisible(false);
-            // }
-        });
-        // 設置音符按鈕圖標
+        // 使用與父類別相同的 ClassLoader 方法
         imageURL = cldr.getResource("images/half_note.png");
+        
         icon = new ImageIcon(imageURL);
+
+
         this.setIcon(icon);
+
         this.setToolTipText("二分音符");
+    } 
+
+    public void doSomething() {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        icon = new ImageIcon(imageURL);
+        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+        Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "");
+        for (int i = 0; i < parent.parent.tabbedPane.getTabCount(); i++) {
+                parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
+            }
+        parent.longtype = longType.half;
     }
-    
-    // public void setStaffPage(StaffPage staffPage) {
-    //     this.staffPage = staffPage;
-    // }
+        // 先確認 imageURL 不為 null
+        // if (imageURL != null) {
+        //     if (parent.inputtype == inputType.Note) {
+        //         icon = new ImageIcon(imageURL);
+        //         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+        //     } else if (parent.inputtype == inputType.rest) {
+        //         icon = new ImageIcon(imageURL);
+        //         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 28, Image.SCALE_DEFAULT));
+        //     }
+            
+            // 確保 imageIcon 不為 null 再創建游標
+            // if (imageIcon != null) {
+            //     Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "");
+            //     for (int i = 0; i < parent.parent.tabbedPane.getTabCount(); i++) {
+            //         parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
+            //     }
+            //     parent.longtype = longType.quarter;
+            // }
+        //}
 }

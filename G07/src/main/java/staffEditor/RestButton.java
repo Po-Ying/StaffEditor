@@ -44,9 +44,9 @@ public class RestButton extends IconButton{
 	{		
 		for (Component btn : rightRest.getComponents()) 
 		{
-            if (btn instanceof JButton) 
+            if (btn instanceof ToggleButton) 
             {
-                ((JButton) btn).setEnabled(true);  
+                ((ToggleButton) btn).setEnabled(true);  
             }
         }
     }

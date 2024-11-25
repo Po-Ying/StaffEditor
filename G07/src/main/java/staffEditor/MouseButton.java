@@ -35,9 +35,9 @@ public class MouseButton extends IconButton{
 	{		
 		for (Component btn : rightPanel.getComponents()) 
 		{
-            if (btn instanceof JButton) 
+            if (btn instanceof ToggleButton) 
             {
-                ((JButton) btn).setEnabled(false);  
+                ((ToggleButton) btn).setEnabled(false);  
             }
         }
 		
@@ -45,7 +45,7 @@ public class MouseButton extends IconButton{
 		{
             if (btn instanceof JButton) 
             {
-                ((JButton) btn).setEnabled(false);  
+                ((ToggleButton) btn).setEnabled(false);  
             }
         }
     }

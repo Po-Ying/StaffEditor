@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.plaf.*;
 import java.net.URL;
 
-public class IconButton extends JButton{
+public class ToggleButton extends JToggleButton{
     
     Toolbar parent;
 
@@ -14,8 +14,8 @@ public class IconButton extends JButton{
     URL imageURL;
     public ImageIcon icon;
     
-    IconButton(Toolbar p) {
-        // super();
+    ToggleButton(Toolbar p) {
+
         parent = p;
         cldr = this.getClass().getClassLoader();
         imageURL = this.cldr.getResource("images/save.png");
@@ -27,6 +27,7 @@ public class IconButton extends JButton{
         
         this.setFocusable(false);
         this.setToolTipText("py");
+
         this.setIcon(icon);
         
         this.addMouseListener(new MouseAdapter() {
