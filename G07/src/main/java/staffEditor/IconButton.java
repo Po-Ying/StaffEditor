@@ -1,4 +1,4 @@
-package staffEditor;
+package staffEditor; //msToggleButton
 
 import java.awt.*;
 import java.awt.event.*;

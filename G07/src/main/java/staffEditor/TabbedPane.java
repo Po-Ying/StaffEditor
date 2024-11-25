@@ -66,6 +66,7 @@ class CloseTabBtn extends JButton {
         this.setBackground(new Color(255, 0, 0));
         this.setOpaque(true);
         this.setRolloverEnabled(true);
+        
 
         this.addMouseListener(new MouseAdapter() 
         {

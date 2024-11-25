@@ -12,20 +12,17 @@ public class MainWindow extends JFrame {
     public Toolbar toolbar;
     public InsMenu instrumentMenu;
     public TabbedPane tabbedPane;
-    private StaffPage staffPage;
+    public StaffPage staffPage;
+	private TopToolbar toptoolbar;
 
     public MainWindow(SECreate p) {
         this.parent = p;
         
- 
 		tabbedPane = new TabbedPane(this);
         staffPage = new StaffPage(tabbedPane);
 
-
         toolbar = new Toolbar(this);
-
-        instrumentMenu = new InsMenu(this);
-        
+        instrumentMenu = new InsMenu(this);	
 
         this.setSize(size);
         this.setLayout(new BorderLayout());
@@ -47,7 +44,6 @@ public class MainWindow extends JFrame {
                 System.exit(0);
             }
         });
-		staffPage.addNote("Quarter", 100, 100);
 
 		System.out.println("tabbedPane: " + (tabbedPane != null));
 		System.out.println("staffPage: " + (staffPage != null));

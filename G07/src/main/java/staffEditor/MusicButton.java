@@ -1,4 +1,4 @@
-package staffEditor;
+package staffEditor;//notemode
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -57,6 +57,8 @@ public class MusicButton extends IconButton{
         
         parentTopToolbar.revalidate();
         parentTopToolbar.repaint();
+
+        parentTopToolbar.inputtype = inputType.Note; //切換成音符模式
 
 	}
 

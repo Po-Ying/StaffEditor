@@ -9,9 +9,12 @@ public class Toolbar extends JPanel{
 	StaffPage staffPage;
 	TopToolbar topToolbar;
 	
-	
+	longType longtype;
+	inputType inputtype;
 	Toolbar(MainWindow p) {
-	    parent = p;
+	    this.parent = p;
+		this.longtype = longType.non;
+		this.inputtype = staffEditor.inputType.Cursor;
 
 	    topToolbar = new TopToolbar(this);
 	    this.setLayout(new BorderLayout());

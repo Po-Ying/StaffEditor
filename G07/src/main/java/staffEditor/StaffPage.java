@@ -4,28 +4,42 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Vector;
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.FontFormatException;
 
 public class StaffPage extends JScrollPane {
+    public TabbedPane parent;
 
-    private final ArrayList<Note> notes = new ArrayList<>();
-    private final ArrayList<JLabel> noteLabels = new ArrayList<>();
-
-    private TabbedPane parent;
-    private static int count = 0;
-    private int id;
+    public JLabel note;
+    public final Vector<JLabel> notes = null;
+    public final Vector<JLabel> trash_note = null;
+    //記憶體會在建構子被呼叫時才分配
+    // public final ArrayList<JLabel> notes = new Vector<JLabel>();
+    //在類別載入時就分配記憶體
+    //不推薦
     
-    private JButton backButton, forwardButton;
-    private JComponent panel;
+    
+    public ClassLoader cldr;
+    public URL imageURL;
+    public ImageIcon icon ,imageIcon;
+    // public String currentNoteType = "Quarter";
+
+    public static int count = 0;
+    public int id;
+
+    public JButton backButton, forwardButton;
+    public JComponent panel;
 
     // 构造函数初始化面板
     public StaffPage(TabbedPane p) {
+
         parent = p;
         count++;
         id = count;
+        notes = new Vector<JLabel>() ;
+        trash_notes = new Vector<JLabel>();
         
         initPanel();
         initButtons();
@@ -35,20 +49,19 @@ public class StaffPage extends JScrollPane {
     }
 
     // 初始化面板
-    private void initPanel() {
+    public void initPanel() {
         panel = new JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
-                drawStaff(g); 
+                drawStaff(g);
 
-                super.paintComponent(g);
-                System.out.println("Repainting StaffPage, notes size: " + notes.size());
-                System.out.println("StaffPage instance hash(paint): " + System.identityHashCode(this));
-                System.out.println("Repainting StaffPage notes instance hash: " + System.identityHashCode(notes));
-
-                for ( Note note : notes) {
-                    note.draw(g);
-                }
+                // super.paintComponent(g);
+                // for( Note note : q_notes) {
+                //     note.draw(g);
+                // }
+                // for( Note note : h_notes){
+                //     note.draw(g);
+                // }
             }
         };
         panel.setLayout(null);
@@ -57,7 +70,7 @@ public class StaffPage extends JScrollPane {
     }
 
     // 绘制五线谱
-    private void drawStaff(Graphics g) {
+    public void drawStaff(Graphics g) {
         int offset = 0;
         int[] measurePositions = {370, 600, 830, 1050}; 
         g.setColor(Color.BLACK);
@@ -89,7 +102,7 @@ public class StaffPage extends JScrollPane {
     }
 
     // 加载 Bravura 字体
-    private Font loadBassClefFont() {
+    public Font loadBassClefFont() {
         try (InputStream is = getClass().getResourceAsStream("resources/fonts/Bravura.otf")) {
             if (is != null) {
                 return Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(50f);
@@ -104,7 +117,7 @@ public class StaffPage extends JScrollPane {
     }
 
     // 初始化按钮
-    private void initButtons() {
+    public void initButtons() {
         backButton = new JButton("←");
         forwardButton = new JButton("→");
 
@@ -119,23 +132,150 @@ public class StaffPage extends JScrollPane {
     }
 
     // 初始化鼠标监听器
-    private void initMouseListeners() {
+    public void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addNote("Quarter", e.getX(), e.getY());
-            }
+                cldr = this.getClass().getClassLoader();
+                if((parent.parent.toolbar.topToolbar.inputtype==inputType.Note)&&(parent.parent.toolbar.topToolbar.longtype!=longType.non)) {
+                    if(parent.parent.toolbar.topToolbar.longtype==longType.quarter){
+                        imageURL = cldr.getResource("images/quarter_note.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.eighth){
+                        imageURL = cldr.getResource("images/eighth_note.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.sixteenth){
+                        imageURL = cldr.getResource("images/sixteenth_note.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.half){
+                        imageURL = cldr.getResource("images/half_note.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.whole){
+                        imageURL = cldr.getResource("images/whole.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(80, 60, Image.SCALE_DEFAULT));
+                    }
+
+                }
+                else if((parent.parent.toolbar.topToolbar.inputtype==inputType.rest)&&(parent.parent.toolbar.topToolbar.longtype!=longType.non)) {
+                    if(parent.parent.toolbar.topToolbar.longtype==longType.quarter) {
+                        imageURL = cldr.getResource("images/quarter-note-rest.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 28, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.eighth){
+                        imageURL = cldr.getResource("images/eighth-note-rest.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 35, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.sixteenth){
+                        imageURL = cldr.getResource("images/sixteenth_rest.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(32, 35, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.half){
+                        imageURL = cldr.getResource("images/half-rest.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(80, 60, Image.SCALE_DEFAULT));
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.whole){
+                        imageURL = cldr.getResource("images/whole_rest.png");
+                        icon = new ImageIcon(imageURL);
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(80, 60, Image.SCALE_DEFAULT));
+                    }
+
+                }
+
+                if((parent.parent.toolbar.topToolbar.inputtype!=inputType.Cursor)&&(parent.parent.toolbar.topToolbar.longtype!=longType.non)) {
+
+
+                    note = new JLabel(imageIcon);
+                    if((parent.parent.toolbar.topToolbar.longtype==longType.whole)||((parent.parent.toolbar.topToolbar.longtype==longType.half)&&(parent.parent.toolbar.topToolbar.inputtype!=inputType.Note))){
+
+                        note.setLocation(getMousePosition().x +7, getMousePosition().y - 10 + msStaffPage.this.getVerticalScrollBar().getValue());
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.quarter){
+                        if(parent.parent.toolbar.topToolbar.inputtype==inputType.Note)
+                            note.setLocation(getMousePosition().x-21 , getMousePosition().y - 18 + msStaffPage.this.getVerticalScrollBar().getValue());
+                        else
+                            note.setLocation(getMousePosition().x-21 , getMousePosition().y - 26 + msStaffPage.this.getVerticalScrollBar().getValue());
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.eighth){
+                        if(parent.parent.toolbar.topToolbar.inputtype==inputType.Note)
+                            note.setLocation(getMousePosition().x-18 , getMousePosition().y - 18 + msStaffPage.this.getVerticalScrollBar().getValue());
+                        else
+                            note.setLocation(getMousePosition().x-18 , getMousePosition().y - 23 + msStaffPage.this.getVerticalScrollBar().getValue());
+                    }
+                    else if(parent.parent.toolbar.topToolbar.longtype==longType.sixteenth){
+                        if(parent.parent.toolbar.topToolbar.inputtype==inputType.Note)
+                            note.setLocation(getMousePosition().x-18 , getMousePosition().y - 18 + msStaffPage.this.getVerticalScrollBar().getValue());
+                        else
+                            note.setLocation(getMousePosition().x-17 , getMousePosition().y - 23 + msStaffPage.this.getVerticalScrollBar().getValue());
+                    }
+                    else {
+                        note.setLocation(getMousePosition().x - 18, getMousePosition().y - 18 + msStaffPage.this.getVerticalScrollBar().getValue());
+                    }
+                    note.setVisible(true);
+
+                    back.setVisible(true);
+                    note.setSize(30, 45);
+                    notes.add(note);
+
+
+                    panel.add(notes.lastElement());
+
+
+                    panel.repaint();
+
+                }
+                    System.out.println("新增音符StaffPage的雜湊值: " + System.identityHashCode(this));
+            } 
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                backButton.setVisible(!notes.isEmpty());
-                forwardButton.setVisible(false); // 如有必要, trash_notes 逻辑可恢复
+                super.mouseEntered(e);
+                if(parent.parent.toolbar.editBar.inputtype==inputType.Cursor){
+                    staffTitle.setEnabled(true);
+                    authorTitle.setEnabled(true);
+                    instrumentTitle.setEnabled(true);
+                    pageCount.setEnabled(true);
+                    for(int i=0;i<10;i++){
+                        measure[i].setEnabled(true);
+                    }
+
+                }
+                else {
+                    staffTitle.setEnabled(false);
+                    authorTitle.setEnabled(false);
+                    instrumentTitle.setEnabled(false);
+                    pageCount.setEnabled(false);
+                    for(int i=0;i<10;i++){
+                        measure[i].setEnabled(false);
+                    }
+                }
+              if(notes.size()!=0)
+                back.setVisible(true);
+              if(trash_notes.size()!=0)
+                forward.setVisible(true);
+
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                backButton.setVisible(false);
-                forwardButton.setVisible(false);
+                super.mouseExited(e);
+
+                  back.setVisible(false);
+
+                  forward.setVisible(false);
             }
         });
 
@@ -146,7 +286,7 @@ public class StaffPage extends JScrollPane {
         });
     }
 
-    // 添加音符
+    //添加音符
     public void addNote(String noteType, int x, int y) {
         if (noteType == null) {
             System.out.println("Error: noteType is null");
@@ -155,17 +295,30 @@ public class StaffPage extends JScrollPane {
 
         Note newNote = new Note(noteType, x, y);
         notes.add(newNote);
+        printNotes();
 
         JLabel noteLabel = new JLabel(noteType);
         noteLabel.setBounds(x, y, 50, 50);
         noteLabels.add(noteLabel);
 
-        System.out.println("Drawing note at x=" + x + ", y=" + y + ", noteType = " + noteType);
-        System.out.println("Added note: " + newNote + ", notes.size: " + notes.size());
-        System.out.println("Adding note to StaffPage notes instance hash: " + System.identityHashCode(notes));
+        // System.out.println("Added note: " + newNote + ", notes.size: " + notes.size());
+        // System.out.println("Adding note to StaffPage notes instance hash: " + System.identityHashCode(notes));
 
         this.revalidate();
         this.repaint();
+    }
+    public void printNotes() {
+        if (q_notes.isEmpty() && h_notes.isEmpty()) {
+            System.out.println("音符列表為空");
+        } else {
+            System.out.println("音符列表如下：");
+            for (JLabel note : notes) {
+                System.out.printf(
+                    "音符類型: %s, 座標: (x=%d, y=%d), 哈希值: %d, <q_notes> size = %d%n",
+                    note.noteType, note.x, note.y, System.identityHashCode(note), notes.size()
+                );
+            }
+        }
     }
 
 }

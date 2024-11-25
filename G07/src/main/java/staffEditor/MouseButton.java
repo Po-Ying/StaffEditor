@@ -1,4 +1,4 @@
-package staffEditor;
+package staffEditor;//cursorMode
 
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -18,7 +18,7 @@ public class MouseButton extends IconButton{
 		super(p);
 		this.rightPanel = rightPanel; 
 		this.rightRest = rightRest;
-        imageURL   = cldr.getResource("images/direct-selection.png");
+        imageURL = cldr.getResource("images/direct-selection.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
         this.setToolTipText("滑鼠");

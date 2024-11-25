@@ -1,31 +1,54 @@
 package staffEditor;
 
 import javax.swing.*;
+import java.awt.Toolkit;
+import java.awt.Cursor;
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.awt.event.ActionListener;
+public class QuarterButton extends IconButton{
 
-public class QuarterButton extends IconButton {
-    // private StaffPage staffPage; // 移除內部初始化 staffPage
-    
-    public QuarterButton(Toolbar p, StaffPage staffPage) {
+    Toolbar parent;
+    ImageIcon imageIcon;
+    public QuarterButton(Toolbar p) {
         super(p);
+        parent = p;
+        //this.setBorderPainted(false);
+        //this.setBorder(null);
 
-        // 設置音符按鈕圖標
-        imageURL = cldr.getResource("images/quarter_note.png");
+        imageURL = cldr.getResource("iamges/quarter_note.png");
+
         icon = new ImageIcon(imageURL);
-        this.setIcon(icon);
-        this.setToolTipText("四分音符");
 
-        // 設置按鈕的點擊事件
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if ( staffPage != null) {
-                    System.out.println("Mouse clicked at: " + e.getX() + ", " + e.getY());
-                    staffPage.addNote("Quarter", e.getX(), e.getY());
-                } else {
-                    System.out.println("staffPage is null");
-                }
-            }
-        });
+        this.setIcon(icon);
+
+        this.setToolTipText("四分音符");
     }
+
+    public void doSomething(){
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        if(parent.inputtype==inputType.Note) {
+            imageURL = cldr.getResource("images/quarter_note.png");
+            icon = new ImageIcon(imageURL);
+
+            imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+        }
+
+
+
+
+        Cursor cu = tk.createCustomCursor(imageIcon.getImage(),new Point(16,16),"");
+        for(int i=0;i<parent.parent.tabbedPane.getTabCount();i++) {
+            parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
+
+
+        }
+
+        parent.longtype = longType.quarter;
+    }
+
 }

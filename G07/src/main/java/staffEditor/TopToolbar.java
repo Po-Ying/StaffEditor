@@ -1,4 +1,4 @@
-package staffEditor;
+package staffEditor;//editbar
 
 import java.awt.*;
 import javax.swing.*;
@@ -30,10 +30,16 @@ public class TopToolbar extends JPanel {
     EightrestButton eightrestBtn;
     SixteenthrestButton sixteenthrestBtn;
 
+    longType longtype;
+    inputType inputtype;
+
 
     TopToolbar(Toolbar p) {
-        parent = p;
-        staffPage = new StaffPage(tabbedPane);
+        this.parent.inputtype= staffEditor.inputType.Cursor;
+        this.parent.longtype = longType.non;
+
+        this.parent = p;
+        this.staffPage = this.parent.parent.staffPage;
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
@@ -70,7 +76,7 @@ public class TopToolbar extends JPanel {
         rightPanel.setBackground(Color.DARK_GRAY);
         wholeBtn = new WholeButton(this.parent);
         halfBtn = new HalfButton(this.parent);
-        quarterBtn = new QuarterButton(this.parent, staffPage);
+        quarterBtn = new QuarterButton(this.parent);
         eighthBtn = new EightButton(this.parent);
         sixteenthBtn = new SixteenthButton(this.parent);
         
@@ -109,5 +115,4 @@ public class TopToolbar extends JPanel {
         this.repaint();
         
     }
-
 }

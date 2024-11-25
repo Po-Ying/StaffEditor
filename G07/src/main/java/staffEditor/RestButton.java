@@ -1,4 +1,4 @@
-package staffEditor;
+package staffEditor;//restmode
 
 import java.awt.BorderLayout;
 import java.awt.Color;
