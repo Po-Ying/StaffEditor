@@ -26,7 +26,7 @@ public class SaveFileButton extends IconButton {
         
         fileChooser.setFileFilter(new FileNameExtensionFilter("PNG, JPG, PDF Files", "png", "jpg", "pdf"));
 
-        this.addActionListener(e -> saveFile());
+        this.addActionListener(e -> {saveFile();});
     }
 
     private void saveFile() {

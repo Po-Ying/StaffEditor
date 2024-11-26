@@ -10,12 +10,12 @@ public class InsList extends JPanel {
     String[] instrumentNames = {"鋼琴", "小提琴", "長笛", "薩克斯風", "豎笛"};
     String[] instrumentMIDIIds = {"pianoMIDI", "violinMIDI", "fluteMIDI", "saxMIDI", "clarinetMIDI"}; 
     int[] instrumentOctaves = {5, 5, 4, 3, 3}; 
-    String[] instrumentIcons = {"images/piano.png", "images/violin.png", "images/flute.png", "images/saxophone.png", "images/clarinet.png"}; // 圖片文件路徑
+    String[] instrumentIcons = {"images/paino.png", "images/violin.png", "images/flute.png", "images/saxophone.png", "images/clarinet.png"}; // 圖片文件路徑
     JButton selectedButton = null;
 
     InsList(InsMenu p) {
         parent = p;
-        this.setBackground(new Color(255, 255, 255));
+        this.setBackground(new Color(255, 255, 255));//255, 220, 150
         this.setPreferredSize(new Dimension(180, 347));
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

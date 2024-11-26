@@ -31,7 +31,7 @@ public class TopToolbar extends JPanel {
 
     TopToolbar(Toolbar p) {
         parent = p;
-        this.setBackground(Color.DARK_GRAY);
+        this.setBackground(new Color(255, 220, 150));
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
 
@@ -40,7 +40,7 @@ public class TopToolbar extends JPanel {
         
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        leftPanel.setBackground(Color.DARK_GRAY);
+        leftPanel.setBackground(new Color(255, 220, 150));
         saveFileBtn = new SaveFileButton(this.parent);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
@@ -62,9 +62,9 @@ public class TopToolbar extends JPanel {
         leftPanel.add(ledgerLineBtn);
 
    
-        //JPanel rightPanel = new JPanel();
+
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.setBackground(Color.DARK_GRAY);
+        rightPanel.setBackground(new Color(255, 220, 150));
         quarterBtn = new QuarterButton(this.parent);
         eighthBtn = new EightButton(this.parent);
         sixteenthBtn = new SixteenthButton(this.parent);

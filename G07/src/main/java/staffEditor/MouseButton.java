@@ -26,7 +26,9 @@ public class MouseButton extends IconButton{
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                disableRightButtons();  
+                disableRightButtons();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
 	}

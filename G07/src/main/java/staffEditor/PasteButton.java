@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PasteButton extends JButton {
-    InsMenu parent;
+	MainWindow parent;
 
-    public PasteButton(InsMenu p) {
-        parent = p;
+    public PasteButton(MainWindow parent2) {
+        parent = parent2;
 
         // 設定按鈕屬性
         this.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/paste.png")));

@@ -35,6 +35,8 @@ public class RestButton extends IconButton{
             public void mouseClicked(MouseEvent e) {
             	enableRightButtons();
                 updateRightPanel();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
  
