@@ -31,7 +31,7 @@ public class StaffPage extends JScrollPane {
     public static int count = 0;
     public int id;
 
-    public JButton backButton, forwardButton;
+    // public JButton backButton, forwardButton;
     public JComponent panel;
     Label staffTitle,authorTitle,instrumentTitle,pageCount,measure[];
 
@@ -54,7 +54,8 @@ public class StaffPage extends JScrollPane {
         initMouseListeners();
         
         this.getVerticalScrollBar().setUnitIncrement(10);
-
+        
+        Toolkit tk = Toolkit.getDefaultToolkit();
     }
 
     // 初始化面板
@@ -174,17 +175,14 @@ public class StaffPage extends JScrollPane {
 
     // 初始化按钮
     public void initButtons() {
-        backButton = new JButton("←");
-        forwardButton = new JButton("→");
+        back.setBounds(20, 20, 45, 45);
+        forward.setBounds(70, 20, 45, 45);
 
-        backButton.setBounds(20, 20, 45, 45);
-        forwardButton.setBounds(70, 20, 45, 45);
+        back.setVisible(false);
+        forward.setVisible(false);
 
-        backButton.setVisible(false);
-        forwardButton.setVisible(false);
-
-        panel.add(backButton);
-        panel.add(forwardButton);
+        panel.add(back);
+        panel.add(forward);
     }
 
     // 初始化鼠标监听器
@@ -193,137 +191,85 @@ public class StaffPage extends JScrollPane {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cldr = this.getClass().getClassLoader();
-                if((parent.parent.toolbar.topToolbar.inputtype==inputType.Note)&&(parent.parent.toolbar.topToolbar.longtype!=longType.non)) {
-                    if(parent.parent.toolbar.topToolbar.longtype==longType.quarter){
+                // 根據長度類型載入對應的圖片
+                switch (parent.parent.toolbar.longtype) {
+                    case quarter:
                         imageURL = cldr.getResource("images/quarter_note.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
-                        System.out.printf("add quarter");
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.eighth){
+                        break;
+                    case eighth:
                         imageURL = cldr.getResource("images/eighth_note.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.sixteenth){
+                        break;
+                    case sixteenth:
                         imageURL = cldr.getResource("images/sixteenth_note.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.half){
+                        break;
+                    case half:
                         imageURL = cldr.getResource("images/half_note.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.whole){
+                        break;
+                    case whole:
                         imageURL = cldr.getResource("images/whole.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(80, 60, Image.SCALE_DEFAULT));
-                    }
-
-                }
-                else if((parent.parent.toolbar.topToolbar.inputtype==inputType.rest)&&(parent.parent.toolbar.topToolbar.longtype!=longType.non)) {
-                    if(parent.parent.toolbar.topToolbar.longtype==longType.quarter) {
-                        imageURL = cldr.getResource("images/quarter-note-rest.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 28, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.eighth){
-                        imageURL = cldr.getResource("images/eighth-note-rest.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 35, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.sixteenth){
-                        imageURL = cldr.getResource("images/sixteenth_rest.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(32, 35, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.half){
-                        imageURL = cldr.getResource("images/half-rest.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(80, 60, Image.SCALE_DEFAULT));
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.whole){
-                        imageURL = cldr.getResource("images/whole_rest.png");
-                        icon = new ImageIcon(imageURL);
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(80, 60, Image.SCALE_DEFAULT));
-                    }
-
+                        break;
+                    default:
+                        System.out.println("Invalid note type.");
+                        return; // 無效的類型，直接退出
                 }
 
-                if((parent.parent.toolbar.topToolbar.inputtype!=inputType.Cursor)&&(parent.parent.toolbar.topToolbar.longtype!=longType.non)) {
-
-
-                    note = new JLabel(imageIcon);
-                    if((parent.parent.toolbar.topToolbar.longtype==longType.whole)||((parent.parent.toolbar.topToolbar.longtype==longType.half)&&(parent.parent.toolbar.topToolbar.inputtype!=inputType.Note))){
-
-                        note.setLocation(getMousePosition().x +7, getMousePosition().y - 10 + StaffPage.this.getVerticalScrollBar().getValue());
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.quarter){
-                        if(parent.parent.toolbar.topToolbar.inputtype==inputType.Note)
-                            note.setLocation(getMousePosition().x-21 , getMousePosition().y - 18 + StaffPage.this.getVerticalScrollBar().getValue());
-                        else
-                            note.setLocation(getMousePosition().x-21 , getMousePosition().y - 26 + StaffPage.this.getVerticalScrollBar().getValue());
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.eighth){
-                        if(parent.parent.toolbar.topToolbar.inputtype==inputType.Note)
-                            note.setLocation(getMousePosition().x-18 , getMousePosition().y - 18 + StaffPage.this.getVerticalScrollBar().getValue());
-                        else
-                            note.setLocation(getMousePosition().x-18 , getMousePosition().y - 23 + StaffPage.this.getVerticalScrollBar().getValue());
-                    }
-                    else if(parent.parent.toolbar.topToolbar.longtype==longType.sixteenth){
-                        if(parent.parent.toolbar.topToolbar.inputtype==inputType.Note)
-                            note.setLocation(getMousePosition().x-18 , getMousePosition().y - 18 + StaffPage.this.getVerticalScrollBar().getValue());
-                        else
-                            note.setLocation(getMousePosition().x-17 , getMousePosition().y - 23 + StaffPage.this.getVerticalScrollBar().getValue());
-                    }
-                    else {
-                        note.setLocation(getMousePosition().x - 18, getMousePosition().y - 18 + StaffPage.this.getVerticalScrollBar().getValue());
-                    }
-                    note.setVisible(true);
-
-                    back.setVisible(true);
-                    note.setSize(30, 45);
-                    notes.add(note);
-
-
-                    panel.add(notes.lastElement());
-
-
-                    panel.repaint();
-
+                if (imageURL == null) {
+                    System.out.println("Failed to load image.");
+                    return; // 圖片加載失敗，退出
                 }
-                    // System.out.println("新增音符StaffPage的雜湊值: " + System.identityHashCode(this));
-            } 
+
+                icon = new ImageIcon(imageURL);
+                imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
+
+                // 創建音符標籤
+                note = new JLabel(imageIcon);
+                int xOffset = -18;
+                int yOffset = -18;
+
+                // 根據音符長度調整偏移量
+                if (parent.parent.toolbar.longtype == longType.whole) {
+                    xOffset = +7;
+                    yOffset = -10;
+                } else if (parent.parent.toolbar.longtype == longType.half) {
+                    xOffset = +7;
+                    yOffset = -10;
+                }
+
+                // 設定音符位置
+                note.setLocation(
+                    getMousePosition().x + xOffset,
+                    getMousePosition().y + yOffset + StaffPage.this.getVerticalScrollBar().getValue()
+                );
+                note.setVisible(true);
+                note.setSize(30, 45);
+
+                // 添加到面板
+                notes.add(note);
+                panel.add(notes.lastElement());
+                panel.repaint();
+            }
 
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                if(parent.parent.toolbar.topToolbar.inputtype==inputType.Cursor){
-                    staffTitle.setEnabled(true);
-                    authorTitle.setEnabled(true);
-                    instrumentTitle.setEnabled(true);
-                    pageCount.setEnabled(true);
-                    for(int i=0;i<10;i++){
-                        measure[i].setEnabled(true);
-                    }
 
+                // 根據功能啟用或禁用控制元件
+                staffTitle.setEnabled(false);
+                authorTitle.setEnabled(false);
+                instrumentTitle.setEnabled(false);
+                pageCount.setEnabled(false);
+                for (int i = 0; i < 10; i++) {
+                    measure[i].setEnabled(false);
                 }
-                else {
-                    staffTitle.setEnabled(false);
-                    authorTitle.setEnabled(false);
-                    instrumentTitle.setEnabled(false);
-                    pageCount.setEnabled(false);
-                    for(int i=0;i<10;i++){
-                        measure[i].setEnabled(false);
-                    }
-                }
-              if(notes.size()!=0)
-                back.setVisible(true);
-              if(trash_notes.size()!=0)
-                forward.setVisible(true);
 
+                if (notes.size() != 0) {
+                    back.setVisible(true);
+                }
+                if (trash_notes.size() != 0) {
+                    forward.setVisible(true);
+                }
             }
+
 
             @Override
             public void mouseExited(MouseEvent e) {
@@ -337,8 +283,8 @@ public class StaffPage extends JScrollPane {
 
         this.addMouseWheelListener(e -> {
             int offset = this.getVerticalScrollBar().getValue();
-            backButton.setLocation(20, 20 + offset);
-            forwardButton.setLocation(70, 20 + offset);
+            back.setLocation(20, 20 + offset);
+            forward.setLocation(70, 20 + offset);
         });
     }
     // public void printNotes() {

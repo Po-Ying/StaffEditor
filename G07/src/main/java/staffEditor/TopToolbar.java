@@ -107,9 +107,9 @@ public class TopToolbar extends JPanel {
         
         for (Component btn : rightPanel.getComponents()) 
 		{
-            if (btn instanceof JButton) 
+            if (btn instanceof ToggleButton) 
             {
-                ((JButton) btn).setEnabled(false);  
+                ((ToggleButton) btn).setEnabled(false);  
             }
         }
         

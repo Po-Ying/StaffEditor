@@ -43,7 +43,7 @@ public class MouseButton extends IconButton{
 		
 		for (Component btn : rightRest.getComponents()) 
 		{
-            if (btn instanceof JButton) 
+            if (btn instanceof ToggleButton) 
             {
                 ((ToggleButton) btn).setEnabled(false);  
             }

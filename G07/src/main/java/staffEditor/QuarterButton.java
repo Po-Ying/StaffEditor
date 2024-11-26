@@ -35,11 +35,14 @@ public class QuarterButton extends ToggleButton {
         Toolkit tk = Toolkit.getDefaultToolkit();
         icon = new ImageIcon(imageURL);
         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+        
         Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "");
+        parent.longtype = longType.quarter;
+        
         for (int i = 0; i < parent.parent.tabbedPane.getTabCount(); i++) {
                 parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
             }
-        parent.longtype = longType.quarter;
+        // parent.longtype = longType.quarter;
     }
         // 先確認 imageURL 不為 null
         // if (imageURL != null) {
