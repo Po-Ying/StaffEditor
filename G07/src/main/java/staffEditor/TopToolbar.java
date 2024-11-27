@@ -94,6 +94,37 @@ public class TopToolbar extends JPanel {
         this.add(leftPanel, BorderLayout.WEST);
         this.add(rightPanel, BorderLayout.EAST);
         
+        for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {  
+                if (btn instanceof MouseButton)
+                {
+                	((JButton) btn).setBackground(Color.LIGHT_GRAY);
+                }
+                else
+                {
+                	((JButton) btn).setBackground(Color.WHITE);
+                }
+            }
+            
+        }
+        for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setEnabled(false);  
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+        for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {  
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+        
         this.revalidate();
         this.repaint();
         
