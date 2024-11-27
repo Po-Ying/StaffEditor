@@ -1,5 +1,6 @@
 package staffEditor;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,12 +11,14 @@ import javax.swing.JPanel;
 
 public class MouseButton extends IconButton{
 	
+	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JPanel rightRest;
 
-	public MouseButton(Toolbar p, JPanel rightPanel, JPanel rightRest) 
+	public MouseButton(Toolbar p, JPanel leftPanel, JPanel rightPanel, JPanel rightRest) 
 	{
 		super(p);
+		this.leftPanel = leftPanel;
 		this.rightPanel = rightPanel; 
 		this.rightRest = rightRest;
         imageURL   = cldr.getResource("images/direct-selection.png");
@@ -27,6 +30,7 @@ public class MouseButton extends IconButton{
             @Override
             public void mouseClicked(MouseEvent e) {
                 disableRightButtons();
+                updateBtnColor();
                 MainWindow mainWindow = parent.parent;
                 mainWindow.hideCopyPasteButtons();
             }
@@ -51,5 +55,18 @@ public class MouseButton extends IconButton{
             }
         }
     }
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
+	}
 	
 }

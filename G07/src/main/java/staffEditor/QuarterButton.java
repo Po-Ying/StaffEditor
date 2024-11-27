@@ -11,7 +11,7 @@ public class QuarterButton extends IconButton{
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
-        this.setToolTipText("儲存檔案");
+        this.setToolTipText("四分音符");
 	}
 
 }
