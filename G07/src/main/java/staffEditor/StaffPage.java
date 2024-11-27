@@ -22,9 +22,10 @@ public class StaffPage extends JScrollPane {
     JComponent panel;
 
     // 用來記錄是否啟用了選擇模式
-    private boolean selectionMode = false;
+    private boolean selectionMode = false; // 初始化為 false
     private Measure[] measures;
     private Measure selectedMeasure = null;
+    private boolean moduleButtonClicked = false;
 
     StaffPage(TabbedPane p) {
         parent = p;
@@ -32,7 +33,6 @@ public class StaffPage extends JScrollPane {
         id = count;
         notes = new Vector<>();
         trash_notes = new Vector<>();
-
         initPanel();
         setupMeasures();  // 初始化小節
         initLabels();
@@ -41,13 +41,12 @@ public class StaffPage extends JScrollPane {
         this.getVerticalScrollBar().setUnitIncrement(10);
     }
 
-    // 新增 setSelectionMode 方法
     public void setSelectionMode(boolean enabled) {
-        this.selectionMode = enabled; // 更新選擇模式狀態
-        repaint(); // 重新繪製，更新視覺效果
+        this.selectionMode = enabled;  // 更新選擇模式
+        repaint();  // 重新繪製頁面
     }
 
-    // 新增 isSelectionMode 方法（可選，用於外部檢查模式）
+    // 檢查是否啟用了選擇模式
     public boolean isSelectionMode() {
         return selectionMode;
     }
@@ -68,7 +67,7 @@ public class StaffPage extends JScrollPane {
     
     private void drawStaff(Graphics g) {
         int offset = 0;
-        int[] measurePositions = {370, 600, 830, 1050}; // 小節的位置
+        int[] measurePositions = {400, 630, 860, 1090}; // 每行的小節起始 X 座標
 
         g.setColor(Color.BLACK);
 
@@ -84,10 +83,10 @@ public class StaffPage extends JScrollPane {
             return;
         }
 
-        // 繪製五線譜
-        for (int i = 0; i < 10; i++) {
+        // 繪製五線譜和小節
+        for (int i = 0; i < 10; i++) { // 假設有 10 行五線譜
             for (int j = 0; j < 5; j++) {
-                g.drawLine(100, 155 + j * 10 + offset, 1050, 155 + j * 10 + offset);
+                g.drawLine(100, 155 + j * 10 + offset, 1090, 155 + j * 10 + offset);
             }
 
             if (i % 2 == 0) {
@@ -107,32 +106,54 @@ public class StaffPage extends JScrollPane {
             offset += 125;
         }
 
-        // 繪製選擇框
+        // 繪製選取框
         if (selectionMode && selectedMeasure != null) {
             g.setColor(new Color(255, 255, 0, 128)); // 半透明黃色
-            g.fillRect(selectedMeasure.startX, selectedMeasure.startY, selectedMeasure.endX - selectedMeasure.startX, selectedMeasure.endY - selectedMeasure.startY);
+            g.fillRect(
+                selectedMeasure.startX, 
+                selectedMeasure.startY, 
+                selectedMeasure.endX - selectedMeasure.startX, 
+                selectedMeasure.endY - selectedMeasure.startY
+            );
             g.setColor(Color.RED); // 紅色邊框
-            g.drawRect(selectedMeasure.startX, selectedMeasure.startY, selectedMeasure.endX - selectedMeasure.startX, selectedMeasure.endY - selectedMeasure.startY);
+            g.drawRect(
+                selectedMeasure.startX, 
+                selectedMeasure.startY, 
+                selectedMeasure.endX - selectedMeasure.startX, 
+                selectedMeasure.endY - selectedMeasure.startY
+            );
         }
     }
 
+
     private void setupMeasures() {
-        // 定義每個小節的寬度和高度
-        int measureWidth = 200;  // 小節的寬度
-        int measureHeight = 40;  // 小節的高度
+        // 定義每個小節的寬度
+        int measureWidth = 230; 
 
-        measures = new Measure[4];  // 根據 measurePositions 長度初始化
+        // 定義五線譜的起始位置
+        int staffStartY = 155; // 五線譜開始的 Y 座標
+        int staffLineSpacing = 125; // 每組五線譜之間的間距
 
-        int[] measurePositions = {370, 600, 830, 1050}; // 小節的位置
-        for (int i = 0; i < measurePositions.length; i++) {
-            int startX = measurePositions[i];
-            int startY = 155; // 起始 Y 座標
+        // 定義每一組五線譜包含的小節數量
+        int measuresPerStaff = 4; 
+
+        // 初始化小節陣列
+        measures = new Measure[40]; // 假設總共 10 個小節
+
+        for (int i = 0; i < measures.length; i++) {
+            int staffIndex = i / measuresPerStaff; // 計算該小節所在的五線譜組
+            int measureIndexInStaff = i % measuresPerStaff; // 計算小節在該五線譜組中的位置
+
+            // 計算小節的起始和結束座標
+            int startX = 170 + measureIndexInStaff * (measureWidth); // 每個小節之間留有 10 的間距
+            int startY = staffStartY + staffIndex * staffLineSpacing;
             int endX = startX + measureWidth;
-            int endY = startY + measureHeight;
+            int endY = startY + 40; // 小節範圍高度固定為 40，與五線譜相符
 
             measures[i] = new Measure(startX, startY, endX, endY);
         }
     }
+
 
     private void initLabels() {
         JLabel staffTitle = new JLabel("Title", SwingConstants.CENTER);
@@ -142,7 +163,7 @@ public class StaffPage extends JScrollPane {
 
         JLabel authorTitle = new JLabel("author", SwingConstants.RIGHT);
         authorTitle.setFont(new Font("標楷體", Font.PLAIN, 17));
-        authorTitle.setBounds(750, 120, 300, 30);
+        authorTitle.setBounds(800, 120, 300, 30);
         panel.add(authorTitle);
 
         JLabel instrumentTitle = new JLabel("Instrument", SwingConstants.LEFT);
@@ -171,32 +192,37 @@ public class StaffPage extends JScrollPane {
     }
 
     private void initMouseListeners() {
-        panel.addMouseListener(new MouseAdapter() {
+    	panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // 檢查點擊位置是否在小節範圍內
+                // 檢查選取模式是否啟用
+                if (!selectionMode) {
+                    System.out.println("選取模式未啟用，無法選取小節。");
+                    return; // 選取模式未啟用時，直接返回
+                }
+
+                // 如果選取模式啟用，檢查點擊的小節
                 for (Measure measure : measures) {
                     if (measure.contains(e.getX(), e.getY())) {
-                        selectedMeasure = measure;  // 記錄選中的小節
-                        setSelectionMode(true);     // 啟用選擇模式
-                        repaint();  // 重新繪製
+                        selectedMeasure = measure;  // 設置選中小節
+                        repaint();                  // 重繪以顯示選中狀態
                         break;
                     }
                 }
             }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                backButton.setVisible(!notes.isEmpty());
-                forwardButton.setVisible(!trash_notes.isEmpty());
-            }
+    	    @Override
+    	    public void mouseEntered(MouseEvent e) {
+    	        backButton.setVisible(!notes.isEmpty());
+    	        forwardButton.setVisible(!trash_notes.isEmpty());
+    	    }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                backButton.setVisible(false);
-                forwardButton.setVisible(false);
-            }
-        });
+    	    @Override
+    	    public void mouseExited(MouseEvent e) {
+    	        backButton.setVisible(false);
+    	        forwardButton.setVisible(false);
+    	    }
+    	});
 
         this.addMouseWheelListener(e -> {
             int offset = this.getVerticalScrollBar().getValue();

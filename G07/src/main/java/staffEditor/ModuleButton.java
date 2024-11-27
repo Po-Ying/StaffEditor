@@ -23,7 +23,7 @@ public class ModuleButton extends IconButton {
             public void actionPerformed(ActionEvent e) {
                 // 切換選取模式
                 selectionModeActive = !selectionModeActive;
-                
+
                 // 通過 MainWindow 控制 CopyButton 和 PasteButton 的可見性
                 MainWindow mainWindow = parentToolbar.parent;
                 mainWindow.toggleCopyPasteButtons(selectionModeActive); // 將按鈕設為可見或隱藏
