@@ -36,6 +36,8 @@ public class RestButton extends IconButton{
             	enableRightButtons();
                 updateRightPanel();
                 updateBtnColor();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
  

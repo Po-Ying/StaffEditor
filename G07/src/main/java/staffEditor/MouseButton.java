@@ -31,6 +31,8 @@ public class MouseButton extends IconButton{
             public void mouseClicked(MouseEvent e) {
                 disableRightButtons();
                 updateBtnColor();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
 	}
