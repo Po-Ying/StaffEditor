@@ -36,7 +36,7 @@ public class TopToolbar extends JPanel {
 
     TopToolbar(Toolbar p) {
         this.parent = p;
-        this.parent.inputtype= staffEditor.inputType.Cursor;
+        // this.parent.inputtype= staffEditor.inputType.Cursor;
         this.parent.longtype = longType.non;
 
         this.staffPage = this.parent.parent.staffPage;

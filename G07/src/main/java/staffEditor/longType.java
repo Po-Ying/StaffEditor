@@ -2,5 +2,5 @@ package staffEditor;
 
 public enum longType {
     quarter,eighth,sixteenth,half,whole,non,
-    quarterR,eighthR,sixteenthR,halfR,WholeR
+    quarterR,eighthR,sixteenthR,halfR,wholeR
 }

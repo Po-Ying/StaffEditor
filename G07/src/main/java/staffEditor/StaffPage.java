@@ -191,28 +191,49 @@ public class StaffPage extends JScrollPane {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cldr = this.getClass().getClassLoader();
-                // 根據長度類型載入對應的圖片
-                switch (parent.parent.toolbar.longtype) {
-                    case quarter:
-                        imageURL = cldr.getResource("images/quarter_note.png");
-                        break;
-                    case eighth:
-                        imageURL = cldr.getResource("images/eighth_note.png");
-                        break;
-                    case sixteenth:
-                        imageURL = cldr.getResource("images/sixteenth_note.png");
-                        break;
-                    case half:
-                        imageURL = cldr.getResource("images/half_note.png");
-                        break;
-                    case whole:
-                        imageURL = cldr.getResource("images/whole.png");
-                        break;
-                    default:
-                        System.out.println("Invalid note type.");
-                        return; // 無效的類型，直接退出
-                }
 
+                // 根據類型載入對應的圖片
+                if(parent.parent.toolbar.longtype != longType.non) {
+                    switch (parent.parent.toolbar.longtype) {
+                        case quarter:
+                            imageURL = cldr.getResource("images/quarter_note.png");
+                            break;
+                        case eighth:
+                            imageURL = cldr.getResource("images/eighth_note.png");
+                            break;
+                        case sixteenth:
+                            imageURL = cldr.getResource("images/sixteenth_note.png");
+                            break;
+                        case half:
+                            imageURL = cldr.getResource("images/half_note.png");
+                            break;
+                        case whole:
+                            imageURL = cldr.getResource("images/whole.png");
+                            break;
+
+
+                        //休止符    
+                        case quarterR:
+                            imageURL = cldr.getResource("images/quarter-note-rest.png");
+                            break;
+                        case eighthR:
+                            imageURL = cldr.getResource("images/eight-note-rest.png");
+                            break;
+                        case sixteenthR:
+                            imageURL = cldr.getResource("images/sixteenth_rest.png");
+                            break;
+                        case halfR:
+                            imageURL = cldr.getResource("images/half-rest.png");
+                            break;
+                        case wholeR:
+                            imageURL = cldr.getResource("images/whole_rest.png");
+                            break;
+                        default:
+                            System.out.println("Invalid note type.");
+                            return; // 無效的類型，直接退出
+                    }
+                
+                }
                 if (imageURL == null) {
                     System.out.println("Failed to load image.");
                     return; // 圖片加載失敗，退出
@@ -223,17 +244,9 @@ public class StaffPage extends JScrollPane {
 
                 // 創建音符標籤
                 note = new JLabel(imageIcon);
-                int xOffset = -18;
-                int yOffset = -18;
-
-                // 根據音符長度調整偏移量
-                if (parent.parent.toolbar.longtype == longType.whole) {
-                    xOffset = +7;
-                    yOffset = -10;
-                } else if (parent.parent.toolbar.longtype == longType.half) {
-                    xOffset = +7;
-                    yOffset = -10;
-                }
+                Point offset = getNoteOffset(parent.parent.toolbar.longtype);
+                int xOffset = offset.x;
+                int yOffset = offset.y;
 
                 // 設定音符位置
                 note.setLocation(
@@ -248,10 +261,41 @@ public class StaffPage extends JScrollPane {
                 panel.add(notes.lastElement());
                 panel.repaint();
             }
-
+            //  傳回偏移量
+            private Point getNoteOffset(longType noteType) {
+                switch (noteType) {
+                    case quarter:
+                        return new Point(-21, -18);
+                    case eighth:
+                        return new Point(-18, -18);
+                    case sixteenth:
+                        return new Point(-17, -23);
+                    case half:
+                        return new Point(-21, -18);
+                    case whole:
+                        return new Point(-21, -18);
+                    
+                    
+                    //休止符
+                    case quarterR:
+                        return new Point(-21, -18);
+                    case eighthR:
+                        return new Point(-18, -18);
+                    case sixteenthR:
+                        return new Point(-17, -23);
+                    case halfR:
+                        return new Point(-21, -18);
+                    case wholeR:
+                        return new Point(-21, -18);
+                    default:
+                        return new Point(0, 0); // 默認偏移量
+                }
+            }
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
+
+    
 
                 // 根據功能啟用或禁用控制元件
                 staffTitle.setEnabled(false);
@@ -275,9 +319,8 @@ public class StaffPage extends JScrollPane {
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
 
-                  back.setVisible(false);
-
-                  forward.setVisible(false);
+                back.setVisible(false);
+                forward.setVisible(false);
             }
         });
 

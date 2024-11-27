@@ -3,6 +3,7 @@ package staffEditor;//cursorMode
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Cursor;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -10,12 +11,14 @@ import javax.swing.JPanel;
 
 public class MouseButton extends IconButton{
 	
-	private JPanel rightPanel;
+	Toolbar parent;
+    private JPanel rightPanel;
 	private JPanel rightRest;
 
 	public MouseButton(Toolbar p, JPanel rightPanel, JPanel rightRest) 
 	{
 		super(p);
+        parent = p;
 		this.rightPanel = rightPanel; 
 		this.rightRest = rightRest;
         imageURL = cldr.getResource("images/direct-selection.png");
@@ -26,9 +29,11 @@ public class MouseButton extends IconButton{
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                parent.inputtype = inputType.Cursor;
                 disableRightButtons();  
             }
         });
+        
 	}
 		
 	private void disableRightButtons() 

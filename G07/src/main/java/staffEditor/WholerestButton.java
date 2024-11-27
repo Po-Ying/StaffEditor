@@ -39,7 +39,7 @@ public class WholerestButton extends ToggleButton {
         for (int i = 0; i < parent.parent.tabbedPane.getTabCount(); i++) {
                 parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
             }
-        parent.longtype = longType.WholeR;
+        parent.longtype = longType.wholeR;
     }
         // 先確認 imageURL 不為 null
         // if (imageURL != null) {

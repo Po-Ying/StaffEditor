@@ -33,6 +33,7 @@ public class QuarterButton extends ToggleButton {
 
     public void doSomething() {
         Toolkit tk = Toolkit.getDefaultToolkit();
+        
         icon = new ImageIcon(imageURL);
         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
         
