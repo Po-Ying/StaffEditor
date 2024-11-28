@@ -34,7 +34,7 @@ public class SaveFileButton extends IconButton {
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
         fileChooser.setAcceptAllFileFilterUsed(false); // 關閉「所有檔案」過濾器
 
-        this.addActionListener(e -> saveFile());
+        this.addActionListener(e -> {saveFile();});
     }
 
     private void saveFile() {

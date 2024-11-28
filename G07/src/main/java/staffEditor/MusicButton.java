@@ -34,6 +34,8 @@ public class MusicButton extends IconButton{
                 enableRightButtons();
                 updateRightPanel();
                 updateBtnColor();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
         

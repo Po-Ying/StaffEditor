@@ -32,7 +32,7 @@ public class TopToolbar extends JPanel {
 
     TopToolbar(Toolbar p) {
         parent = p;
-        this.setBackground(Color.DARK_GRAY);        
+        this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
 
@@ -65,7 +65,7 @@ public class TopToolbar extends JPanel {
         leftPanel.add(ledgerLineBtn);
 
    
-        //JPanel rightPanel = new JPanel();
+
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setBackground(Color.DARK_GRAY);
         wholeBtn = new WholeButton(this.parent);
@@ -97,7 +97,6 @@ public class TopToolbar extends JPanel {
         this.add(leftPanel, BorderLayout.WEST);
         this.add(rightPanel, BorderLayout.EAST);
         
-        //初設按鈕顏色
         for (Component btn : leftPanel.getComponents()) 
 		{
             if (btn instanceof JButton) 
@@ -129,10 +128,9 @@ public class TopToolbar extends JPanel {
             }
         }
         
-        
         this.revalidate();
         this.repaint();
         
     }
- 
+    
 }
