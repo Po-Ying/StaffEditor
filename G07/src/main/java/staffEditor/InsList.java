@@ -1,5 +1,7 @@
 package staffEditor;
 
+import org.jfugue.player.Player;
+import org.jfugue.pattern.Pattern;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -8,11 +10,13 @@ public class InsList extends JPanel {
     InsMenu parent;
     JButton[] instruments;
     String[] instrumentNames = {"鋼琴", "小提琴", "長笛", "薩克斯風", "豎笛"};
-    String[] instrumentMIDIIds = {"pianoMIDI", "violinMIDI", "fluteMIDI", "saxMIDI", "clarinetMIDI"}; 
-    int[] instrumentOctaves = {5, 5, 4, 3, 3}; 
+    String[] instrumentMIDIIds = {"Piano", "Violin", "Flute", "Alto_Sax", "Clarinet"}; 
+    int[] instrumentOctaves = {4, 6, 7, 4, 5}; 
     String[] instrumentIcons = {"images/paino.png", "images/violin.png", "images/flute.png", "images/saxophone.png", "images/clarinet.png"}; // 圖片文件路徑
     JButton selectedButton = null;
-
+    private Player player;
+    
+    
     InsList(InsMenu p) {
         parent = p;
         this.setBackground(new Color(255, 255, 255));//255, 220, 150
@@ -21,7 +25,8 @@ public class InsList extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(Box.createVerticalGlue());
-
+        // 初始化 JFugue 播放器
+        player = new Player();
         instruments = new JButton[instrumentNames.length];
         for (int i = 0; i < instrumentNames.length; i++) {
             JPanel buttonPanel = new JPanel();
@@ -56,8 +61,14 @@ public class InsList extends JPanel {
                     clickedButton.setForeground(new Color(255, 255, 255));
                     selectedButton = clickedButton;
 
+                    // 確認選擇的樂器並使用其八度
+                    String instrumentPattern = getInstrumentPattern(index, instrumentOctaves[index]);
+                    Pattern pattern = new Pattern(instrumentPattern);
                     System.out.println("Selected Instrument: " + instrumentNames[index]);
                     System.out.println("MIDI ID: " + instrumentMIDIIds[index]);
+                    System.out.println("Playing with instrument: " + instrumentPattern);
+
+                    player.play(pattern);  // 播放選擇的樂器音色
                 }
             });
 
@@ -70,5 +81,19 @@ public class InsList extends JPanel {
         }
 
         this.add(Box.createVerticalGlue());
+        
     }
+    
+    private String getInstrumentPattern(int index, int octave) {
+        switch (index) {
+            case 0: return "I[Piano] " + "C" + octave + " D" + octave + " E" + octave; // 鋼琴
+            case 1: return "I[Violin] " + "C" + octave + " D" + octave + " E" + octave; // 小提琴
+            case 2: return "I[Flute] " + "C" + octave + " D" + octave + " E" + octave; // 長笛
+            case 3: return "I[Alto_Sax] " + "C" + octave + " D" + octave + " E" + octave; // 薩克斯風
+            case 4: return "I[Clarinet] " + "C" + octave + " D" + octave + " E" + octave; // 豎笛
+            default: return "I[Piano] " + "C" + octave + " D" + octave + " E" + octave;  // 默認鋼琴
+        }
+    }
+
+
 }
