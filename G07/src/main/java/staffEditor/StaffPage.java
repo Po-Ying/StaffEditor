@@ -202,7 +202,7 @@ public class StaffPage extends JScrollPane {
                             imageURL = cldr.getResource("images/eighth_note.png");
                             break;
                         case sixteenth:
-                            imageURL = cldr.getResource("images/sixteenth_note.png");
+                            imageURL = cldr.getResource("images/sixteenth-note.png");
                             break;
                         case half:
                             imageURL = cldr.getResource("images/half_note.png");
@@ -233,7 +233,7 @@ public class StaffPage extends JScrollPane {
                             return; // 無效的類型，直接退出
                     }
                 
-                }
+                
                 if (imageURL == null) {
                     System.out.println("Failed to load image.");
                     return; // 圖片加載失敗，退出
@@ -261,6 +261,7 @@ public class StaffPage extends JScrollPane {
                 panel.add(notes.lastElement());
                 panel.repaint();
             }
+            }
             //  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
@@ -269,13 +270,13 @@ public class StaffPage extends JScrollPane {
                     case eighth:
                         return new Point(-18, -18);
                     case sixteenth:
-                        return new Point(-17, -23);
+                        return new Point(-21, -18);
                     case half:
                         return new Point(-21, -18);
                     case whole:
                         return new Point(-21, -18);
                     
-                    
+                
                     //休止符
                     case quarterR:
                         return new Point(-21, -18);

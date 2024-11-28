@@ -45,10 +45,10 @@ public class MainWindow extends JFrame {
             }
         });
 
-		System.out.println("tabbedPane: " + (tabbedPane != null));
-		System.out.println("staffPage: " + (staffPage != null));
-		System.out.println("toolbar: " + (toolbar != null));
-		System.out.println("instrumentMenu: " + (instrumentMenu != null));
+		// System.out.println("tabbedPane: " + (tabbedPane != null));
+		// System.out.println("staffPage: " + (staffPage != null));
+		// System.out.println("toolbar: " + (toolbar != null));
+		// System.out.println("instrumentMenu: " + (instrumentMenu != null));
 
     }
 }
