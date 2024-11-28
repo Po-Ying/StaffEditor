@@ -28,8 +28,7 @@ public class MouseButton extends IconButton {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                parent.longtype = longType.non;
-                // parent.inputtype = inputType.Cursor; // 更新輸入模式
+                parent.inputtype = inputType.Cursor; // 更新輸入模式
                 disableRightButtons(); // 停用其他按鈕
                 resetCursor(); // 將滑鼠切換為預設鼠標
             }
