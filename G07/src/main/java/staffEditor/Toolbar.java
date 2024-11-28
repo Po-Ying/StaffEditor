@@ -8,7 +8,7 @@ public class Toolbar extends JPanel {
     MainWindow parent;
     TopToolbar topToolbar;
 	
-//Buttest
+//Buttest 
 	public MainWindow getMainWindow() {
         return parent;}
 //main

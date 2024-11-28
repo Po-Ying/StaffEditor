@@ -247,7 +247,7 @@ public class StaffPage extends JScrollPane {
             return x >= startX && x <= endX && y >= startY && y <= endY;
         }
     }
-//Buttest
+//Buttest 
     public BufferedImage renderToImage() {
         int width = this.getWidth();
         int height = this.getHeight();
