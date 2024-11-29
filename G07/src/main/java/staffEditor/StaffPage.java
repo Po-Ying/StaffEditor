@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Vector;
+import java.util.*;
 import javax.swing.*;
 
 import java.io.IOException;
@@ -18,6 +18,8 @@ public class StaffPage extends JScrollPane {
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
+    private Set<Measure> selectedMeasures; // 儲存已選取的小節
+
     JButton backButton, forwardButton; 
     JComponent panel;
 
@@ -33,6 +35,7 @@ public class StaffPage extends JScrollPane {
         id = count;
         notes = new Vector<>();
         trash_notes = new Vector<>();
+        selectedMeasures = new HashSet<>();
         initPanel();
         setupMeasures();  // 初始化小節
         initLabels();
@@ -107,21 +110,24 @@ public class StaffPage extends JScrollPane {
         }
 
         // 繪製選取框
-        if (selectionMode && selectedMeasure != null) {
-            g.setColor(new Color(255, 255, 0, 128)); // 半透明黃色
-            g.fillRect(
-                selectedMeasure.startX, 
-                selectedMeasure.startY, 
-                selectedMeasure.endX - selectedMeasure.startX, 
-                selectedMeasure.endY - selectedMeasure.startY
-            );
-            g.setColor(Color.RED); // 紅色邊框
-            g.drawRect(
-                selectedMeasure.startX, 
-                selectedMeasure.startY, 
-                selectedMeasure.endX - selectedMeasure.startX, 
-                selectedMeasure.endY - selectedMeasure.startY
-            );
+        if (selectionMode && selectedMeasures != null) {
+        	for (Measure measure : selectedMeasures) {
+        	    g.setColor(new Color(255, 255, 0, 128)); // 半透明黃色背景
+        	    g.fillRect(
+        	        measure.startX,
+        	        measure.startY,
+        	        measure.endX - measure.startX,
+        	        measure.endY - measure.startY
+        	    );
+        	    g.setColor(Color.RED); // 紅色邊框
+        	    g.drawRect(
+        	        measure.startX,
+        	        measure.startY,
+        	        measure.endX - measure.startX,
+        	        measure.endY - measure.startY
+        	    );
+        	}
+
         }
     }
 
@@ -201,11 +207,14 @@ public class StaffPage extends JScrollPane {
                     return; // 選取模式未啟用時，直接返回
                 }
 
-                // 如果選取模式啟用，檢查點擊的小節
                 for (Measure measure : measures) {
                     if (measure.contains(e.getX(), e.getY())) {
-                        selectedMeasure = measure;  // 設置選中小節
-                        repaint();                  // 重繪以顯示選中狀態
+                        if (selectedMeasures.contains(measure)) {
+                            selectedMeasures.remove(measure); // 已選取，則取消
+                        } else {
+                            selectedMeasures.add(measure); // 新增到選取集合
+                        }
+                        repaint(); // 更新畫面
                         break;
                     }
                 }
