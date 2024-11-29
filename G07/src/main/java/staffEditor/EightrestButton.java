@@ -32,6 +32,9 @@ public class EightrestButton extends ToggleButton {
     } 
 
     public void doSomething() {
+        if (parent.inputtype == inputType.Cursor) {
+            return;
+        }
         Toolkit tk = Toolkit.getDefaultToolkit();
         icon = new ImageIcon(imageURL);
         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
@@ -41,23 +44,4 @@ public class EightrestButton extends ToggleButton {
             }
         parent.longtype = longType.eighthR;
     }
-        // 先確認 imageURL 不為 null
-        // if (imageURL != null) {
-        //     if (parent.inputtype == inputType.Note) {
-        //         icon = new ImageIcon(imageURL);
-        //         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
-        //     } else if (parent.inputtype == inputType.rest) {
-        //         icon = new ImageIcon(imageURL);
-        //         imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 28, Image.SCALE_DEFAULT));
-        //     }
-            
-            // 確保 imageIcon 不為 null 再創建游標
-            // if (imageIcon != null) {
-            //     Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "");
-            //     for (int i = 0; i < parent.parent.tabbedPane.getTabCount(); i++) {
-            //         parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
-            //     }
-            //     parent.longtype = longType.quarter;
-            // }
-        //}
 }

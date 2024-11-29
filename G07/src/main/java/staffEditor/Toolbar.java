@@ -14,7 +14,7 @@ public class Toolbar extends JPanel{
 	Toolbar(MainWindow p) {
 	    this.parent = p;
 		longtype = longType.non;
-		inputtype = staffEditor.inputType.Cursor;
+		inputtype = inputType.Cursor;
 
 	    topToolbar = new TopToolbar(this);
 	    this.setLayout(new BorderLayout());

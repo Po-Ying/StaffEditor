@@ -32,6 +32,9 @@ public class SixteenthButton extends ToggleButton {
     } 
 
     public void doSomething() {
+        if (parent.inputtype == inputType.Cursor) {
+            return;
+        }
         parent.longtype = longType.sixteenth;
 
         if (parent.longtype != longType.non){
