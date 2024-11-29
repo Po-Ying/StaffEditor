@@ -242,8 +242,18 @@ public class StaffPage extends JScrollPane {
                     }
 
                     icon = new ImageIcon(imageURL);
-                    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
-
+                    switch (parent.parent.toolbar.longtype) {
+                        case quarter: 
+                        case eighth: 
+                        case sixteenth:
+                        case sixteenthR:
+                        case half:    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));break;
+                        case whole:   imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));break;
+                        case quarterR: 
+                        case halfR:
+                        case wholeR:  imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 30, Image.SCALE_DEFAULT));break;
+                        case eighthR: imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 24, Image.SCALE_DEFAULT));break;
+                    }
                     // 創建音符標籤
                     note = new JLabel(imageIcon);
                     Point offset = getNoteOffset(parent.parent.toolbar.longtype);
@@ -274,8 +284,8 @@ public class StaffPage extends JScrollPane {
                     case whole:
                     
                     //休止符
-                    case quarterR:
-                    case eighthR:
+                    case quarterR:   
+                    case eighthR:    
                     case sixteenthR:
                     case halfR:
                     case wholeR:     return new Point(-21, -18);

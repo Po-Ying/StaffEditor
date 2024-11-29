@@ -37,7 +37,7 @@ public class QuarterrestButton extends ToggleButton {
         }
         Toolkit tk = Toolkit.getDefaultToolkit();
         icon = new ImageIcon(imageURL);
-        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 30, Image.SCALE_DEFAULT));
         Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "");
         for (int i = 0; i < parent.parent.tabbedPane.getTabCount(); i++) {
                 parent.parent.tabbedPane.getComponentAt(i).setCursor(cu);
