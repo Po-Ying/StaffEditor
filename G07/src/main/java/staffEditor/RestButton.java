@@ -1,25 +1,21 @@
 package staffEditor;//restmode
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-public class RestButton extends IconButton{
+public class RestButton extends ToggleButton{
 	
 	private JPanel leftPanel;
 	private JPanel rightRest;
 	private TopToolbar parentTopToolbar;
+    private Toolbar parent;
 
 	public RestButton(Toolbar p, JPanel leftPanel, JPanel rightRest, TopToolbar parentTopToolbar) 
 	{
         super(p);
+        parent = p;
         this.leftPanel = leftPanel; 
         this.rightRest = rightRest;
         this.parentTopToolbar = parentTopToolbar;
@@ -35,6 +31,7 @@ public class RestButton extends IconButton{
             public void mouseClicked(MouseEvent e) {
             	enableRightButtons();
                 updateRightPanel();
+                doSomething();
             }
         });
  
@@ -62,5 +59,18 @@ public class RestButton extends IconButton{
         parentTopToolbar.repaint();
 
 	}
+    public void doSomething(){
+        parentTopToolbar.setLengthEnable(true);
+        if(parentTopToolbar.inputtype != inputType.Note) { //如果不是音符模式
+            // parentTopToolbar.resetlongButtongroup();
+            parentTopToolbar.longtype=longType.non;
+            for(int i=0;i<parentTopToolbar.parent.parent.tabbedPane.getTabCount();i++) {
+                parentTopToolbar.parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+        }
+
+        parent.inputtype = inputType.Note; //切換成音符模式
+    }
 
 }
