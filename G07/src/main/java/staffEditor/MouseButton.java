@@ -7,7 +7,7 @@ import java.awt.Cursor;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class MouseButton extends IconButton {
+public class MouseButton extends ToggleButton {
     
     Toolbar parent;
     private JPanel rightPanel;
@@ -19,18 +19,20 @@ public class MouseButton extends IconButton {
         this.rightPanel = rightPanel; 
         this.rightRest = rightRest;
 
+        parent.inputtype = inputType.Cursor;
+        parent.longtype=longType.non;
+
         // 設置圖標
         imageURL = cldr.getResource("images/direct-selection.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
         this.setToolTipText("滑鼠");
-        
+
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                parent.inputtype = inputType.Cursor; // 更新輸入模式
-                disableRightButtons(); // 停用其他按鈕
-                resetCursor(); // 將滑鼠切換為預設鼠標
+                disableRightButtons();
+                resetCursor();
             }
         });
     }
@@ -50,9 +52,14 @@ public class MouseButton extends IconButton {
 
     // 將滑鼠切換回預設鼠標
     private void resetCursor() {
-        Component root = parent.getRootPane(); // 獲取工具列的根元件
-        if (root != null) {
-            root.setCursor(Cursor.getDefaultCursor()); // 將鼠標切換為系統預設指標
+        System.out.println("clicked!");
+        Cursor cu = new Cursor(Cursor.DEFAULT_CURSOR);
+        for(int i=0;i<parent.parent.tabbedPane.getTabCount();i++) {
+            parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
+        parent.inputtype = inputType.Cursor;
+        parent.longtype=longType.non;
+
+        parent.topToolbar.setLengthEnable(false);
     }
 }

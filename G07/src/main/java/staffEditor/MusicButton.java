@@ -5,15 +5,17 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-public class MusicButton extends IconButton{
+public class MusicButton extends ToggleButton{
 	
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private TopToolbar parentTopToolbar;
+    private Toolbar parent;
 
 	public MusicButton(Toolbar p, JPanel leftPanel, JPanel rightPanel, TopToolbar parentTopToolbar) 
 	{
 		super(p);
+        parent = p;
 		this.leftPanel = leftPanel;
 		this.rightPanel = rightPanel; 
 		this.parentTopToolbar = parentTopToolbar;
@@ -67,7 +69,7 @@ public class MusicButton extends IconButton{
 
         }
 
-        parentTopToolbar.inputtype = inputType.Note; //切換成音符模式
+        parent.inputtype = inputType.Note; //切換成音符模式
     }
 
 }

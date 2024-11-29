@@ -2,204 +2,349 @@ package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.InputStream;
 import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 import javax.swing.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
 
 public class StaffPage extends JScrollPane {
-    private static int count = 0;
-    private final int id;
-    private final TabbedPane parent;
-    private final Vector<JLabel> notes = new Vector<>();
-    private final Vector<JLabel> trashNotes = new Vector<>();
-    private final backButton back;
-    private final forwardButton forward;
-    private final JComponent panel;
-    private final Label staffTitle, authorTitle, instrumentTitle, pageCount;
-    private final Label[] measureLabels;
-    private static final int[] MEASURE_POSITIONS = {370, 600, 830, 1050};
-    private static final String[] MEASURE_TEXTS = {"1", "5", "9", "13", "17", "21", "25", "29", "33", "37"};
+    public TabbedPane parent;
 
+    public JLabel note;
+    public Vector<JLabel> notes = null;
+    public Vector<JLabel> trash_notes = null;
+    //記憶體會在建構子被呼叫時才分配
+    // public final ArrayList<JLabel> notes = new Vector<JLabel>();
+    //在類別載入時就分配記憶體
+    //不推薦
+    
+    backButton back;
+    forwardButton forward;
+    public ClassLoader cldr;
+    public URL imageURL;
+    public ImageIcon icon ,imageIcon;
+    // public String currentNoteType = "Quarter";
+
+    public static int count = 0;
+    public int id;
+
+    // public JButton backButton, forwardButton;
+    public JComponent panel;
+    StaffLabel staffTitle,authorTitle,instrumentTitle,pageCount,measure[];
+
+    String m[]={"1","5","9","13","17","21","25","29","33","37"};
+
+
+    // 构造函数初始化面板
     public StaffPage(TabbedPane p) {
-        this.parent = p;
-        this.id = ++count;
-        this.back = new backButton(this);
-        this.forward = new forwardButton(this);
 
-        panel = createPanel();
-        staffTitle = createLabel("Title", 340, 33, 500, 75, 30, SwingConstants.CENTER);
-        authorTitle = createLabel("author", 750, 120, 300, 30, 17, SwingConstants.RIGHT);
-        instrumentTitle = createLabel("Instrument", 100, 100, 150, 30, 20, SwingConstants.LEFT);
-        pageCount = createLabel("-" + id + "-", 570, 1350, 60, 30, 17, SwingConstants.CENTER);
-        measureLabels = createMeasureLabels();
-
+        parent = p;
+        count++;
+        id = count;
+        back= new backButton(this);
+        forward=new forwardButton(this);
+        notes = new Vector<JLabel>() ;
+        trash_notes = new Vector<JLabel>();
+        
         initPanel();
-        initNavigationButtons();
+        initButtons();
         initMouseListeners();
+        
         this.getVerticalScrollBar().setUnitIncrement(10);
+        
+        Toolkit tk = Toolkit.getDefaultToolkit();
     }
 
-    private JComponent createPanel() {
-        return new JComponent() {
+    // 初始化面板
+    public void initPanel() {
+        panel = new JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
                 drawStaff(g);
             }
         };
-    }
-
-    private Label createLabel(String text, int x, int y, int width, int height, int fontSize, int alignment) {
-        Label label = new Label(text, alignment, this);
-        label.setBounds(x, y, width, height);
-        label.setFont(new Font("標楷體", Font.PLAIN, fontSize));
-        return label;
-    }
-
-    private Label[] createMeasureLabels() {
-        Label[] labels = new Label[10];
-        int offset = 0;
-        for (int i = 0; i < MEASURE_TEXTS.length; i++) {
-            labels[i] = createLabel(MEASURE_TEXTS[i], 95, 135 + offset, 25, 20, 12, SwingConstants.CENTER);
-            offset += 115;
-        }
-        return labels;
-    }
-
-    private void initPanel() {
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
-        panel.setBackground(Color.white);
-
+        this.setViewportView(panel);
+        staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
+        staffTitle.setLocation(340,33);
+        staffTitle.setFont(new Font("標楷體",0,30));
+        staffTitle.setSize(new Dimension(500,75));
         panel.add(staffTitle);
+
+
+        authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
+        authorTitle.setLocation(750,120);
+        authorTitle.setFont(new Font("標楷體",0,17));
+        authorTitle.setSize(new Dimension(300,30));
         panel.add(authorTitle);
+
+        instrumentTitle = new StaffLabel("Instrument",SwingConstants.LEFT,this);
+        instrumentTitle.setLocation(100,100);
+        instrumentTitle.setFont(new Font("標楷體",0,20));
+        instrumentTitle.setSize(new Dimension(150,30));
         panel.add(instrumentTitle);
+
+        pageCount = new StaffLabel("-" + id + "-",SwingConstants.CENTER,this);
+        pageCount.setLocation(570,1350);
+        pageCount.setFont(new Font("標楷體",0,17));
+        pageCount.setSize(new Dimension(60,30));
         panel.add(pageCount);
-        for (Label measure : measureLabels) {
-            panel.add(measure);
+
+        measure = new StaffLabel[10];
+        int g=0;
+        for(int i=0;i<10;i++){
+
+            measure[i] = new StaffLabel(m[i],SwingConstants.CENTER,this);
+            measure[i].setLocation(95,135+ i*10 + g);
+            measure[i].setFont(new Font("標楷體",0,12));
+            measure[i].setSize(new Dimension(25,20));
+            panel.add(measure[i]);
+
+            g+=115;
         }
 
+        this.panel.setBackground(Color.white);
+        this.panel.setPreferredSize(new Dimension(0,1400));
+
+
+
+        this.parent.setVisible(true);
+
         this.setViewportView(panel);
+        back.setLocation(20,20);
+        back.setVisible(false);
+        back.setSize(new Dimension(45,45));
+        panel.add(back);
+
+        forward.setLocation(70,20);
+        forward.setVisible(false);
+        forward.setSize(new Dimension(45,45));
+        panel.add(forward);
     }
 
-    private void initNavigationButtons() {
-        setupButton(back, 20, 20, 45, 45);
-        setupButton(forward, 70, 20, 45, 45);
+    // 绘制五线谱
+    public void drawStaff(Graphics g) {
+        int offset = 0;
+        int[] measurePositions = {370, 600, 830, 1050}; 
+        g.setColor(Color.BLACK);
+
+        // 加载 Bravura 字体，用于低音谱号
+        Font bassClefFont = loadBassClefFont();
+        
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 5; j++) {
+                g.drawLine(100, 155 + j * 10 + offset, 1050, 155 + j * 10 + offset);
+            }
+
+            if (i % 2 == 0) {
+                g.setFont(new Font("Default", Font.PLAIN, 90)); 
+                g.drawString("\uD834\uDD1E", 110, 202 + offset); 
+            } else {
+                if (bassClefFont != null) {
+                    g.setFont(bassClefFont); 
+                }
+                g.drawString("\uD834\uDD22", 125, 175 + offset); 
+            }
+
+            for (int pos : measurePositions) {
+                g.drawLine(pos, 155 + offset, pos, 195 + offset);
+            }
+
+            offset += 125;
+        }
     }
 
-    private void setupButton(JButton button, int x, int y, int width, int height) {
-        button.setBounds(x, y, width, height);
-        button.setVisible(false);
-        panel.add(button);
+    // 加载 Bravura 字体
+    public Font loadBassClefFont() {
+        try (InputStream is = getClass().getResourceAsStream("resources/fonts/Bravura.otf")) {
+            if (is != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(50f);
+            } else {
+                System.out.println("字体文件未找到");
+                return null;
+            }
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    private void initMouseListeners() {
+    // 初始化按钮
+    public void initButtons() {
+        back.setBounds(20, 20, 45, 45);
+        forward.setBounds(70, 20, 45, 45);
+
+        back.setVisible(false);
+        forward.setVisible(false);
+
+        panel.add(back);
+        panel.add(forward);
+    }
+
+    // 初始化鼠标监听器
+    public void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                handleNoteAddition(e.getPoint());
-            }
+                if (parent.parent.toolbar.inputtype == inputType.Cursor) {
+                    return;
+                }
+                cldr = this.getClass().getClassLoader();
 
+                // 根據類型載入對應的圖片
+                // if(parent.inputtype == inputType.Note){
+                    switch (parent.parent.toolbar.longtype) {
+                        case quarter:
+                           imageURL = cldr.getResource("images/quarter_note.png");
+                            break;
+                        case eighth:
+                            imageURL = cldr.getResource("images/eighth_note.png");
+                            break;
+                        case sixteenth:
+                            imageURL = cldr.getResource("images/sixteenth-note.png");
+                            break;
+                        case half:
+                            imageURL = cldr.getResource("images/half_note.png");
+                            break;
+                        case whole:
+                            imageURL = cldr.getResource("images/whole.png");
+                            break;
+
+
+                        //休止符    
+                        case quarterR:
+                            imageURL = cldr.getResource("images/quarter-note-rest.png");
+                            break;
+                        case eighthR:
+                            imageURL = cldr.getResource("images/eight-note-rest.png");
+                            break;
+                        case sixteenthR:
+                            imageURL = cldr.getResource("images/sixteenth_rest.png");
+                            break;
+                        case halfR:
+                            imageURL = cldr.getResource("images/half-rest.png");
+                            break;
+                        case wholeR:
+                            imageURL = cldr.getResource("images/whole_rest.png");
+                            break;
+                        default:
+                            System.out.println("Invalid note type.");
+                            return; // 無效的類型，直接退出
+                    }
+                
+                
+                    if (imageURL == null) {
+                        System.out.println("Failed to load image.");
+                        return; // 圖片加載失敗，退出
+                    }
+
+                    icon = new ImageIcon(imageURL);
+                    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
+
+                    // 創建音符標籤
+                    note = new JLabel(imageIcon);
+                    Point offset = getNoteOffset(parent.parent.toolbar.longtype);
+                    int xOffset = offset.x;
+                    int yOffset = offset.y;
+
+                    // 設定音符位置
+                    note.setLocation(
+                        getMousePosition().x + xOffset,
+                        getMousePosition().y + yOffset + StaffPage.this.getVerticalScrollBar().getValue()
+                    );
+                    note.setVisible(true);
+                    note.setSize(30, 45);
+
+                    // 添加到面板
+                    notes.add(note);
+                    panel.add(notes.lastElement());
+                    panel.repaint();
+                // }
+            }
+            //  傳回偏移量
+            private Point getNoteOffset(longType noteType) {
+                switch (noteType) {
+                    case quarter:
+                        return new Point(-21, -18);
+                    case eighth:
+                        return new Point(-18, -18);
+                    case sixteenth:
+                        return new Point(-21, -18);
+                    case half:
+                        return new Point(-21, -18);
+                    case whole:
+                        return new Point(-21, -18);
+                    
+                
+                    //休止符
+                    case quarterR:
+                        return new Point(-21, -18);
+                    case eighthR:
+                        return new Point(-18, -18);
+                    case sixteenthR:
+                        return new Point(-17, -23);
+                    case halfR:
+                        return new Point(-21, -18);
+                    case wholeR:
+                        return new Point(-21, -18);
+                    default:
+                        return new Point(0, 0); // 默認偏移量
+                }
+            }
             @Override
             public void mouseEntered(MouseEvent e) {
-                toggleUIElements(false);
-                updateNavigationButtonVisibility();
+                super.mouseEntered(e);
+
+    
+
+                // 根據功能啟用或禁用控制元件
+                staffTitle.setEnabled(false);
+                authorTitle.setEnabled(false);
+                instrumentTitle.setEnabled(false);
+                pageCount.setEnabled(false);
+                for (int i = 0; i < 10; i++) {
+                    measure[i].setEnabled(false);
+                }
+
+                if (notes.size() != 0) {
+                    back.setVisible(true);
+                }
+                if (trash_notes.size() != 0) {
+                    forward.setVisible(true);
+                }
             }
+
 
             @Override
             public void mouseExited(MouseEvent e) {
-                toggleUIElements(true);
+                super.mouseExited(e);
+
                 back.setVisible(false);
                 forward.setVisible(false);
             }
         });
 
-        this.addMouseWheelListener(e -> updateNavigationButtonPosition());
+        this.addMouseWheelListener(e -> {
+            int offset = this.getVerticalScrollBar().getValue();
+            back.setLocation(20, 20 + offset);
+            forward.setLocation(70, 20 + offset);
+        });
     }
-
-    private void toggleUIElements(boolean enable) {
-        staffTitle.setEnabled(enable);
-        authorTitle.setEnabled(enable);
-        instrumentTitle.setEnabled(enable);
-        pageCount.setEnabled(enable);
-        for (Label label : measureLabels) {
-            label.setEnabled(enable);
-        }
-    }
-
-    private void updateNavigationButtonVisibility() {
-        back.setVisible(!notes.isEmpty());
-        forward.setVisible(!trashNotes.isEmpty());
-    }
-
-    private void updateNavigationButtonPosition() {
-        int scrollOffset = this.getVerticalScrollBar().getValue();
-        back.setLocation(20, 20 + scrollOffset);
-        forward.setLocation(70, 20 + scrollOffset);
-    }
-
-    private void drawStaff(Graphics g) {
-        int offset = 0;
-        for (int i = 0; i < 10; i++) {
-            drawStaffLines(g, offset);
-            drawClef(g, i, offset);
-            drawMeasureBars(g, offset);
-            offset += 125;
-        }
-    }
-
-    private void drawStaffLines(Graphics g, int offset) {
-        g.setColor(Color.BLACK);
-        for (int j = 0; j < 5; j++) {
-            g.drawLine(100, 155 + j * 10 + offset, 1050, 155 + j * 10 + offset);
-        }
-    }
-
-    private void drawClef(Graphics g, int staffIndex, int offset) {
-        String clefSymbol = (staffIndex % 2 == 0) ? "\uD834\uDD1E" : "\uD834\uDD22";
-        g.setFont(new Font("Default", Font.PLAIN, 90));
-        g.drawString(clefSymbol, (staffIndex % 2 == 0) ? 110 : 125, (staffIndex % 2 == 0) ? 202 + offset : 175 + offset);
-    }
-
-    private void drawMeasureBars(Graphics g, int offset) {
-        for (int pos : MEASURE_POSITIONS) {
-            g.drawLine(pos, 155 + offset, pos, 195 + offset);
-        }
-    }
-
-    private void handleNoteAddition(Point mousePoint) {
-        if (parent.inputType != inputType.Note) return;
-        URL imageURL = loadNoteImageURL();
-        if (imageURL == null) return;
-
-        ImageIcon imageIcon = createScaledIcon(imageURL, 30, 45);
-        JLabel noteLabel = createNoteLabel(imageIcon, mousePoint);
-        notes.add(noteLabel);
-        panel.add(noteLabel);
-        panel.repaint();
-    }
-
-    private URL loadNoteImageURL() {
-        String resourcePath = switch (parent.parent.toolbar.longType) {
-            case quarter -> "images/quarter_note.png";
-            case eighth -> "images/eighth_note.png";
-            case sixteenth -> "images/sixteenth_note.png";
-            case half -> "images/half_note.png";
-            case whole -> "images/whole.png";
-            default -> null;
-        };
-        return resourcePath != null ? getClass().getClassLoader().getResource(resourcePath) : null;
-    }
-
-    private ImageIcon createScaledIcon(URL imageURL, int width, int height) {
-        ImageIcon icon = new ImageIcon(imageURL);
-        return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-    }
-
-    private JLabel createNoteLabel(ImageIcon imageIcon, Point mousePoint) {
-        JLabel label = new JLabel(imageIcon);
-        label.setBounds(mousePoint.x - 20, mousePoint.y - 20 + this.getVerticalScrollBar().getValue(), 30, 45);
-        label.setVisible(true);
-        return label;
-    }
+    // public void printNotes() {
+    //     if (notes.isEmpty()) {
+    //         System.out.println("音符列表為空");
+    //     } else {
+    //         System.out.println("音符列表如下：");
+    //         for (JLabel note : notes) {
+    //             System.out.printf(
+    //                 "音符類型: %s, 座標: (x=%d, y=%d), 哈希值: %d, <q_notes> size = %d%n",
+    //                 note.noteType, note.x, note.y, System.identityHashCode(note), notes.size()
+    //             );
+    //         }
+    //     }
+    // }
 }
