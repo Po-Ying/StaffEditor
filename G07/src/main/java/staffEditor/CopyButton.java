@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CopyButton extends JButton {
-	MainWindow parent;
+    MainWindow parent;
 
-    public CopyButton(MainWindow parent2) {
-        parent = parent2;
+    public CopyButton(MainWindow parent) {
+        this.parent = parent;
 
         // 設定按鈕屬性
         this.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/copy icon.png")));
@@ -21,8 +21,23 @@ public class CopyButton extends JButton {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Copy button clicked");
-                // 複製邏輯：選取範圍，將內容保存至臨時變量
-                // e.g., parent.copySelectedNotes();
+                
+                // 獲取當前的 TabbedPane
+                TabbedPane tabbedPane = parent.getTabbedPane();
+                
+                // 檢查當前的頁面是否為 StaffPage
+                if (tabbedPane.getSelectedComponent() instanceof StaffPage) {
+                    StaffPage staffPage = (StaffPage) tabbedPane.getSelectedComponent();
+
+                    // 調用 StaffPage 的複製邏輯
+                    if (staffPage.copySelectedMeasure()) {
+                        System.out.println("Selected measure copied to clipboard.");
+                    } else {
+                        System.out.println("No measure selected for copying.");
+                    }
+                } else {
+                    System.out.println("Current tab is not a StaffPage.");
+                }
             }
         });
     }

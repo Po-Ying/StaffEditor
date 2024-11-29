@@ -4,9 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,6 +18,7 @@ public class StaffPage extends JScrollPane {
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
     private Set<Measure> selectedMeasures; // 儲存已選取的小節
+    private List<Measure> clipboard; // 暫存區，用於存儲複製的小節
 
     JButton backButton, forwardButton; 
     JComponent panel;
@@ -27,7 +27,6 @@ public class StaffPage extends JScrollPane {
     private boolean selectionMode = false; // 初始化為 false
     private Measure[] measures;
     private Measure selectedMeasure = null;
-    private boolean moduleButtonClicked = false;
 
     StaffPage(TabbedPane p) {
         parent = p;
@@ -36,6 +35,8 @@ public class StaffPage extends JScrollPane {
         notes = new Vector<>();
         trash_notes = new Vector<>();
         selectedMeasures = new HashSet<>();
+        clipboard = new ArrayList<>(); // 初始化暫存區
+        
         initPanel();
         setupMeasures();  // 初始化小節
         initLabels();
@@ -256,4 +257,15 @@ public class StaffPage extends JScrollPane {
             return x >= startX && x <= endX && y >= startY && y <= endY;
         }
     }
+    
+    // 新增 copySelectedMeasure 方法
+    public boolean copySelectedMeasure() {
+        if (selectedMeasure != null) { // 確保有選中的小節
+            clipboard.clear(); // 清空之前的暫存區內容
+            clipboard.add(selectedMeasure); // 將選定的小節存入暫存區
+            return true;
+        }
+        return false; // 沒有選定的小節
+    }
+
 }

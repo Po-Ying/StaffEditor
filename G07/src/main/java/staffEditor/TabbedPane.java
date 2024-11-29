@@ -96,11 +96,15 @@ class CloseTabBtn extends JButton {
         });
     }
 
+ 
+    
     public void doSomething(final Component c) {
         if (this.parent.getTabCount() == 1) {
-            // 當只剩下最後一個標籤時，這裡可以加上特殊處理邏輯（目前註解掉了）
+        	
         }
 
         this.parent.removeTabAt(this.parent.indexOfComponent(c));
     }
+    
+    
 }
