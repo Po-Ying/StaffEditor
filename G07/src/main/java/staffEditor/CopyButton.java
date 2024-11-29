@@ -16,20 +16,20 @@ public class CopyButton extends JButton {
         this.setContentAreaFilled(false);
         this.setBorderPainted(false);
 
-        // 添加按鈕功能
+     // 添加按鈕功能
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Copy button clicked");
-                
+
                 // 獲取當前的 TabbedPane
                 TabbedPane tabbedPane = parent.getTabbedPane();
-                
+
                 // 檢查當前的頁面是否為 StaffPage
                 if (tabbedPane.getSelectedComponent() instanceof StaffPage) {
                     StaffPage staffPage = (StaffPage) tabbedPane.getSelectedComponent();
 
-                    // 調用 StaffPage 的複製邏輯
+                    // 呼叫 StaffPage 的複製邏輯
                     if (staffPage.copySelectedMeasure()) {
                         System.out.println("Selected measure copied to clipboard.");
                     } else {
