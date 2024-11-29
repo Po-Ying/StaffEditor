@@ -196,7 +196,6 @@ public class StaffPage extends JScrollPane {
                 cldr = this.getClass().getClassLoader();
 
                 // 根據類型載入對應的圖片
-                // if(parent.inputtype == inputType.Note){
                     switch (parent.parent.toolbar.longtype) {
                         case quarter:
                            imageURL = cldr.getResource("images/quarter_note.png");
@@ -269,37 +268,23 @@ public class StaffPage extends JScrollPane {
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
                     case quarter:
-                        return new Point(-21, -18);
                     case eighth:
-                        return new Point(-18, -18);
                     case sixteenth:
-                        return new Point(-21, -18);
                     case half:
-                        return new Point(-21, -18);
                     case whole:
-                        return new Point(-21, -18);
                     
-                
                     //休止符
                     case quarterR:
-                        return new Point(-21, -18);
                     case eighthR:
-                        return new Point(-18, -18);
                     case sixteenthR:
-                        return new Point(-17, -23);
                     case halfR:
-                        return new Point(-21, -18);
-                    case wholeR:
-                        return new Point(-21, -18);
-                    default:
-                        return new Point(0, 0); // 默認偏移量
+                    case wholeR:     return new Point(-21, -18);
+                    default:         return new Point(0, 0); // 默認偏移量
                 }
             }
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-
-    
 
                 // 根據功能啟用或禁用控制元件
                 staffTitle.setEnabled(false);
@@ -334,17 +319,4 @@ public class StaffPage extends JScrollPane {
             forward.setLocation(70, 20 + offset);
         });
     }
-    // public void printNotes() {
-    //     if (notes.isEmpty()) {
-    //         System.out.println("音符列表為空");
-    //     } else {
-    //         System.out.println("音符列表如下：");
-    //         for (JLabel note : notes) {
-    //             System.out.printf(
-    //                 "音符類型: %s, 座標: (x=%d, y=%d), 哈希值: %d, <q_notes> size = %d%n",
-    //                 note.noteType, note.x, note.y, System.identityHashCode(note), notes.size()
-    //             );
-    //         }
-    //     }
-    // }
 }
