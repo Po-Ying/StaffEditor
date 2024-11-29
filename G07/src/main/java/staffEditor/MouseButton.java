@@ -52,7 +52,7 @@ public class MouseButton extends ToggleButton {
 
     // 將滑鼠切換回預設鼠標
     private void resetCursor() {
-        System.out.println("clicked!");
+        // System.out.println("clicked!");
         Cursor cu = new Cursor(Cursor.DEFAULT_CURSOR);
         for(int i=0;i<parent.parent.tabbedPane.getTabCount();i++) {
             parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
