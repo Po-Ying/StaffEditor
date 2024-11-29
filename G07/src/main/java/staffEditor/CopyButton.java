@@ -26,25 +26,20 @@ public class CopyButton extends JButton {
                 TabbedPane tabbedPane = parent.getTabbedPane();
 
                 // 檢查當前的頁面是否為 StaffPage
-                if (tabbedPane.getSelectedComponent() instanceof StaffPage) 
-                {
+                if (tabbedPane.getSelectedComponent() instanceof StaffPage) {
                     StaffPage staffPage = (StaffPage) tabbedPane.getSelectedComponent();
 
                     // 呼叫 StaffPage 的複製邏輯
-                    if (staffPage.copySelectedMeasure()) 
-                    {
-                        System.out.println("Selected measure copied to clipboard.");
-                    } 
-                    else 
-                    {
-                        System.out.println("No measure selected for copying.");
+                    if (staffPage.copySelectedMeasure()) {
+                        System.out.println("Selected measures copied to clipboard.");
+                    } else {
+                        System.out.println("No measures selected for copying.");
                     }
-                } 
-                else 
-                {
+                } else {
                     System.out.println("Current tab is not a StaffPage.");
                 }
             }
         });
+
     }
 }

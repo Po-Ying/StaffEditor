@@ -258,22 +258,23 @@ public class StaffPage extends JScrollPane {
     }
     
     public boolean copySelectedMeasure() {
-        // 檢查是否有選取的小節
-        if (selectedMeasure != null) {
-            // 確保 clipboard 已被初始化
-            if (clipboard == null) {
-                clipboard = new ArrayList<>();
-            }
-
-            // 將選中的小節複製到剪貼簿
-            clipboard.clear(); // 清空之前的剪貼簿
-            clipboard.add(selectedMeasure); // 複製當前選中的小節
-            System.out.println("Measure copied: " + selectedMeasure);
-            return true; // 返回成功複製的狀態
+        // 檢查是否有任何選取的小節
+        if (selectedMeasures == null || selectedMeasures.isEmpty()) {
+            System.out.println("No measure selected for copying.");
+            return false;
         }
 
-        System.out.println("No measure selected for copying.");
-        return false; // 沒有選中的小節
+        // 確保 clipboard 已初始化
+        if (clipboard == null) {
+            clipboard = new ArrayList<>();
+        }
+
+        // 將選中的小節複製到剪貼簿
+        clipboard.clear(); // 清空之前的剪貼簿
+        clipboard.addAll(selectedMeasures); // 複製所有選取的小節到剪貼簿
+        System.out.println("Copied " + selectedMeasures.size() + " measure(s) to clipboard.");
+        return true;
     }
+
 
 }
