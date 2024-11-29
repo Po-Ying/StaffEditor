@@ -220,7 +220,6 @@ public class StaffPage extends JScrollPane {
                     }
                 }
             }
-
     	    @Override
     	    public void mouseEntered(MouseEvent e) {
     	        backButton.setVisible(!notes.isEmpty());
@@ -258,14 +257,23 @@ public class StaffPage extends JScrollPane {
         }
     }
     
-    // 新增 copySelectedMeasure 方法
     public boolean copySelectedMeasure() {
-        if (selectedMeasure != null) { // 確保有選中的小節
-            clipboard.clear(); // 清空之前的暫存區內容
-            clipboard.add(selectedMeasure); // 將選定的小節存入暫存區
-            return true;
+        // 檢查是否有選取的小節
+        if (selectedMeasure != null) {
+            // 確保 clipboard 已被初始化
+            if (clipboard == null) {
+                clipboard = new ArrayList<>();
+            }
+
+            // 將選中的小節複製到剪貼簿
+            clipboard.clear(); // 清空之前的剪貼簿
+            clipboard.add(selectedMeasure); // 複製當前選中的小節
+            System.out.println("Measure copied: " + selectedMeasure);
+            return true; // 返回成功複製的狀態
         }
-        return false; // 沒有選定的小節
+
+        System.out.println("No measure selected for copying.");
+        return false; // 沒有選中的小節
     }
 
 }
