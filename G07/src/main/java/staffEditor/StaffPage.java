@@ -26,8 +26,8 @@ public class StaffPage extends JScrollPane {
 
     // 用來記錄是否啟用了選擇模式
     private boolean selectionMode = false; // 初始化為 false
+    private boolean pasteSelectionEnabled = false; // 控制貼上選取是否啟用
     private Measure[] measures;
-    private Measure selectedMeasure = null;
 
     StaffPage(TabbedPane p) {
         parent = p;
@@ -48,9 +48,15 @@ public class StaffPage extends JScrollPane {
     }
 
     public void setSelectionMode(boolean enabled) {
-        this.selectionMode = enabled;  // 更新選擇模式
-        repaint();  // 重新繪製頁面
+        this.selectionMode = enabled;
+        if (!enabled) {
+            selectedCopyMeasures.clear();
+            selectedPasteMeasures.clear();
+        }
+        repaint(); // 更新畫面
+        System.out.println("Selection mode " + (enabled ? "enabled." : "disabled."));
     }
+
 
     // 檢查是否啟用了選擇模式
     public boolean isSelectionMode() {
@@ -238,21 +244,22 @@ public class StaffPage extends JScrollPane {
 
                 for (Measure measure : measures) {
                     if (measure.contains(e.getX(), e.getY())) {
-                        // 根據按下的鍵判斷是複製還是貼上目標
-                        if (SwingUtilities.isLeftMouseButton(e)) {
-                            if (selectedCopyMeasures.contains(measure)) {
-                                selectedCopyMeasures.remove(measure); // 已選取，則取消
-                            } else {
-                                selectedCopyMeasures.add(measure); // 新增到選取集合
-                            }
-                        } else if (SwingUtilities.isRightMouseButton(e)) {
+                        if (pasteSelectionEnabled) {
+                            // 當貼上選取功能啟用時，左鍵選取貼上目標
                             if (selectedPasteMeasures.contains(measure)) {
-                                selectedPasteMeasures.remove(measure); // 已選取，則取消
+                                selectedPasteMeasures.remove(measure);
                             } else {
-                                selectedPasteMeasures.add(measure); // 新增到貼上集合
+                                selectedPasteMeasures.add(measure);
+                            }
+                        } else {
+                            // 當貼上選取功能未啟用時，左鍵選取複製區塊
+                            if (selectedCopyMeasures.contains(measure)) {
+                                selectedCopyMeasures.remove(measure);
+                            } else {
+                                selectedCopyMeasures.add(measure);
                             }
                         }
-                        repaint(); // 更新畫面
+                        repaint();
                         break;
                     }
                 }
@@ -303,33 +310,30 @@ public class StaffPage extends JScrollPane {
     
     
     
-    public boolean copySelectedMeasure() 
-    {
-        // 檢查是否有任何選取的小節
+    public boolean copySelectedMeasure() {
         if (selectedCopyMeasures == null || selectedCopyMeasures.isEmpty()) {
             System.out.println("No measure selected for copying.");
             return false;
         }
 
-        // 確保 clipboard 已初始化
-        if (clipboard == null) {
-            clipboard = new ArrayList<>();
-        }
-
-        // 將選中的小節複製到剪貼簿
         clipboard.clear(); // 清空之前的剪貼簿
-        clipboard.addAll(selectedCopyMeasures); // 複製所有選取的小節到剪貼簿
+        clipboard.addAll(selectedCopyMeasures);
         System.out.println("Copied " + selectedCopyMeasures.size() + " measure(s) to clipboard.");
+        
+        pasteSelectionEnabled = true; // 啟用貼上選取功能
+        selectedCopyMeasures.clear(); // 清除已選取的複製區塊
+        repaint();
         return true;
     }
+
     
     public boolean pasteToSelectedMeasures() {
-        if (clipboard == null || clipboard.isEmpty()) {
+        if (clipboard.isEmpty()) {
             System.out.println("Clipboard is empty. Nothing to paste.");
             return false;
         }
 
-        if (selectedPasteMeasures == null || selectedPasteMeasures.isEmpty()) {
+        if (selectedPasteMeasures.isEmpty()) {
             System.out.println("No target measures selected for pasting.");
             return false;
         }
@@ -354,10 +358,14 @@ public class StaffPage extends JScrollPane {
         }
 
         System.out.println("Pasted to " + selectedPasteMeasures.size() + " target measures.");
+        pasteSelectionEnabled = false; // 禁用貼上選取功能
+        selectedPasteMeasures.clear(); // 清除貼上選取集合
         repaint();
         return true;
     }
 
+
+    
 
 
     // 工具方法：尋找某個小節在 measures 陣列中的索引

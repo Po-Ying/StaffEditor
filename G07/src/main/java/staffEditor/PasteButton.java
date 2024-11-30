@@ -31,9 +31,12 @@ public class PasteButton extends JButton {
 
                     // 呼叫 StaffPage 的貼上邏輯
                     if (staffPage.pasteToSelectedMeasures()) {
-                        System.out.println("Clipboard content pasted into selected measure.");
+                        System.out.println("Clipboard content pasted into selected measures.");
+                        
+                        // 清空貼上選取區域
+                        staffPage.clearSelectedPasteMeasures();
                     } else {
-                        System.out.println("Failed to paste content. No measure selected or clipboard is empty.");
+                        System.out.println("Failed to paste content. No measures selected or clipboard is empty.");
                     }
                 } else {
                     System.out.println("Current tab is not a StaffPage.");

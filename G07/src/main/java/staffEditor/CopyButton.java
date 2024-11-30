@@ -16,7 +16,7 @@ public class CopyButton extends JButton {
         this.setContentAreaFilled(false);
         this.setBorderPainted(false);
 
-     // 添加按鈕功能
+        // 添加按鈕功能
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -32,6 +32,11 @@ public class CopyButton extends JButton {
                     // 呼叫 StaffPage 的複製邏輯
                     if (staffPage.copySelectedMeasure()) {
                         System.out.println("Selected measures copied to clipboard.");
+                        
+                        // 切換到貼上模式
+                        staffPage.clearSelectedPasteMeasures(); // 清空貼上區塊
+                        staffPage.setSelectionMode(true);       // 啟用選取貼上區塊
+                        System.out.println("Switched to paste selection mode.");
                     } else {
                         System.out.println("No measures selected for copying.");
                     }
@@ -40,6 +45,5 @@ public class CopyButton extends JButton {
                 }
             }
         });
-
     }
 }
