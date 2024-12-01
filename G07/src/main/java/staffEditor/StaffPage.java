@@ -2,11 +2,11 @@ package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.*;
 import javax.swing.*;
-import java.awt.Font;
-import java.awt.FontFormatException;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -22,7 +22,9 @@ public class StaffPage extends JScrollPane {
 
     JButton backButton, forwardButton; 
     JComponent panel;
-
+    StaffPage page;
+    String title="曲名" ; 
+    String composer="作曲家" ;
     // 用來記錄是否啟用了選擇模式
     private boolean selectionMode = false; // 初始化為 false
     private Measure[] measures;
@@ -255,5 +257,57 @@ public class StaffPage extends JScrollPane {
         boolean contains(int x, int y) {
             return x >= startX && x <= endX && y >= startY && y <= endY;
         }
+    }
+    public BufferedImage renderToImage() {
+        // 获取有效的面板尺寸
+        int width = this.getWidth();
+        int height = this.getHeight();
+
+        // 如果尺寸无效，使用默认尺寸
+        if (width <= 0 || height <= 0) {
+            width = 1100;
+            height = 1400;
+        }
+
+        // 创建图像
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+
+        // 填充白色背景
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+
+        // 调整字体和大小
+        Font titleFont = new Font("標楷體", Font.PLAIN, 30);
+        Font authorFont = new Font("標楷體", Font.PLAIN, 17);
+        Font instrumentFont = new Font("標楷體", Font.PLAIN, 20);
+
+        // 绘制曲名（居中对齐）
+        g.setColor(Color.BLACK);
+        g.setFont(titleFont);
+        String title = "Title"; // 曲名
+        FontMetrics titleMetrics = g.getFontMetrics(titleFont);
+        int titleX = (width - titleMetrics.stringWidth(title)) / 2;  // 居中
+        int titleY = 70; // 调整曲名的垂直位置，向下移动
+        g.drawString(title, titleX, titleY);
+
+        // 绘制作曲家（右对齐）
+        String author = "author"; // 作曲家
+        g.setFont(authorFont);
+        FontMetrics authorMetrics = g.getFontMetrics(authorFont);
+        int authorX = width - 50 - authorMetrics.stringWidth(author);  // 右对齐
+        g.drawString(author, authorX, 120);
+
+        // 绘制乐器（左对齐）
+        String instrument = "Instrument"; // 乐器
+        g.setFont(instrumentFont);
+        g.drawString(instrument, 100, 100);  // 乐器
+
+        // 绘制五线谱
+        drawStaff(g);
+
+        g.dispose();
+
+        return image;
     }
 }
