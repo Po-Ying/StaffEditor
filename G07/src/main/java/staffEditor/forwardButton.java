@@ -24,7 +24,7 @@ public class forwardButton extends JButton{
         this.setBorder(null);
         this.setFocusable(false);
         cldr = this.getClass().getClassLoader();
-        imageURL   = cldr.getResource("images/return.png");
+        imageURL   = cldr.getResource("images/arrow.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
@@ -47,7 +47,7 @@ public class forwardButton extends JButton{
     }
     public void doSomething(){
 
-        if((parent.parent.parent.toolbar.topToolbar.inputtype==inputType.Cursor)){
+        if((parent.parent.parent.toolbar.inputtype==inputType.Cursor)){
             if(parent.trash_notes.size()>0) {
                 parent.back.setVisible(true);
                 parent.notes.add(parent.trash_notes.lastElement());

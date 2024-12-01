@@ -26,6 +26,7 @@ public class StaffPage extends JScrollPane {
     
     backButton back;
     forwardButton forward;
+
     public ClassLoader cldr;
     public URL imageURL;
     public ImageIcon icon ,imageIcon;
@@ -72,6 +73,8 @@ public class StaffPage extends JScrollPane {
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
         this.setViewportView(panel);
+
+        
         staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
         staffTitle.setLocation(340,33);
         staffTitle.setFont(new Font("標楷體",0,30));
@@ -302,12 +305,14 @@ public class StaffPage extends JScrollPane {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-
+                toggleLabels(parent.parent.toolbar.inputtype == inputType.Cursor);
+                back.setVisible(!notes.isEmpty());
+                forward.setVisible(!trash_notes.isEmpty());
                 // 根據功能啟用或禁用控制元件
-                staffTitle.setEnabled(false);
-                authorTitle.setEnabled(false);
-                instrumentTitle.setEnabled(false);
-                pageCount.setEnabled(false);
+                // staffTitle.setEnabled(false);
+                // authorTitle.setEnabled(false);
+                // instrumentTitle.setEnabled(false);
+                // pageCount.setEnabled(false);
                 for (int i = 0; i < 10; i++) {
                     measure[i].setEnabled(false);
                 }
@@ -335,5 +340,14 @@ public class StaffPage extends JScrollPane {
             back.setLocation(20, 20 + offset);
             forward.setLocation(70, 20 + offset);
         });
+    }
+    private void toggleLabels(boolean enable) {
+        staffTitle.setEnabled(enable);
+        authorTitle.setEnabled(enable);
+        instrumentTitle.setEnabled(enable);
+        pageCount.setEnabled(enable);
+        for (StaffLabel m : measure) {
+            m.setEnabled(enable);
+        }
     }
 }

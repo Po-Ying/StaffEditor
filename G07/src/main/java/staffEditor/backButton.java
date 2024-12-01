@@ -25,7 +25,7 @@ public class backButton extends JButton{
         this.setBorderPainted(false);
         this.setBorder(null);
         cldr = this.getClass().getClassLoader();
-        imageURL  = cldr.getResource("images/return.png");
+        imageURL  = cldr.getResource("images/back.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
@@ -49,7 +49,7 @@ public class backButton extends JButton{
     public void doSomething(){
 
 
-        if((parent.parent.parent.toolbar.topToolbar.inputtype==inputType.Cursor)){
+        if((parent.parent.parent.toolbar.inputtype==inputType.Cursor)){
            if(parent.notes.size()>0) {
              parent.forward.setVisible(true);
              parent.panel.remove(parent.notes.lastElement());
