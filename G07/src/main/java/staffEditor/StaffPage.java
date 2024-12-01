@@ -11,6 +11,9 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 
 public class StaffPage extends JScrollPane {
+    private final int STAFF_X_START = 100;
+    private final int STAFF_Y_START = 128;
+    private final int STAFF_X_END = 1050;
     public TabbedPane parent;
 
     public JLabel note;
@@ -37,7 +40,7 @@ public class StaffPage extends JScrollPane {
 
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
-
+    MouseButton Mouse;
     // 构造函数初始化面板
     public StaffPage(TabbedPane p) {
 
@@ -109,7 +112,6 @@ public class StaffPage extends JScrollPane {
 
         this.panel.setBackground(Color.white);
         this.panel.setPreferredSize(new Dimension(0,1400));
-
 
 
         this.parent.setVisible(true);
@@ -190,11 +192,16 @@ public class StaffPage extends JScrollPane {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (parent.parent.toolbar.inputtype == inputType.Cursor) {
+                int x = e.getX();
+                int y = e.getY() + StaffPage.this.getVerticalScrollBar().getValue();
+                
+                if ((parent.parent.toolbar.inputtype == inputType.Cursor) || (x < STAFF_X_START) || (x > STAFF_X_END) || (y < STAFF_Y_START)) {
                     return;
                 }
+                
+                System.out.println("滑鼠點擊座標: X=" + x + ", Y=" + y);
+                
                 cldr = this.getClass().getClassLoader();
-
                 // 根據類型載入對應的圖片
                     switch (parent.parent.toolbar.longtype) {
                         case quarter:
