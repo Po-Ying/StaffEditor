@@ -27,7 +27,8 @@ public class TopToolbar extends JPanel {
     QuarterrestButton quarterrestBtn;
     EightrestButton eightrestBtn;
     SixteenthrestButton sixteenthrestBtn;
-
+    StaffPage page;
+    TabbedPane tabbedPane;
 
     TopToolbar(Toolbar p) {
         parent = p;
@@ -41,7 +42,9 @@ public class TopToolbar extends JPanel {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(Color.DARK_GRAY);
-        saveFileBtn = new SaveFileButton(this.parent);
+        tabbedPane = new TabbedPane(parent.getMainWindow());
+        page = new StaffPage(tabbedPane);
+        saveFileBtn = new SaveFileButton(this.parent,this.page);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);

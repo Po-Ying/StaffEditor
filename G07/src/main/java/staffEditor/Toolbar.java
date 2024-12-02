@@ -21,6 +21,10 @@ public class Toolbar extends JPanel {
     public ModuleButton getModuleButton() {
         return topToolbar.moduleBtn; // 返回 TopToolbar 中的 moduleBtn 實例
     }
+    public MainWindow getMainWindow() {
+        return parent;}
+
+
 }
 
 
