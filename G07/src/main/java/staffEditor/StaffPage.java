@@ -363,11 +363,6 @@ public class StaffPage extends JScrollPane {
         repaint();
         return true;
     }
-
-
-    
-
-
     // 工具方法：尋找某個小節在 measures 陣列中的索引
     private int findMeasureIndex(Measure measure) {
         for (int i = 0; i < measures.length; i++) {
