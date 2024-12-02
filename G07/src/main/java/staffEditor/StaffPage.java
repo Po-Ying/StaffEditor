@@ -289,6 +289,7 @@ public class StaffPage extends JScrollPane {
 
     private class Measure 
     {
+    	
         int startX, startY, endX, endY;
         boolean isSelected;
 
