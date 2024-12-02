@@ -27,7 +27,7 @@ public class StaffLabel extends JLabel {
 
             public void mouseEntered(MouseEvent e){
 
-                if(parent.parent.parent.toolbar.topToolbar.inputtype==inputType.Cursor) {
+                if(parent.parent.parent.toolbar.inputtype==inputType.Cursor) {
 
                     //msLabel.this.setEnabled(true);
 
@@ -41,13 +41,13 @@ public class StaffLabel extends JLabel {
 
             }
             public void mouseExited(MouseEvent e){
-                if(parent.parent.parent.toolbar.topToolbar.inputtype==inputType.Cursor) {
+                if(parent.parent.parent.toolbar.inputtype==inputType.Cursor) {
                     StaffLabel.this.setBorder(null);
                 }
 
             }
             public void mouseClicked(MouseEvent e) {
-                if (parent.parent.parent.toolbar.topToolbar.inputtype == inputType.Cursor) {
+                if (parent.parent.parent.toolbar.inputtype == inputType.Cursor) {
                     String ren = JOptionPane.showInputDialog("輸入預更改之文字");
 
                     if (ren != null)
