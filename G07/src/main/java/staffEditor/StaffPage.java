@@ -311,3 +311,4 @@ public class StaffPage extends JScrollPane {
         return image;
     }
 }
+
