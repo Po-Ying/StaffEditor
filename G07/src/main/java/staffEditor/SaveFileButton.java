@@ -3,100 +3,138 @@ package staffEditor;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.imageio.ImageIO;
-import java.awt.*;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.kernel.pdf.PdfWriter;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class SaveFileButton extends IconButton {
+    StaffPage page;
     JFileChooser fileChooser;
-    
-    SaveFileButton(Toolbar p) {
-        
+
+    SaveFileButton(Toolbar p, StaffPage page) {
         super(p);
-        
-        imageURL   = cldr.getResource("images/save.png");
+        this.page = page;
+        imageURL = cldr.getResource("images/save.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("儲存檔案");
-        
-        fileChooser = new JFileChooser();
-        
-        
-        fileChooser.setFileFilter(new FileNameExtensionFilter("PNG, JPG, PDF Files", "png", "jpg", "pdf"));
 
-        this.addActionListener(e -> {saveFile();});
+        // 初始化檔案選擇器
+        fileChooser = new JFileChooser();
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG Files", "png"));
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JPG Files", "jpg"));
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+        fileChooser.setAcceptAllFileFilterUsed(false);
+
+        this.addActionListener(e -> {
+            try {
+                saveFile();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "發生未預期的錯誤: " + ex.getMessage(), "錯誤", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     private void saveFile() {
-        int returnValue = fileChooser.showSaveDialog(this);
+        SwingUtilities.invokeLater(() -> {
+            int returnValue = fileChooser.showSaveDialog(this);
 
-        
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            if (returnValue != JFileChooser.APPROVE_OPTION) {
+                JOptionPane.showMessageDialog(this, "保存操作已取消。");
+                return;
+            }
+
             File selectedFile = fileChooser.getSelectedFile();
-            String fileName = selectedFile.getName();
-            String fileExtension = "";
+            String fileExtension = getSelectedFileExtension();
 
-            
-            if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".pdf")) {
-                fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
-            } else {
-                
-                if (fileChooser.getSelectedFile().getPath().endsWith(".png")) {
-                    selectedFile = new File(selectedFile.getAbsolutePath() + ".png");
-                    fileExtension = "png";
-                } else if (fileChooser.getSelectedFile().getPath().endsWith(".jpg")) {
-                    selectedFile = new File(selectedFile.getAbsolutePath() + ".jpg");
-                    fileExtension = "jpg";
-                } else if (fileChooser.getSelectedFile().getPath().endsWith(".pdf")) {
-                    selectedFile = new File(selectedFile.getAbsolutePath() + ".pdf");
-                    fileExtension = "pdf";
-                }
+            if (fileExtension == null) {
+                JOptionPane.showMessageDialog(this, "請選擇有效的檔案格式。", "錯誤", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!selectedFile.getName().toLowerCase().endsWith("." + fileExtension)) {
+                selectedFile = new File(selectedFile.getAbsolutePath().replaceAll("\\.+$", "") + "." + fileExtension);
             }
 
             try {
-                
                 if (fileExtension.equals("png") || fileExtension.equals("jpg")) {
-                    saveImage(selectedFile, fileExtension);  
+                    saveImage(selectedFile, fileExtension);
+                    
+                    JOptionPane.showMessageDialog(this, "成功儲存圖片: " + selectedFile.getAbsolutePath());
                 } else if (fileExtension.equals("pdf")) {
-                    savePDF(selectedFile);  
+                    savePDF(selectedFile);
+                    JOptionPane.showMessageDialog(this, "成功儲存 PDF: " + selectedFile.getAbsolutePath());
                 }
-
-                JOptionPane.showMessageDialog(this, "檔案已儲存: " + selectedFile.getAbsolutePath());
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "儲存檔案時發生錯誤: " + ex.getMessage());
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "儲存檔案時發生錯誤: " + ex.getMessage(), "錯誤", JOptionPane.ERROR_MESSAGE);
             }
+        });
+    }
+
+    private void saveImage(File file, String format) throws IOException {
+        BufferedImage image = page.renderToImage();
+        if (image == null) {
+            JOptionPane.showMessageDialog(this, "圖像渲染失敗，無法保存文件。", "錯誤", JOptionPane.ERROR_MESSAGE);
+            throw new IOException("圖像渲染失敗，圖像為 null。");
+        }
+        try {
+        	ImageIO.write(image, format, file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+  
+       
+    }
+
+    private void savePDF(File file) throws IOException {
+        BufferedImage image = page.renderToImage();
+        if (image == null) {
+            JOptionPane.showMessageDialog(this, "圖像渲染失敗，無法生成文件。", "錯誤", JOptionPane.ERROR_MESSAGE);
+            throw new IOException("圖像渲染失敗，圖像為 null。");
+        }
+
+        byte[] imageDataBytes = writeToByteArray(image, "png");
+
+        try (PdfWriter writer = new PdfWriter(file);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document document = new Document(pdf)) {
+
+            com.itextpdf.io.image.ImageData imageData = ImageDataFactory.create(imageDataBytes);
+            Image pdfImage = new Image(imageData);
+            document.add(pdfImage);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "儲存 PDF 檔案時發生錯誤: " + e.getMessage(), "錯誤", JOptionPane.ERROR_MESSAGE);
+            throw new IOException("PDF 保存失敗", e);
         }
     }
 
-    
-    private void saveImage(File file, String format) throws IOException {
-        
-        BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = image.createGraphics();
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 200, 200);
-        g.setColor(Color.WHITE);
-        g.drawString("Test Image", 50, 100);
-        g.dispose();
-
-        
-        ImageIO.write(image, format, file);
+    private String getSelectedFileExtension() {
+        String description = fileChooser.getFileFilter().getDescription();
+        if (description.contains("PNG")) {
+            return "png";
+        } else if (description.contains("JPG")) {
+            return "jpg";
+        } else if (description.contains("PDF")) {
+            return "pdf";
+        }
+        return null;
     }
-
     
-    private void savePDF(File file) throws IOException {
-        
-        /*com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(file);
-        com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
-        com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdf);
-
-        
-        document.add(new com.itextpdf.layout.element.Paragraph("Test PDF Content"));
-
-        
-        document.close();*/
+    private byte[] writeToByteArray(BufferedImage image, String format) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, format, baos);
+        baos.flush();
+        return baos.toByteArray();
     }
 }
-
