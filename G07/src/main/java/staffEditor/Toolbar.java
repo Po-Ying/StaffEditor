@@ -6,13 +6,12 @@ import javax.swing.*;
 public class Toolbar extends JPanel{
 
 	MainWindow parent;
-	StaffPage staffPage;
 	TopToolbar topToolbar;
 	
 	longType longtype;
 	inputType inputtype;
 	Toolbar(MainWindow p) {
-	    this.parent = p;
+	    parent = p;
 		longtype = longType.non;
 		inputtype = inputType.Cursor;
 
@@ -23,6 +22,18 @@ public class Toolbar extends JPanel{
 	    this.setPreferredSize(new Dimension(0,95));
 
 	}
+	
+    // 返回 ModuleButton 的 getter 方法
+    public ModuleButton getModuleButton() 
+    {
+        return topToolbar.moduleBtn; // 返回 TopToolbar 中的 moduleBtn 實例
+    }
+    
+    public MainWindow getMainWindow() 
+    {
+        return parent;
+    }
+
 	
 
 }

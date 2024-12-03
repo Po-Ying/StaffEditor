@@ -1,21 +1,18 @@
-package staffEditor;//notemode
+package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicButtonUI;
 
-public class MusicButton extends ToggleButton{
+public class MusicButton extends IconButton{
 	
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private TopToolbar parentTopToolbar;
-    private Toolbar parent;
 
 	public MusicButton(Toolbar p, JPanel leftPanel, JPanel rightPanel, TopToolbar parentTopToolbar) 
 	{
 		super(p);
-        parent = p;
 		this.leftPanel = leftPanel;
 		this.rightPanel = rightPanel; 
 		this.parentTopToolbar = parentTopToolbar;
@@ -30,33 +27,12 @@ public class MusicButton extends ToggleButton{
             public void mouseClicked(MouseEvent e) {
                 enableRightButtons();
                 updateRightPanel();
-                doSomething();
+                updateBtnColor();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
         
-	}
-	
-	private void enableRightButtons() 
-	{		
-		for (Component btn : rightPanel.getComponents()) 
-		{
-            if (btn instanceof ToggleButton) 
-            {
-                ((ToggleButton) btn).setEnabled(true);  
-            }
-        }
-    }
-	
-	public void updateRightPanel() 
-	{
-		parentTopToolbar.removeAll();
-		
-		parentTopToolbar.add(leftPanel, BorderLayout.WEST);
-        parentTopToolbar.add(rightPanel, BorderLayout.EAST);
-        
-        parentTopToolbar.revalidate();
-        parentTopToolbar.repaint();
-
 	}
     public void doSomething(){
         parentTopToolbar.setLengthEnable(true);
@@ -71,5 +47,41 @@ public class MusicButton extends ToggleButton{
 
         parent.inputtype = inputType.Note; //切換成音符模式
     }
+
+	private void enableRightButtons() 
+	{		
+		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setEnabled(true);  
+            }
+        }
+    }
+	
+	public void updateRightPanel() 
+	{
+		parentTopToolbar.removeAll();
+
+		parentTopToolbar.add(leftPanel, BorderLayout.WEST);
+        parentTopToolbar.add(rightPanel, BorderLayout.EAST);
+        
+        parentTopToolbar.revalidate();
+        parentTopToolbar.repaint();
+
+	}
+	
+	public void updateBtnColor()
+	{
+		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
+	}
 
 }

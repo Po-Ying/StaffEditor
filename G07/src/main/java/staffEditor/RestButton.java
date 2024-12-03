@@ -1,21 +1,18 @@
-package staffEditor;//restmode
+package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicButtonUI;
 
-public class RestButton extends ToggleButton{
+public class RestButton extends IconButton{
 	
 	private JPanel leftPanel;
 	private JPanel rightRest;
 	private TopToolbar parentTopToolbar;
-    private Toolbar parent;
 
 	public RestButton(Toolbar p, JPanel leftPanel, JPanel rightRest, TopToolbar parentTopToolbar) 
 	{
         super(p);
-        parent = p;
         this.leftPanel = leftPanel; 
         this.rightRest = rightRest;
         this.parentTopToolbar = parentTopToolbar;
@@ -31,7 +28,9 @@ public class RestButton extends ToggleButton{
             public void mouseClicked(MouseEvent e) {
             	enableRightButtons();
                 updateRightPanel();
-                doSomething();
+                updateBtnColor();
+                MainWindow mainWindow = parent.parent;
+                mainWindow.hideCopyPasteButtons();
             }
         });
  
@@ -41,9 +40,9 @@ public class RestButton extends ToggleButton{
 	{		
 		for (Component btn : rightRest.getComponents()) 
 		{
-            if (btn instanceof ToggleButton) 
+            if (btn instanceof JButton) 
             {
-                ((ToggleButton) btn).setEnabled(true);  
+                ((JButton) btn).setEnabled(true);  
             }
         }
     }
@@ -59,18 +58,17 @@ public class RestButton extends ToggleButton{
         parentTopToolbar.repaint();
 
 	}
-    public void doSomething(){
-        parentTopToolbar.setLengthEnable(true);
-        if(parentTopToolbar.inputtype != inputType.Note) { //如果不是音符模式
-            // parentTopToolbar.resetlongButtongroup();
-            parentTopToolbar.longtype=longType.non;
-            for(int i=0;i<parentTopToolbar.parent.parent.tabbedPane.getTabCount();i++) {
-                parentTopToolbar.parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+	public void updateBtnColor()
+	{
+		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
             }
-
         }
-
-        parent.inputtype = inputType.Note; //切換成音符模式
-    }
-
+		
+		this.setBackground(Color.LIGHT_GRAY);
+	}
 }

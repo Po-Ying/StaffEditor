@@ -1,11 +1,9 @@
-package staffEditor;//editbar
+package staffEditor;
 
 import java.awt.*;
 import javax.swing.*;
 
 public class TopToolbar extends JPanel {
-    TabbedPane tabbedPane;
-    StaffPage staffPage;
     Toolbar parent;
 
     SaveFileButton saveFileBtn;
@@ -29,33 +27,30 @@ public class TopToolbar extends JPanel {
     QuarterrestButton quarterrestBtn;
     EightrestButton eightrestBtn;
     SixteenthrestButton sixteenthrestBtn;
-
+    StaffPage page;
+    TabbedPane tabbedPane;
     longType longtype;
     inputType inputtype;
 
 
     TopToolbar(Toolbar p) {
-        this.parent = p;
-        this.parent.inputtype= staffEditor.inputType.Cursor;
-        this.parent.longtype = longType.non;
-
-        this.staffPage = this.parent.parent.staffPage;
+        parent = p;
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
 
         JPanel rightPanel = new JPanel();
         JPanel rightRest = new JPanel();
-        JPanel leftPanel = new JPanel();
-
         
+        JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(Color.DARK_GRAY);
-
-        saveFileBtn = new SaveFileButton(this.parent);
+        tabbedPane = new TabbedPane(parent.getMainWindow());
+        page = new StaffPage(tabbedPane);
+        saveFileBtn = new SaveFileButton(this.parent,this.page);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
-        mouseBtn = new MouseButton(this.parent, rightPanel, rightRest);
+        mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
         musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, this);
         restBtn = new RestButton(this.parent, leftPanel, rightRest, this);
         tupletBtn = new TupletButton(this.parent);
@@ -73,7 +68,7 @@ public class TopToolbar extends JPanel {
         leftPanel.add(ledgerLineBtn);
 
    
-        //JPanel rightPanel = new JPanel();
+
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setBackground(Color.DARK_GRAY);
         wholeBtn = new WholeButton(this.parent);
@@ -105,11 +100,34 @@ public class TopToolbar extends JPanel {
         this.add(leftPanel, BorderLayout.WEST);
         this.add(rightPanel, BorderLayout.EAST);
         
+        for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {  
+                if (btn instanceof MouseButton)
+                {
+                	((JButton) btn).setBackground(Color.LIGHT_GRAY);
+                }
+                else
+                {
+                	((JButton) btn).setBackground(Color.WHITE);
+                }
+            }
+            
+        }
         for (Component btn : rightPanel.getComponents()) 
 		{
-            if (btn instanceof ToggleButton) 
+            if (btn instanceof JButton) 
             {
-                ((ToggleButton) btn).setEnabled(false);  
+                ((JButton) btn).setEnabled(false);  
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+        for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {  
+                ((JButton) btn).setBackground(Color.WHITE);
             }
         }
         
@@ -117,6 +135,7 @@ public class TopToolbar extends JPanel {
         this.repaint();
         
     }
+    
     public void setLengthEnable(boolean b){
         this.halfBtn.setEnabled(b);
         this.quarterBtn.setEnabled(b);
@@ -129,21 +148,6 @@ public class TopToolbar extends JPanel {
         this.restBtn.setEnabled(b);
         this.mouseBtn.setEnabled(b);
     }
-    // public void resetlongButtongroup(){
-    //     length.remove(quarterBtn);
-    //     length.remove(eighthBtn);
-    //     length.remove(sixteenthBtn);
-    //     length.remove(halfBtn);
-    //     length.remove(wholeBtn);
-    //     quarter.setSelected(false);
-    //     eighth.setSelected(false);
-    //     sixteenth.setSelected(false);
-    //     half.setSelected(false);
-    //     whole.setSelected(false);
-    //     length.add(quarterBtn);
-    //     length.add(eighthBtn);
-    //     length.add(sixteenthBtn);
-    //     length.add(halfBtn);
-    //     length.add(wholeBtn);
-    // }
+
+
 }
