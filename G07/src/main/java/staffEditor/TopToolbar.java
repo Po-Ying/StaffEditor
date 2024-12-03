@@ -29,6 +29,9 @@ public class TopToolbar extends JPanel {
     SixteenthrestButton sixteenthrestBtn;
     StaffPage page;
     TabbedPane tabbedPane;
+    longType longtype;
+    inputType inputtype;
+
 
     TopToolbar(Toolbar p) {
         parent = p;
@@ -133,4 +136,18 @@ public class TopToolbar extends JPanel {
         
     }
     
+    public void setLengthEnable(boolean b){
+        this.halfBtn.setEnabled(b);
+        this.quarterBtn.setEnabled(b);
+        this.eighthBtn.setEnabled(b);
+        this.sixteenthBtn.setEnabled(b);
+        this.wholeBtn.setEnabled(b);
+    }
+    public void setTypeEnable(boolean b){
+        this.musicBtn.setEnabled(b);
+        this.restBtn.setEnabled(b);
+        this.mouseBtn.setEnabled(b);
+    }
+
+
 }

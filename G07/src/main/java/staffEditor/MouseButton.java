@@ -1,13 +1,8 @@
 package staffEditor;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class MouseButton extends IconButton{
 	
@@ -33,6 +28,7 @@ public class MouseButton extends IconButton{
                 updateBtnColor();
                 MainWindow mainWindow = parent.parent;
                 mainWindow.hideCopyPasteButtons();
+                resetCursor();
             }
         });
 	}
@@ -55,6 +51,20 @@ public class MouseButton extends IconButton{
             }
         }
     }
+	
+    // 將滑鼠切換回預設鼠標
+    public void resetCursor() {
+        // System.out.println("clicked!");
+        Cursor cu = new Cursor(Cursor.DEFAULT_CURSOR);
+        for(int i=0;i<parent.parent.tabbedPane.getTabCount();i++) {
+            parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+        parent.inputtype = inputType.Cursor;
+        parent.longtype=longType.non;
+
+        parent.topToolbar.setLengthEnable(false);
+    }
+
 	
 	private void updateBtnColor()
 	{
