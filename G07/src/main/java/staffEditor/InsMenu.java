@@ -8,6 +8,7 @@ public class InsMenu extends JPanel {
     InsList instrumentList;
     CopyButton copyBtn;
     PasteButton pasteBtn;
+    PlayButton playBtn;
 
     public InsMenu(MainWindow p) {
         parent = p;
@@ -20,12 +21,16 @@ public class InsMenu extends JPanel {
         // 創建 Copy 和 Paste 按鈕
         copyBtn = new CopyButton(parent); // 假設 CopyButton 類需要傳遞父類
         pasteBtn = new PasteButton(parent); // 假設 PasteButton 類需要傳遞父類
-
+        
+        playBtn = new PlayButton(parent);
+        
         // 設置按鈕大小
         copyBtn.setPreferredSize(new Dimension(50, 50));
         pasteBtn.setPreferredSize(new Dimension(50, 50));
+        playBtn.setPreferredSize(new Dimension(50, 50));
         copyBtn.setVisible(false);
         pasteBtn.setVisible(false);
+        this.add(playBtn);
         // 創建按鈕面板
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // 水平排列
@@ -33,6 +38,7 @@ public class InsMenu extends JPanel {
         buttonPanel.add(copyBtn);
         buttonPanel.add(Box.createHorizontalStrut(10)); // 添加按鈕之間的間距
         buttonPanel.add(pasteBtn);
+        
         
         // 樂器列表
         instrumentList = new InsList(this);
@@ -44,35 +50,4 @@ public class InsMenu extends JPanel {
         this.add(instrumentList);
     }
 }
-
-/*package staffEditor;
-
-import javax.swing.*;
-import java.awt.*;
-
-public class InsMenu extends JPanel {
-    MainWindow parent;
-    InsList instrumentList;
-    CopyButton copyBtn;
-    PasteButton pasteBtn;
-
-    public InsMenu(MainWindow p) {
-        parent = p;
-
-        copyBtn = new CopyButton(parent);
-        pasteBtn = new PasteButton(parent);
-        instrumentList = new InsList(this);
-
-        // 預設按鈕為不可見
-        copyBtn.setVisible(false);
-        pasteBtn.setVisible(false);
-
-        this.setBackground(Color.blue);
-        this.setLayout(new BorderLayout());
-        this.add(instrumentList, BorderLayout.CENTER);
-        this.add(copyBtn, BorderLayout.NORTH); // 可根據需求更改布局
-        this.add(pasteBtn, BorderLayout.SOUTH);
-        this.setPreferredSize(new Dimension(200, 0));
-    }
-}*/
 

@@ -59,5 +59,7 @@ public class MainWindow extends JFrame {
     public TabbedPane getTabbedPane() {
         return tabbedPane;
     }
+    
+
 
 }

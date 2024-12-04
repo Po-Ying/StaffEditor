@@ -66,6 +66,9 @@ public class TabbedPane extends JTabbedPane{
 	    }
 	    super.removeTabAt(index);
 	}
+	
+
+
 }
 
 class CloseTabBtn extends JButton {

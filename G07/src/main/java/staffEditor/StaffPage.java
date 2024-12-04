@@ -87,6 +87,37 @@ public class StaffPage extends JScrollPane {
     public boolean isSelectionMode() {
         return selectionMode;
     }
+    
+    public Vector<JLabel> getNotes() {
+        return notes;
+    }
+    
+    public List<NoteData> getNotesForPlayback() {
+        List<NoteData> musicData = new ArrayList<>();
+
+        // 假設您的音符列表是保存在 notes 中
+        for (JLabel noteLabel : notes) {
+            String pitch = (String) noteLabel.getClientProperty("notePitch");  // 從 clientProperty 中取得音高
+            String duration = (String) noteLabel.getClientProperty("noteDuration");  // 從 clientProperty 中取得時值
+
+            // 取得音符的 X 和 Y 座標
+            int x = noteLabel.getX();  // 音符的 X 座標
+            System.out.println(x);
+            int y = noteLabel.getY();  // 音符的 Y 座標
+            System.out.println(y);
+            if (pitch != null && duration != null) {
+                // 創建音符資料並加入音符播放列表
+                NoteData noteData = new NoteData(pitch, duration, x, y);
+                musicData.add(noteData);
+            }
+        }
+
+        return musicData;
+    }
+
+
+
+
 
     // 初始化面板
     public void initPanel() {
@@ -329,103 +360,141 @@ public class StaffPage extends JScrollPane {
                 System.out.println("滑鼠點擊座標: X=" + x + ", Y=" + y);
                 
                 cldr = this.getClass().getClassLoader();
+                String pitch = "";  // 設定音符的音高
+                String duration = "";  // 設定音符的時值
                 // 根據類型載入對應的圖片
-                    switch (parent.parent.toolbar.longtype) {
-                        case quarter:
-                           imageURL = cldr.getResource("images/quarter_note.png");
-                            break;
-                        case eighth:
-                            imageURL = cldr.getResource("images/eighth_note.png");
-                            break;
-                        case sixteenth:
-                            imageURL = cldr.getResource("images/sixteenth-note.png");
-                            break;
-                        case half:
-                            imageURL = cldr.getResource("images/half_note.png");
-                            break;
-                        case whole:
-                            imageURL = cldr.getResource("images/whole.png");
-                            break;
+                switch (parent.parent.toolbar.longtype) {
+                    case quarter:
+                        pitch = "C4";  // 假設選擇的是C4音符
+                        duration = "quarter";
+                        imageURL = cldr.getResource("images/quarter_note.png");
+                        break;
+                    case eighth:
+                        pitch = "D4";  // 假設選擇的是D4音符
+                        duration = "eighth";
+                        imageURL = cldr.getResource("images/eighth_note.png");
+                        break;
+                    case sixteenth:
+                        pitch = "E4";  // 假設選擇的是E4音符
+                        duration = "sixteenth";
+                        imageURL = cldr.getResource("images/sixteenth-note.png");
+                        break;
+                    case half:
+                        pitch = "E4";  // 假設選擇的是E4音符
+                        duration = "half";
+                        imageURL = cldr.getResource("images/half_note.png");
+                        break;
+                    case whole:
+                        pitch = "E4";  // 假設選擇的是E4音符
+                        duration = "whole";
+                        imageURL = cldr.getResource("images/whole.png");
+                        break;
 
+                    // 休止符
+                    case quarterR:
+                        pitch = "rest";  // 假設選擇的是休止符
+                        duration = "quarterR";
+                        imageURL = cldr.getResource("images/quarter-note-rest.png");
+                        break;
+                    case eighthR:
+                        pitch = "rest";  // 假設選擇的是休止符
+                        duration = "eighthR";
+                        imageURL = cldr.getResource("images/eight-note-rest.png");
+                        break;
+                    case sixteenthR:
+                        pitch = "rest";  // 假設選擇的是休止符
+                        duration = "sixteenthR";
+                        imageURL = cldr.getResource("images/sixteenth_rest.png");
+                        break;
+                    case halfR:
+                        pitch = "rest";  // 假設選擇的是休止符
+                        duration = "halfR";
+                        imageURL = cldr.getResource("images/half-rest.png");
+                        break;
+                    case wholeR:
+                        pitch = "rest";  // 假設選擇的是休止符
+                        duration = "wholeR";
+                        imageURL = cldr.getResource("images/whole_rest.png");
+                        break;
+                    default:
+                        System.out.println("Invalid note type.");
+                        return; // 無效的類型，直接退出
+                }
 
-                        //休止符    
-                        case quarterR:
-                            imageURL = cldr.getResource("images/quarter-note-rest.png");
-                            break;
-                        case eighthR:
-                            imageURL = cldr.getResource("images/eight-note-rest.png");
-                            break;
-                        case sixteenthR:
-                            imageURL = cldr.getResource("images/sixteenth_rest.png");
-                            break;
-                        case halfR:
-                            imageURL = cldr.getResource("images/half-rest.png");
-                            break;
-                        case wholeR:
-                            imageURL = cldr.getResource("images/whole_rest.png");
-                            break;
-                        default:
-                            System.out.println("Invalid note type.");
-                            return; // 無效的類型，直接退出
-                    }
+                // 如果圖片加載失敗，退出
+                if (imageURL == null) {
+                    System.out.println("Failed to load image.");
+                    return;
+                }
+
+                icon = new ImageIcon(imageURL);
+                switch (parent.parent.toolbar.longtype) {
+                    case quarter: 
+                    case eighth: 
+                    case sixteenth:
+                    case sixteenthR:
+                    case half:    
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
+                        break;
+                    case whole:   
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));
+                        break;
+                    case quarterR: 
+                    case halfR:
+                    case wholeR:  
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 30, Image.SCALE_DEFAULT));
+                        break;
+                    case eighthR: 
+                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 24, Image.SCALE_DEFAULT));
+                        break;
+                }
+
+                // 創建音符標籤
+                note = new JLabel(imageIcon);
+                note.putClientProperty("notePitch", pitch);  // 設置音高
+                note.putClientProperty("noteDuration", duration);  // 設置時值
                 
-                
-                    if (imageURL == null) {
-                        System.out.println("Failed to load image.");
-                        return; // 圖片加載失敗，退出
-                    }
+                Point offset = getNoteOffset(parent.parent.toolbar.longtype);
+                int xOffset = offset.x;
+                int yOffset = offset.y;
 
-                    icon = new ImageIcon(imageURL);
-                    switch (parent.parent.toolbar.longtype) {
-                        case quarter: 
-                        case eighth: 
-                        case sixteenth:
-                        case sixteenthR:
-                        case half:    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));break;
-                        case whole:   imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));break;
-                        case quarterR: 
-                        case halfR:
-                        case wholeR:  imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 30, Image.SCALE_DEFAULT));break;
-                        case eighthR: imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 24, Image.SCALE_DEFAULT));break;
-                    }
-                    // 創建音符標籤
-                    note = new JLabel(imageIcon);
-                    Point offset = getNoteOffset(parent.parent.toolbar.longtype);
-                    int xOffset = offset.x;
-                    int yOffset = offset.y;
+                // 設定音符位置，確保符頭在正確的位置
+                note.setLocation(
+                    x + xOffset,
+                    y + yOffset
+                );
+                note.setVisible(true);
+                note.setSize(30, 45);
 
-                    // 設定音符位置
-                    note.setLocation(
-                        getMousePosition().x + xOffset,
-                        getMousePosition().y + yOffset + StaffPage.this.getVerticalScrollBar().getValue()
-                    );
-                    note.setVisible(true);
-                    note.setSize(30, 45);
-
-                    // 添加到面板
-                    notes.add(note);
-                    panel.add(notes.lastElement());
-                    panel.repaint();
-                // }
+                // 添加到面板
+                notes.add(note);
+                panel.add(notes.lastElement());
+                panel.repaint();
             }
+
             //  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
                     case quarter:
                     case eighth:
                     case sixteenth:
+                        // 假設符頭位於音符的中心，因此對y軸進行調整
+                        return new Point(-15, -22); // 假設的偏移值，根據圖片大小調整
                     case half:
                     case whole:
-                    
-                    //休止符
+                        return new Point(-12, -18); // 基於音符的大小調整
+                    // 休止符的偏移
                     case quarterR:   
                     case eighthR:    
                     case sixteenthR:
                     case halfR:
-                    case wholeR:     return new Point(-21, -18);
-                    default:         return new Point(0, 0); // 默認偏移量
+                    case wholeR:     
+                        return new Point(-20, -15); // 根據休止符的大小調整
+                    default:         
+                        return new Point(0, 0); // 默認偏移量
                 }
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
