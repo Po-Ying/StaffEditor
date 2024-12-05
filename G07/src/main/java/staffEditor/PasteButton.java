@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 
 public class PasteButton extends JButton {
     MainWindow parent;
-
+    public MeasureManager measureManager;
+    
     public PasteButton(MainWindow parent) {
         this.parent = parent;
 
@@ -30,7 +31,7 @@ public class PasteButton extends JButton {
                     StaffPage staffPage = (StaffPage) tabbedPane.getSelectedComponent();
 
                     // 呼叫 StaffPage 的貼上邏輯
-                    if (staffPage.pasteToSelectedMeasures()) {
+                    if (measureManager.pasteToSelectedMeasures()) {
                         System.out.println("Clipboard content pasted into selected measures.");
                         
                         // 清空貼上選取區域

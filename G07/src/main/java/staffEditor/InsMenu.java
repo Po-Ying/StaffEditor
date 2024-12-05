@@ -9,17 +9,20 @@ public class InsMenu extends JPanel {
     CopyButton copyBtn;
     PasteButton pasteBtn;
     PlayButton playBtn;
+    MeasureManager measureManager;
 
     public InsMenu(MainWindow p) {
         parent = p;
-
+        
+        JComponent panel = parent.getStaffPage().getPanel();
+        measureManager = new MeasureManager(panel);  // 初始化 MeasureManager
         // 設置主佈局為 BoxLayout 垂直方向
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(new Color(255, 220, 150)); // 背景色與設計一致
         this.setPreferredSize(new Dimension(200, 0));
 
         // 創建 Copy 和 Paste 按鈕
-        copyBtn = new CopyButton(parent); // 假設 CopyButton 類需要傳遞父類
+        copyBtn = new CopyButton(parent,measureManager); // 假設 CopyButton 類需要傳遞父類
         pasteBtn = new PasteButton(parent); // 假設 PasteButton 類需要傳遞父類
         
         playBtn = new PlayButton(parent);

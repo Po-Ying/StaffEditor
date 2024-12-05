@@ -32,7 +32,7 @@ public class StaffPage extends JScrollPane {
     String title="曲名" ; 
     String composer="作曲家" ;
     // 用來記錄是否啟用了選擇模式
-    private boolean selectionMode = false; // 初始化為 false
+    public boolean selectionMode = false; // 初始化為 false
     private boolean pasteSelectionEnabled = false; // 控制貼上選取是否啟用
     private Measure[] measures;
 
@@ -47,7 +47,11 @@ public class StaffPage extends JScrollPane {
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
     MouseButton Mouse;
-
+    
+    
+    public StaffDrawer staffDrawer; // 用於繪製五線譜的物件
+    public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
+    
     public StaffPage(TabbedPane p) {
 
         parent = p;
@@ -55,12 +59,13 @@ public class StaffPage extends JScrollPane {
         id = count;
         back= new backButton(this);
         forward=new forwardButton(this);
+        staffDrawer = new StaffDrawer();
         notes = new Vector<JLabel>() ;
         trash_notes = new Vector<JLabel>();
         selectedCopyMeasures = new HashSet<>();
         clipboard = new ArrayList<>(); // 初始化暫存區
         selectedPasteMeasures = new HashSet<>();
-
+        
         
         initPanel();
         setupMeasures();  // 初始化小節
@@ -124,7 +129,9 @@ public class StaffPage extends JScrollPane {
         panel = new JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
-                drawStaff(g);
+            	super.paintComponent(g);
+                staffDrawer.drawStaff(g, 10, new int[]{400, 630, 860, 1090}, 100, 155, 1090); 
+                staffDrawer.drawSelectionBoxes(g, selectionMode, selectedCopyMeasures, selectedPasteMeasures);
             }
         };
         panel.setLayout(null);
@@ -188,88 +195,7 @@ public class StaffPage extends JScrollPane {
         panel.add(forward);
     }
 
-    // 绘制五线谱
-    public void drawStaff(Graphics g) {
-        int offset = 0;
-        int[] measurePositions = {400, 630, 860, 1090}; // 每行的小節起始 X 座標
-        g.setColor(Color.BLACK);
 
-        Font bassClefFont = null;
-        try (InputStream is = getClass().getResourceAsStream("/fonts/Bravura.otf")) {
-            if (is != null) {
-                bassClefFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(50f);
-            } else {
-                System.out.println("字體檔案未找到");
-            }
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        // 繪製五線譜和小節
-        for (int i = 0; i < 10; i++) { // 假設有 10 行五線譜
-            for (int j = 0; j < 5; j++) {
-                g.drawLine(100, 155 + j * 10 + offset, 1090, 155 + j * 10 + offset);
-            }
-
-            if (i % 2 == 0) {
-                g.setFont(new Font("Default", Font.PLAIN, 90)); 
-                g.drawString("\uD834\uDD1E", 110, 202 + offset); 
-            } else {
-                if (bassClefFont != null) {
-                    g.setFont(bassClefFont); 
-                }
-                g.drawString("\uD834\uDD22", 125, 175 + offset); 
-            }
-
-            for (int pos : measurePositions) {
-                g.drawLine(pos, 155 + offset, pos, 195 + offset);
-            }
-
-            offset += 125;
-        }
-        
-
-        // 繪製複製選取框
-        if (selectionMode && selectedCopyMeasures != null) {
-        	for (Measure measure : selectedCopyMeasures) {
-        	    g.setColor(new Color(255, 255, 0, 128)); // 半透明黃色背景
-        	    g.fillRect(
-        	        measure.startX,
-        	        measure.startY,
-        	        measure.endX - measure.startX,
-        	        measure.endY - measure.startY
-        	    );
-        	    g.setColor(Color.RED); // 紅色邊框
-        	    g.drawRect(
-        	        measure.startX,
-        	        measure.startY,
-        	        measure.endX - measure.startX,
-        	        measure.endY - measure.startY
-        	    );
-        	}
-
-        }
-        //繪製貼上選取框
-        if (selectionMode && selectedPasteMeasures != null) {
-            for (Measure measure : selectedPasteMeasures) {
-                g.setColor(new Color(0, 255, 0, 128)); // 半透明綠色背景
-                g.fillRect(
-                    measure.startX,
-                    measure.startY,
-                    measure.endX - measure.startX,
-                    measure.endY - measure.startY
-                );
-                g.setColor(Color.BLUE); // 藍色邊框
-                g.drawRect(
-                    measure.startX,
-                    measure.startY,
-                    measure.endX - measure.startX,
-                    measure.endY - measure.startY
-                );
-            }
-        }
-    }
-    
     private void setupMeasures() 
     {
         // 定義每個小節的寬度
@@ -544,82 +470,56 @@ public class StaffPage extends JScrollPane {
         }
     }
     
-    private class Measure 
-    {
-    	
-        int startX, startY, endX, endY;
-        boolean isSelected;
-
-        Measure(int startX, int startY, int endX, int endY) {
-            this.startX = startX;
-            this.startY = startY;
-            this.endX = endX;
-            this.endY = endY;
-            this.isSelected = false;
+    // 用來啟動複製選擇的操作
+    public void copySelectedMeasures() {
+        if (!measureManager.copySelectedMeasures()) {
+            System.out.println("複製小節失敗");
         }
-
-        boolean contains(int x, int y) {
-            return x >= startX && x <= endX && y >= startY && y <= endY;
-        }
-        // 複製小節並應用偏移量
-        Measure cloneWithOffset(int deltaX, int deltaY) {
-            return new Measure(startX + deltaX, startY + deltaY, endX + deltaX, endY + deltaY);
-        }
-    }    
-    
-    public boolean copySelectedMeasure() {
-        if (selectedCopyMeasures == null || selectedCopyMeasures.isEmpty()) {
-            System.out.println("No measure selected for copying.");
-            return false;
-        }
-
-        clipboard.clear(); // 清空之前的剪貼簿
-        clipboard.addAll(selectedCopyMeasures);
-        System.out.println("Copied " + selectedCopyMeasures.size() + " measure(s) to clipboard.");
-        
-        pasteSelectionEnabled = true; // 啟用貼上選取功能
-        selectedCopyMeasures.clear(); // 清除已選取的複製區塊
-        repaint();
-        return true;
     }
 
-    
-    public boolean pasteToSelectedMeasures() {
-        if (clipboard.isEmpty()) {
-            System.out.println("Clipboard is empty. Nothing to paste.");
-            return false;
+    // 用來啟動貼上選擇的操作
+    public void pasteToSelectedMeasures() {
+        if (!measureManager.pasteToSelectedMeasures()) {
+            System.out.println("貼上小節失敗");
         }
-
-        if (selectedPasteMeasures.isEmpty()) {
-            System.out.println("No target measures selected for pasting.");
-            return false;
-        }
-
-        if (selectedPasteMeasures.size() != clipboard.size()) {
-            System.out.println("The number of clipboard measures and target measures do not match.");
-            return false;
-        }
-
-        Iterator<Measure> pasteTargets = selectedPasteMeasures.iterator();
-        for (Measure clipboardMeasure : clipboard) {
-            if (pasteTargets.hasNext()) {
-                Measure targetMeasure = pasteTargets.next();
-                int deltaX = targetMeasure.startX - clipboardMeasure.startX;
-                int deltaY = targetMeasure.startY - clipboardMeasure.startY;
-                Measure newMeasure = clipboardMeasure.cloneWithOffset(deltaX, deltaY);
-                int index = findMeasureIndex(targetMeasure);
-                if (index != -1) {
-                    measures[index] = newMeasure;
-                }
-            }
-        }
-
-        System.out.println("Pasted to " + selectedPasteMeasures.size() + " target measures.");
-        pasteSelectionEnabled = false; // 禁用貼上選取功能
-        selectedPasteMeasures.clear(); // 清除貼上選取集合
-        repaint();
-        return true;
     }
+	/*
+	 * public boolean copySelectedMeasure() { if (selectedCopyMeasures == null ||
+	 * selectedCopyMeasures.isEmpty()) {
+	 * System.out.println("No measure selected for copying."); return false; }
+	 * 
+	 * clipboard.clear(); // 清空之前的剪貼簿 clipboard.addAll(selectedCopyMeasures);
+	 * System.out.println("Copied " + selectedCopyMeasures.size() +
+	 * " measure(s) to clipboard.");
+	 * 
+	 * pasteSelectionEnabled = true; // 啟用貼上選取功能 selectedCopyMeasures.clear(); //
+	 * 清除已選取的複製區塊 repaint(); return true; }
+	 * 
+	 * 
+	 * public boolean pasteToSelectedMeasures() { if (clipboard.isEmpty()) {
+	 * System.out.println("Clipboard is empty. Nothing to paste."); return false; }
+	 * 
+	 * if (selectedPasteMeasures.isEmpty()) {
+	 * System.out.println("No target measures selected for pasting."); return false;
+	 * }
+	 * 
+	 * if (selectedPasteMeasures.size() != clipboard.size()) { System.out.
+	 * println("The number of clipboard measures and target measures do not match."
+	 * ); return false; }
+	 * 
+	 * Iterator<Measure> pasteTargets = selectedPasteMeasures.iterator(); for
+	 * (Measure clipboardMeasure : clipboard) { if (pasteTargets.hasNext()) {
+	 * Measure targetMeasure = pasteTargets.next(); int deltaX =
+	 * targetMeasure.startX - clipboardMeasure.startX; int deltaY =
+	 * targetMeasure.startY - clipboardMeasure.startY; Measure newMeasure =
+	 * clipboardMeasure.cloneWithOffset(deltaX, deltaY); int index =
+	 * findMeasureIndex(targetMeasure); if (index != -1) { measures[index] =
+	 * newMeasure; } } }
+	 * 
+	 * System.out.println("Pasted to " + selectedPasteMeasures.size() +
+	 * " target measures."); pasteSelectionEnabled = false; // 禁用貼上選取功能
+	 * selectedPasteMeasures.clear(); // 清除貼上選取集合 repaint(); return true; }
+	 */
     // 工具方法：尋找某個小節在 measures 陣列中的索引
     private int findMeasureIndex(Measure measure) {
         for (int i = 0; i < measures.length; i++) {
@@ -684,7 +584,7 @@ public class StaffPage extends JScrollPane {
         g.drawString(instrument, 100, 100);  // 乐器
 
         // 绘制五线谱
-        drawStaff(g);
+        //drawStaff(g);
 
         g.dispose();
 
