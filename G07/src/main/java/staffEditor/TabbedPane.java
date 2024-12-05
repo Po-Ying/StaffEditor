@@ -7,26 +7,27 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-public class TabbedPane extends JTabbedPane {
-    MainWindow parent;
-    int c = 0; // 計數用
-    int id;
 
+public class TabbedPane extends JTabbedPane{
+	
+	MainWindow parent;
+	int c=0;//計數用
+	int id;
     // 新增一個清單來儲存 StaffPage
     private List<StaffPage> staffPages = new ArrayList<>();
 
-    public TabbedPane(MainWindow p) {
-        parent = p;
+	TabbedPane(MainWindow p)
+	{
+        this.parent = p;
 
         this.setBackground(Color.white);
-        this.setPreferredSize(new Dimension(40, 0));
+        this.setPreferredSize(new Dimension(40,0));
 
         this.parent.setVisible(true);
 
-        // 預設新增一個頁面
-        this.addTab("page", new StaffPage(this));
-    }
-
+        this.addTab("page",new StaffPage(this));
+	}
+	
     @Override
     public void addTab(String title, final Component content) {
         c++;
@@ -48,59 +49,65 @@ public class TabbedPane extends JTabbedPane {
         if (content instanceof StaffPage) {
             staffPages.add((StaffPage) content);
         }
+
     }
 
-    // 提供方法來返回目前所有的 StaffPage
-    public List<StaffPage> getAllStaffPages() {
-        return staffPages;
-    }
-
-    @Override
-    public void removeTabAt(int index) {
-        // 在移除標籤頁時，同步更新 staffPages
-        Component content = getComponentAt(index);
-        if (content instanceof StaffPage) {
-            staffPages.remove(content);
-        }
-        super.removeTabAt(index);
-    }
+	// 提供方法來返回目前所有的 StaffPage
+	public List<StaffPage> getAllStaffPages() {
+	    return staffPages;
+	}
+	
+	@Override
+	public void removeTabAt(int index) {
+	    // 在移除標籤頁時，同步更新 staffPages
+	    Component content = getComponentAt(index);
+	    if (content instanceof StaffPage) {
+	        staffPages.remove(content);
+	    }
+	    super.removeTabAt(index);
+	}
 }
 
 class CloseTabBtn extends JButton {
-    TabbedPane parent;
+TabbedPane parent;
 
-    public CloseTabBtn(TabbedPane p, final Component c) {
-        parent = p;
+public CloseTabBtn(TabbedPane p, final Component c) {
+	    parent = p;
+	
+	    this.setText("x");
+	    this.setPreferredSize(new Dimension(17, 17));
+	    this.setToolTipText("關閉TabbedPage");
+	    this.setUI(new BasicButtonUI());
+	    this.setContentAreaFilled(false);
+	    this.setFocusable(false);
+	    this.setBorder(BorderFactory.createEtchedBorder());
+	    this.setBorderPainted(false);
+	
+	    this.setForeground(new Color(255, 255, 255));
+	    this.setBackground(new Color(255, 0, 0));
+	    this.setOpaque(true);
+	    this.setRolloverEnabled(true);
+	
+	    this.addMouseListener(new MouseAdapter() {
+	        @Override
+	        public void mouseClicked(MouseEvent e) {
+	            int a = JOptionPane.showConfirmDialog(null, "確定關閉頁面？", "警告", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+	            if (a == 0)
+	                doSomething(c);
+	        }
+	    });
+	}
 
-        this.setText("x");
-        this.setPreferredSize(new Dimension(17, 17));
-        this.setToolTipText("關閉TabbedPage");
-        this.setUI(new BasicButtonUI());
-        this.setContentAreaFilled(false);
-        this.setFocusable(false);
-        this.setBorder(BorderFactory.createEtchedBorder());
-        this.setBorderPainted(false);
 
-        this.setForeground(new Color(255, 255, 255));
-        this.setBackground(new Color(255, 0, 0));
-        this.setOpaque(true);
-        this.setRolloverEnabled(true);
 
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int a = JOptionPane.showConfirmDialog(null, "確定關閉頁面？", "警告", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if (a == 0)
-                    doSomething(c);
-            }
-        });
-    }
+	public void doSomething(final Component c) {
+	    if (this.parent.getTabCount() == 1) {
+	    	
+	    }
+	
+	    this.parent.removeTabAt(this.parent.indexOfComponent(c));
+	}
 
-    public void doSomething(final Component c) {
-        if (this.parent.getTabCount() == 1) {
-            // 當只剩下最後一個標籤時，這裡可以加上特殊處理邏輯（目前註解掉了）
-        }
 
-        this.parent.removeTabAt(this.parent.indexOfComponent(c));
-    }
 }
+

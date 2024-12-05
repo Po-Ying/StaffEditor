@@ -55,5 +55,9 @@ public class MainWindow extends JFrame {
     public List<StaffPage> getAllStaffPages() {
         return tabbedPane.getAllStaffPages();
     }
+    
+    public TabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
 
 }

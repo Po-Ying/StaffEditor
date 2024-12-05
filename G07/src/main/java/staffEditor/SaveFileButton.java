@@ -138,4 +138,3 @@ public class SaveFileButton extends IconButton {
         return baos.toByteArray();
     }
 }
-

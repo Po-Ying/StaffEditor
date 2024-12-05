@@ -1,14 +1,8 @@
 package staffEditor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class MusicButton extends IconButton{
 	
@@ -40,7 +34,20 @@ public class MusicButton extends IconButton{
         });
         
 	}
-	
+    public void doSomething(){
+        parentTopToolbar.setLengthEnable(true);
+        if(parentTopToolbar.inputtype != inputType.Note) { //如果不是音符模式
+            // parentTopToolbar.resetlongButtongroup();
+            parentTopToolbar.longtype=longType.non;
+            for(int i=0;i<parentTopToolbar.parent.parent.tabbedPane.getTabCount();i++) {
+                parentTopToolbar.parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+        }
+
+        parent.inputtype = inputType.Note; //切換成音符模式
+    }
+
 	private void enableRightButtons() 
 	{		
 		for (Component btn : rightPanel.getComponents()) 
