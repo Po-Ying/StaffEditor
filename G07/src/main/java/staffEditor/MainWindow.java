@@ -19,9 +19,9 @@ public class MainWindow extends JFrame {
 
         this.setSize(size);
         toolbar = new Toolbar(this);
-        instrumentMenu = new InsMenu(this);
+        
         tabbedPane = new TabbedPane(this);
-
+        instrumentMenu = new InsMenu(this);
         this.setLayout(new BorderLayout());
 
         this.add(toolbar, BorderLayout.NORTH);

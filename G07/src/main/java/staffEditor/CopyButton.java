@@ -32,7 +32,7 @@ public class CopyButton extends JButton {
                     StaffPage staffPage = (StaffPage) tabbedPane.getSelectedComponent();
 
                     // 呼叫 StaffPage 的複製邏輯
-                    if (measureManager.copySelectedMeasures()) {
+                    if (staffPage.copySelectedMeasures()) {
                         System.out.println("Selected measures copied to clipboard.");
                         
                         // 切換到貼上模式

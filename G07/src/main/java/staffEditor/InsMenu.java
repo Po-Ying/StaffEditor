@@ -14,8 +14,14 @@ public class InsMenu extends JPanel {
     public InsMenu(MainWindow p) {
         parent = p;
         
-        JComponent panel = parent.getStaffPage().getPanel();
-        measureManager = new MeasureManager(panel);  // 初始化 MeasureManager
+        // 嘗試從 TabbedPane 中獲取當前選中的 StaffPage
+        StaffPage currentStaffPage = parent.getTabbedPane().getSelectedStaffPage();
+        if (currentStaffPage != null) {
+            JComponent panel = currentStaffPage.getPanel(); // 假設 StaffPage 有 getPanel 方法
+            //measureManager = new MeasureManager(panel);     // 初始化 MeasureManager
+        } else {
+            System.out.println("No StaffPage is currently selected.");
+        }
         // 設置主佈局為 BoxLayout 垂直方向
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(new Color(255, 220, 150)); // 背景色與設計一致

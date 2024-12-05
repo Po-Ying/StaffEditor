@@ -22,6 +22,8 @@ public class StaffPage extends JScrollPane {
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
+    public StaffDrawer staffDrawer; // 用於繪製五線譜的物件
+    public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
     private Set<Measure> selectedCopyMeasures; // 儲存已選取的小節
     private List<Measure> clipboard; // 暫存區，用於存儲複製的小節
     private Set<Measure> selectedPasteMeasures; // 儲存貼上目標的小節
@@ -49,31 +51,28 @@ public class StaffPage extends JScrollPane {
     MouseButton Mouse;
     
     
-    public StaffDrawer staffDrawer; // 用於繪製五線譜的物件
-    public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
+
     
     public StaffPage(TabbedPane p) {
-
         parent = p;
         count++;
         id = count;
-        back= new backButton(this);
-        forward=new forwardButton(this);
+        back = new backButton(this);
+        forward = new forwardButton(this);
         staffDrawer = new StaffDrawer();
-        notes = new Vector<JLabel>() ;
-        trash_notes = new Vector<JLabel>();
+        notes = new Vector<>();
+        trash_notes = new Vector<>();
         selectedCopyMeasures = new HashSet<>();
-        clipboard = new ArrayList<>(); // 初始化暫存區
+        clipboard = new ArrayList<>();
         selectedPasteMeasures = new HashSet<>();
-        
         
         initPanel();
         setupMeasures();  // 初始化小節
+        measureManager = new MeasureManager(panel, measures); // 初始化 MeasureManager
         initButtons();
         initMouseListeners();
         
         this.getVerticalScrollBar().setUnitIncrement(10);
-        
         Toolkit tk = Toolkit.getDefaultToolkit();
     }
     
@@ -250,25 +249,10 @@ public class StaffPage extends JScrollPane {
                     System.out.println("選取模式未啟用，無法選取小節。");
                     return; // 選取模式未啟用時，直接返回
                 }
-
                 for (Measure measure : measures) {
                     if (measure.contains(e.getX(), e.getY())) {
-                        if (pasteSelectionEnabled) {
-                            // 當貼上選取功能啟用時，左鍵選取貼上目標
-                            if (selectedPasteMeasures.contains(measure)) {
-                                selectedPasteMeasures.remove(measure);
-                            } else {
-                                selectedPasteMeasures.add(measure);
-                            }
-                        } else {
-                            // 當貼上選取功能未啟用時，左鍵選取複製區塊
-                            if (selectedCopyMeasures.contains(measure)) {
-                                selectedCopyMeasures.remove(measure);
-                            } else {
-                                selectedCopyMeasures.add(measure);
-                            }
-                        }
-                        repaint();
+                        boolean isCopyMode = !pasteSelectionEnabled; // 根據模式切換
+                        measureManager.toggleMeasureSelection(measure, isCopyMode);
                         break;
                     }
                 }
@@ -471,10 +455,12 @@ public class StaffPage extends JScrollPane {
     }
     
     // 用來啟動複製選擇的操作
-    public void copySelectedMeasures() {
+    public boolean copySelectedMeasures() {
         if (!measureManager.copySelectedMeasures()) {
             System.out.println("複製小節失敗");
+            return false;
         }
+        return true;
     }
 
     // 用來啟動貼上選擇的操作
@@ -521,14 +507,7 @@ public class StaffPage extends JScrollPane {
 	 * selectedPasteMeasures.clear(); // 清除貼上選取集合 repaint(); return true; }
 	 */
     // 工具方法：尋找某個小節在 measures 陣列中的索引
-    private int findMeasureIndex(Measure measure) {
-        for (int i = 0; i < measures.length; i++) {
-            if (measures[i] == measure) {
-                return i;
-            }
-        }
-        return -1;
-    }
+
 
     // 清除當前的選取小節
     public void clearSelectedPasteMeasures() {
@@ -590,5 +569,9 @@ public class StaffPage extends JScrollPane {
 
         return image;
     }
-
+    
+    public JComponent getPanel()
+    {
+    	return panel;
+    }
 }
