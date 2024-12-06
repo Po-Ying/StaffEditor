@@ -13,12 +13,13 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 
 public class StaffPage extends JScrollPane {
+	TabbedPane parent; 
+	
     private final int STAFF_X_START = 100;
     private final int STAFF_Y_START = 128;
     private final int STAFF_X_END = 1050;
-    TabbedPane parent; 
-    static int count = 0;
-    int id;
+    private static int count = -2;
+    private int id = 1;
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
@@ -70,6 +71,7 @@ public class StaffPage extends JScrollPane {
         this.getVerticalScrollBar().setUnitIncrement(10);
         
         Toolkit tk = Toolkit.getDefaultToolkit();
+        System.out.print("New StaffPage\n");
     }
     
     public void setSelectionMode(boolean enabled) {

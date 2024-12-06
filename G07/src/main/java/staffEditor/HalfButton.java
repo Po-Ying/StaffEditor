@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class HalfButton extends IconButton{
+public class HalfButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
 
