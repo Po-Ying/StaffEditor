@@ -18,7 +18,6 @@ public class StaffPage extends JScrollPane {
     private final int STAFF_X_END = 1050;
     static int count = -2;
     int id=1;
->>>>>>> G07/src/main/java/staffEditor/StaffPage.java
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
@@ -127,12 +126,21 @@ public class StaffPage extends JScrollPane {
         this.setViewportView(panel);
 
         
-        staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
-        staffTitle.setLocation(340,33);
-        staffTitle.setFont(new Font("標楷體",0,30));
-        staffTitle.setSize(new Dimension(500,75));
-        panel.add(staffTitle);
-
+        if(id==1)
+	    {
+	        staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
+	        staffTitle.setLocation(340,33);
+	        staffTitle.setFont(new Font("標楷體",0,30));
+	        staffTitle.setSize(new Dimension(500,75));
+	        panel.add(staffTitle);
+        }
+        else
+        {
+	        staffTitle = new StaffLabel("",SwingConstants.CENTER,this);
+	        staffTitle.setLocation(340,33);
+	        staffTitle.setFont(new Font("標楷體",0,30));
+	        panel.add(staffTitle);
+        }
 
         authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
         authorTitle.setLocation(750,120);
