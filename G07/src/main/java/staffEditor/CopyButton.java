@@ -6,9 +6,11 @@ import java.awt.event.ActionListener;
 
 public class CopyButton extends JButton {
     MainWindow parent;
-
-    public CopyButton(MainWindow parent) {
+    public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
+    
+    public CopyButton(MainWindow parent, MeasureManager measureManager) {
         this.parent = parent;
+        this.measureManager = measureManager;  // 在這裡初始化 measureManager
 
         // 設定按鈕屬性
         this.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/copy icon.png")));
@@ -30,7 +32,7 @@ public class CopyButton extends JButton {
                     StaffPage staffPage = (StaffPage) tabbedPane.getSelectedComponent();
 
                     // 呼叫 StaffPage 的複製邏輯
-                    if (staffPage.copySelectedMeasure()) {
+                    if (staffPage.copySelectedMeasures()) {
                         System.out.println("Selected measures copied to clipboard.");
                         
                         // 切換到貼上模式
@@ -46,4 +48,5 @@ public class CopyButton extends JButton {
             }
         });
     }
+
 }

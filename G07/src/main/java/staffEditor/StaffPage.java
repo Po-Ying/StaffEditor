@@ -18,6 +18,7 @@ public class StaffPage extends JScrollPane {
     private final int STAFF_X_END = 1050;
     static int count = -2;
     int id=1;
+>>>>>>> G07/src/main/java/staffEditor/StaffPage.java
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
