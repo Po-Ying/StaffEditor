@@ -11,12 +11,14 @@ import javax.swing.*;
 
 
 public class StaffPage extends JScrollPane {
+	TabbedPane parent; 
+	
     private final int STAFF_X_START = 100;
-    private final int STAFF_Y_START = 120;
-    private final int STAFF_X_END = 1090;
-    TabbedPane parent; 
-    static int count = 0;
-    int id;
+    private final int STAFF_Y_START = 128;
+    private final int STAFF_X_END = 1050;
+    static int count = -2;
+    int id=1;
+>>>>>>> G07/src/main/java/staffEditor/StaffPage.java
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
