@@ -45,7 +45,7 @@ public class WholeButton extends IconButton{
 	        return;
 	    }
 	    icon = new ImageIcon(imageURL);
-	    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
+	    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));
 	    // 創建自定義鼠標
 	    Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "Quarter Note Cursor");
 	    parent.longtype = longType.whole;

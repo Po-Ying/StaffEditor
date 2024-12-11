@@ -13,12 +13,13 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 
 public class StaffPage extends JScrollPane {
+	TabbedPane parent; 
+	
     private final int STAFF_X_START = 100;
     private final int STAFF_Y_START = 128;
     private final int STAFF_X_END = 1050;
-    TabbedPane parent; 
-    static int count = 0;
-    int id;
+    private static int count = -2;
+    private int id = 1;
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
@@ -70,6 +71,7 @@ public class StaffPage extends JScrollPane {
         this.getVerticalScrollBar().setUnitIncrement(10);
         
         Toolkit tk = Toolkit.getDefaultToolkit();
+        System.out.print("New StaffPage\n");
     }
     
     public void setSelectionMode(boolean enabled) {
@@ -100,25 +102,23 @@ public class StaffPage extends JScrollPane {
         panel.setPreferredSize(new Dimension(0, 1400));
         this.setViewportView(panel);
 
-        
-        staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
-        staffTitle.setLocation(340,33);
-        staffTitle.setFont(new Font("標楷體",0,30));
-        staffTitle.setSize(new Dimension(500,75));
-        panel.add(staffTitle);
-
+	    staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
+	    staffTitle.setLocation(340,33);
+	    staffTitle.setFont(new Font("標楷體",0,30));
+	    staffTitle.setSize(new Dimension(500,75));
+	    if(id == 1) panel.add(staffTitle);
 
         authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
         authorTitle.setLocation(750,120);
         authorTitle.setFont(new Font("標楷體",0,17));
         authorTitle.setSize(new Dimension(300,30));
-        panel.add(authorTitle);
+        if(id == 1) panel.add(authorTitle);
 
         instrumentTitle = new StaffLabel("Instrument",SwingConstants.LEFT,this);
         instrumentTitle.setLocation(100,100);
         instrumentTitle.setFont(new Font("標楷體",0,20));
         instrumentTitle.setSize(new Dimension(150,30));
-        panel.add(instrumentTitle);
+        if(id == 1) panel.add(instrumentTitle);
 
         pageCount = new StaffLabel("-" + id + "-",SwingConstants.CENTER,this);
         pageCount.setLocation(570,1350);
