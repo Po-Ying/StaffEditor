@@ -29,7 +29,7 @@ public class InsMenu extends JPanel {
 
         // 創建 Copy 和 Paste 按鈕
         copyBtn = new CopyButton(parent,measureManager); // 假設 CopyButton 類需要傳遞父類
-        pasteBtn = new PasteButton(parent); // 假設 PasteButton 類需要傳遞父類
+        pasteBtn = new PasteButton(parent,measureManager); // 假設 PasteButton 類需要傳遞父類
         
         playBtn = new PlayButton(parent);
         

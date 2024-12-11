@@ -7,15 +7,13 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.awt.Font;
-import java.awt.FontFormatException;
+
+
 
 public class StaffPage extends JScrollPane {
     private final int STAFF_X_START = 100;
-    private final int STAFF_Y_START = 128;
-    private final int STAFF_X_END = 1050;
+    private final int STAFF_Y_START = 120;
+    private final int STAFF_X_END = 1090;
     TabbedPane parent; 
     static int count = 0;
     int id;
@@ -25,7 +23,6 @@ public class StaffPage extends JScrollPane {
     public StaffDrawer staffDrawer; // 用於繪製五線譜的物件
     public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
     private Set<Measure> selectedCopyMeasures; // 儲存已選取的小節
-    private List<Measure> clipboard; // 暫存區，用於存儲複製的小節
     private Set<Measure> selectedPasteMeasures; // 儲存貼上目標的小節
 
     JButton backButton, forwardButton; 
@@ -35,7 +32,7 @@ public class StaffPage extends JScrollPane {
     String composer="作曲家" ;
     // 用來記錄是否啟用了選擇模式
     public boolean selectionMode = false; // 初始化為 false
-    private boolean pasteSelectionEnabled = false; // 控制貼上選取是否啟用
+
     private Measure[] measures;
 
     
@@ -48,11 +45,7 @@ public class StaffPage extends JScrollPane {
 
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
-    MouseButton Mouse;
-    
-    
-
-    
+    MouseButton Mouse;   
     public StaffPage(TabbedPane p) {
         parent = p;
         count++;
@@ -63,7 +56,7 @@ public class StaffPage extends JScrollPane {
         notes = new Vector<>();
         trash_notes = new Vector<>();
         selectedCopyMeasures = new HashSet<>();
-        clipboard = new ArrayList<>();
+        new ArrayList<>();
         selectedPasteMeasures = new HashSet<>();
         
         initPanel();
@@ -73,7 +66,7 @@ public class StaffPage extends JScrollPane {
         initMouseListeners();
         
         this.getVerticalScrollBar().setUnitIncrement(10);
-        Toolkit tk = Toolkit.getDefaultToolkit();
+
     }
     
     public void setSelectionMode(boolean enabled) {
@@ -85,8 +78,6 @@ public class StaffPage extends JScrollPane {
         repaint(); // 更新畫面
         System.out.println("Selection mode " + (enabled ? "enabled." : "disabled."));
     }
-
-
     // 檢查是否啟用了選擇模式
     public boolean isSelectionMode() {
         return selectionMode;
@@ -119,10 +110,6 @@ public class StaffPage extends JScrollPane {
         return musicData;
     }
 
-
-
-
-
     // 初始化面板
     public void initPanel() {
         panel = new JComponent() {
@@ -130,7 +117,7 @@ public class StaffPage extends JScrollPane {
             protected void paintComponent(Graphics g) {
             	super.paintComponent(g);
                 staffDrawer.drawStaff(g, 10, new int[]{400, 630, 860, 1090}, 100, 155, 1090); 
-                staffDrawer.drawSelectionBoxes(g, selectionMode, selectedCopyMeasures, selectedPasteMeasures);
+                staffDrawer.drawSelectionBoxes(g, selectionMode, measureManager.getSelectedCopyMeasures(), measureManager.getSelectedPasteMeasures());
             }
         };
         panel.setLayout(null);
@@ -175,14 +162,11 @@ public class StaffPage extends JScrollPane {
 
             g+=115;
         }
-
         this.panel.setBackground(Color.white);
         this.panel.setPreferredSize(new Dimension(0,1400));
-
-
         this.parent.setVisible(true);
-
         this.setViewportView(panel);
+        
         back.setLocation(20,20);
         back.setVisible(false);
         back.setSize(new Dimension(45,45));
@@ -191,9 +175,9 @@ public class StaffPage extends JScrollPane {
         forward.setLocation(70,20);
         forward.setVisible(false);
         forward.setSize(new Dimension(45,45));
+        
         panel.add(forward);
     }
-
 
     private void setupMeasures() 
     {
@@ -225,6 +209,28 @@ public class StaffPage extends JScrollPane {
         }
     }
 
+    private String getPitchFromYCoordinate(int y) {
+        // 基準位置，假設 "F5" 的 Y 座標是 155
+        int baseY = 140;
+        int step = 5;  // 每 5 單位對應一個音符的間隔
+
+        // 音符的對應（從 F5 開始向下推）
+        String[] notes = {"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};
+
+        // 計算相對的偏移量
+        int offset = (y - baseY) / step;
+
+        // 如果偏移量超出範圍，進行限制
+        if (offset < 0 || offset >= notes.length) {
+            System.out.println("超出範圍");
+            return null;  // 或者返回一個預設值，如 "F5"
+        }
+
+        // 返回對應的音符
+        String pitch = notes[offset];
+        System.out.println("y=" + y + " -> pitch: " + pitch);
+        return pitch;
+    }
 
 
     // 初始化按钮
@@ -246,13 +252,12 @@ public class StaffPage extends JScrollPane {
             public void mousePressed(MouseEvent e) {
                 // 檢查選取模式是否啟用
                 if (!selectionMode) {
-                    System.out.println("選取模式未啟用，無法選取小節。");
+                    //System.out.println("選取模式未啟用，無法選取小節。");
                     return; // 選取模式未啟用時，直接返回
                 }
                 for (Measure measure : measures) {
                     if (measure.contains(e.getX(), e.getY())) {
-                        boolean isCopyMode = !pasteSelectionEnabled; // 根據模式切換
-                        measureManager.toggleMeasureSelection(measure, isCopyMode);
+                        measureManager.toggleMeasureSelection(measure);
                         break;
                     }
                 }
@@ -262,73 +267,66 @@ public class StaffPage extends JScrollPane {
             public void mouseClicked(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY() + StaffPage.this.getVerticalScrollBar().getValue();
-                
+
                 if ((parent.parent.toolbar.inputtype == inputType.Cursor) || (x < STAFF_X_START) || (x > STAFF_X_END) || (y < STAFF_Y_START)) {
                     return;
                 }
-                
+
                 System.out.println("滑鼠點擊座標: X=" + x + ", Y=" + y);
-                
+
                 cldr = this.getClass().getClassLoader();
-                String pitch = "";  // 設定音符的音高
+                String pitch = getPitchFromYCoordinate(y);  // 根據 y 座標獲取音高
                 String duration = "";  // 設定音符的時值
                 // 根據類型載入對應的圖片
                 switch (parent.parent.toolbar.longtype) {
                     case quarter:
-                        pitch = "C4";  // 假設選擇的是C4音符
                         duration = "quarter";
                         imageURL = cldr.getResource("images/quarter_note.png");
                         break;
                     case eighth:
-                        pitch = "D4";  // 假設選擇的是D4音符
                         duration = "eighth";
                         imageURL = cldr.getResource("images/eighth_note.png");
                         break;
                     case sixteenth:
-                        pitch = "E4";  // 假設選擇的是E4音符
                         duration = "sixteenth";
                         imageURL = cldr.getResource("images/sixteenth-note.png");
                         break;
                     case half:
-                        pitch = "E4";  // 假設選擇的是E4音符
                         duration = "half";
                         imageURL = cldr.getResource("images/half_note.png");
                         break;
                     case whole:
-                        pitch = "E4";  // 假設選擇的是E4音符
                         duration = "whole";
                         imageURL = cldr.getResource("images/whole.png");
                         break;
-
-                    // 休止符
                     case quarterR:
-                        pitch = "rest";  // 假設選擇的是休止符
+                        pitch = "rest";  // 休止符
                         duration = "quarterR";
                         imageURL = cldr.getResource("images/quarter-note-rest.png");
                         break;
                     case eighthR:
-                        pitch = "rest";  // 假設選擇的是休止符
+                        pitch = "rest";
                         duration = "eighthR";
                         imageURL = cldr.getResource("images/eight-note-rest.png");
                         break;
                     case sixteenthR:
-                        pitch = "rest";  // 假設選擇的是休止符
+                        pitch = "rest";
                         duration = "sixteenthR";
                         imageURL = cldr.getResource("images/sixteenth_rest.png");
                         break;
                     case halfR:
-                        pitch = "rest";  // 假設選擇的是休止符
+                        pitch = "rest";
                         duration = "halfR";
                         imageURL = cldr.getResource("images/half-rest.png");
                         break;
                     case wholeR:
-                        pitch = "rest";  // 假設選擇的是休止符
+                        pitch = "rest";
                         duration = "wholeR";
                         imageURL = cldr.getResource("images/whole_rest.png");
                         break;
                     default:
                         System.out.println("Invalid note type.");
-                        return; // 無效的類型，直接退出
+                        return; // 無效的類型，退出
                 }
 
                 // 如果圖片加載失敗，退出
@@ -337,50 +335,31 @@ public class StaffPage extends JScrollPane {
                     return;
                 }
 
+                // 創建音符圖標
                 icon = new ImageIcon(imageURL);
-                switch (parent.parent.toolbar.longtype) {
-                    case quarter: 
-                    case eighth: 
-                    case sixteenth:
-                    case sixteenthR:
-                    case half:    
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));
-                        break;
-                    case whole:   
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));
-                        break;
-                    case quarterR: 
-                    case halfR:
-                    case wholeR:  
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 30, Image.SCALE_DEFAULT));
-                        break;
-                    case eighthR: 
-                        imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 24, Image.SCALE_DEFAULT));
-                        break;
-                }
+                ImageIcon imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
 
                 // 創建音符標籤
                 note = new JLabel(imageIcon);
                 note.putClientProperty("notePitch", pitch);  // 設置音高
                 note.putClientProperty("noteDuration", duration);  // 設置時值
-                
+
+                // 設定偏移量以調整符頭位置
                 Point offset = getNoteOffset(parent.parent.toolbar.longtype);
                 int xOffset = offset.x;
                 int yOffset = offset.y;
 
-                // 設定音符位置，確保符頭在正確的位置
-                note.setLocation(
-                    x + xOffset,
-                    y + yOffset
-                );
+                // 設定音符位置
+                note.setLocation(x + xOffset, y + yOffset);
                 note.setVisible(true);
-                note.setSize(30, 45);
+                note.setSize(30, 40);
 
                 // 添加到面板
                 notes.add(note);
                 panel.add(notes.lastElement());
                 panel.repaint();
             }
+
 
             //  傳回偏移量
             private Point getNoteOffset(longType noteType) {
@@ -462,53 +441,14 @@ public class StaffPage extends JScrollPane {
         }
         return true;
     }
-
     // 用來啟動貼上選擇的操作
-    public void pasteToSelectedMeasures() {
+    public boolean pasteToSelectedMeasures() {
         if (!measureManager.pasteToSelectedMeasures()) {
             System.out.println("貼上小節失敗");
+            return false;
         }
+        return true;
     }
-	/*
-	 * public boolean copySelectedMeasure() { if (selectedCopyMeasures == null ||
-	 * selectedCopyMeasures.isEmpty()) {
-	 * System.out.println("No measure selected for copying."); return false; }
-	 * 
-	 * clipboard.clear(); // 清空之前的剪貼簿 clipboard.addAll(selectedCopyMeasures);
-	 * System.out.println("Copied " + selectedCopyMeasures.size() +
-	 * " measure(s) to clipboard.");
-	 * 
-	 * pasteSelectionEnabled = true; // 啟用貼上選取功能 selectedCopyMeasures.clear(); //
-	 * 清除已選取的複製區塊 repaint(); return true; }
-	 * 
-	 * 
-	 * public boolean pasteToSelectedMeasures() { if (clipboard.isEmpty()) {
-	 * System.out.println("Clipboard is empty. Nothing to paste."); return false; }
-	 * 
-	 * if (selectedPasteMeasures.isEmpty()) {
-	 * System.out.println("No target measures selected for pasting."); return false;
-	 * }
-	 * 
-	 * if (selectedPasteMeasures.size() != clipboard.size()) { System.out.
-	 * println("The number of clipboard measures and target measures do not match."
-	 * ); return false; }
-	 * 
-	 * Iterator<Measure> pasteTargets = selectedPasteMeasures.iterator(); for
-	 * (Measure clipboardMeasure : clipboard) { if (pasteTargets.hasNext()) {
-	 * Measure targetMeasure = pasteTargets.next(); int deltaX =
-	 * targetMeasure.startX - clipboardMeasure.startX; int deltaY =
-	 * targetMeasure.startY - clipboardMeasure.startY; Measure newMeasure =
-	 * clipboardMeasure.cloneWithOffset(deltaX, deltaY); int index =
-	 * findMeasureIndex(targetMeasure); if (index != -1) { measures[index] =
-	 * newMeasure; } } }
-	 * 
-	 * System.out.println("Pasted to " + selectedPasteMeasures.size() +
-	 * " target measures."); pasteSelectionEnabled = false; // 禁用貼上選取功能
-	 * selectedPasteMeasures.clear(); // 清除貼上選取集合 repaint(); return true; }
-	 */
-    // 工具方法：尋找某個小節在 measures 陣列中的索引
-
-
     // 清除當前的選取小節
     public void clearSelectedPasteMeasures() {
         if (selectedPasteMeasures != null) {
