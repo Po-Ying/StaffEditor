@@ -306,6 +306,10 @@ public class StaffPage extends JScrollPane {
                 String duration = "";  // 設定音符的時值
                 // 根據類型載入對應的圖片
                 switch (parent.parent.toolbar.longtype) {
+                	case line:
+                		pitch = "rest";
+                		imageURL = cldr.getResource("images/minus.png");
+                		break;
                     case quarter:
                         duration = "quarter";
                         imageURL = cldr.getResource("images/quarter_note.png");
