@@ -4,8 +4,6 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-/*import staffEditor.StaffPage.Measure;*/
-
 public class StaffDrawer 
 {
     private Font bassClefFont; // 低音譜號字體
@@ -42,7 +40,7 @@ public class StaffDrawer
     {
         int offset = 0;
         g.setColor(Color.BLACK);
-
+        
         // 繪製五線譜和小節
         for (int i = 0; i < staffLines; i++) 
         {

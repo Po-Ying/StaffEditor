@@ -36,6 +36,22 @@ public class RestButton extends IconButton{
  
 	}
 	
+    public void doSomething(){
+        parentTopToolbar.setLengthEnable(true);
+        if(parentTopToolbar.inputtype != inputType.rest) { //如果不是音符模式
+            // parentTopToolbar.resetlongButtongroup();
+            parentTopToolbar.longtype=longType.non;
+            for(int i=0;i<parentTopToolbar.parent.parent.tabbedPane.getTabCount();i++) {
+                parentTopToolbar.parent.parent.tabbedPane.getComponentAt(i).setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+        }
+
+        parent.inputtype = inputType.rest; //切換成音符模式
+        ModuleButton mud=parent.getModuleButton();
+        mud.selectionModeActive = false;
+    }
+	
 	private void enableRightButtons() 
 	{		
 		for (Component btn : rightRest.getComponents()) 
