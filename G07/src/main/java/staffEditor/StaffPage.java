@@ -399,7 +399,8 @@ public class StaffPage extends JScrollPane {
             //  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
-                    case quarter:
+                	case line:
+                	case quarter:
                     case eighth:
                     case sixteenth:
                     case half:
