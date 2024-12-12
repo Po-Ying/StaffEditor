@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 
 public class ModuleButton extends IconButton {
     Toolbar parentToolbar;
+    
     private boolean selectionModeActive = false; // 用於追蹤選取模式的狀態
-
     public ModuleButton(Toolbar p) {
         super(p);
         parentToolbar = p;

@@ -20,23 +20,24 @@ public class StaffPage extends JScrollPane {
     private final int STAFF_X_END = 1050;
     private static int count = -2;
     private int id = 1;
+    
     JLabel note;
     Vector<JLabel> notes;
     Vector<JLabel> trash_notes;
+    
     private Set<Measure> selectedCopyMeasures; // 儲存已選取的小節
     private List<Measure> clipboard; // 暫存區，用於存儲複製的小節
     private Set<Measure> selectedPasteMeasures; // 儲存貼上目標的小節
 
-    JButton backButton, forwardButton; 
+    JButton backButton, forwardButton;
     JComponent panel;
     StaffPage page;
     String title="曲名" ; 
-    String composer="作曲家" ;
-    // 用來記錄是否啟用了選擇模式
+    String composer="作曲家" ;    // 用來記錄是否啟用了選擇模式
+    
     private boolean selectionMode = false; // 初始化為 false
     private boolean pasteSelectionEnabled = false; // 控制貼上選取是否啟用
     private Measure[] measures;
-
     
     backButton back;
     forwardButton forward;
@@ -56,10 +57,10 @@ public class StaffPage extends JScrollPane {
         id = count;
         back= new backButton(this);
         forward=new forwardButton(this);
-        notes = new Vector<JLabel>() ;
+        notes = new Vector<JLabel>();
         trash_notes = new Vector<JLabel>();
         selectedCopyMeasures = new HashSet<>();
-        clipboard = new ArrayList<>(); // 初始化暫存區
+        clipboard = new ArrayList<>();  // 初始化暫存區
         selectedPasteMeasures = new HashSet<>();
 
         

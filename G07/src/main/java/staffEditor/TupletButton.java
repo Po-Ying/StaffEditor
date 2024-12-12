@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
-public class TupletButton extends IconButton{	
+public class TupletButton extends IconButton{
 	
 	TupletButton(Toolbar p)
 	{

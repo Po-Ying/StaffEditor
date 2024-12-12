@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
-public class LedgerLineButton extends IconButton{
+public class LedgerLineButton extends IconButton {
 	LedgerLineButton(Toolbar p)
 	{
 		super(p);

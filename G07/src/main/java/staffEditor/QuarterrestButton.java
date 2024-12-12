@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
-
 public class QuarterrestButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
