@@ -35,8 +35,6 @@ public class StaffPage extends JScrollPane {
     public boolean selectionMode = false; // 初始化為 false
 
     private Measure[] measures;
-
-    
     backButton back;
     forwardButton forward;
     public ClassLoader cldr;
@@ -141,7 +139,7 @@ public class StaffPage extends JScrollPane {
 	        staffTitle.setFont(new Font("標楷體",0,30));
 	        panel.add(staffTitle);
         }
-
+        
         authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
         authorTitle.setLocation(750,120);
         authorTitle.setFont(new Font("標楷體",0,17));
@@ -220,27 +218,44 @@ public class StaffPage extends JScrollPane {
     }
 
     private String getPitchFromYCoordinate(int y) {
-        // 基準位置，假設 "F5" 的 Y 座標是 155
-        int baseY = 140;
-        int step = 5;  // 每 5 單位對應一個音符的間隔
+        // 每行五線譜的基準參數
+        int startY = 155;  // 第一行五線譜起始 Y 座標
+        int offsetPerLine = 125;  // 每行五線譜的垂直偏移量
+        int lineSpacing = 5;  // 每個音符間的像素間隔
 
-        // 音符的對應（從 F5 開始向下推）
-        String[] notes = {"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};
+        // 每行五線譜對應的固定音符（從高到低）
+        String[] pitches = {"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};
 
-        // 計算相對的偏移量
-        int offset = (y - baseY) / step;
+        // 計算屬於哪一行五線譜
+        int lineIndex = (y - startY) / offsetPerLine;
 
-        // 如果偏移量超出範圍，進行限制
-        if (offset < 0 || offset >= notes.length) {
+        // 檢查是否在五線譜範圍內（10 行五線譜）
+        if (lineIndex < 0 || lineIndex >= 10) {
             System.out.println("超出範圍");
-            return null;  // 或者返回一個預設值，如 "F5"
+            return null;
         }
 
-        // 返回對應的音符
-        String pitch = notes[offset];
+        // 該行五線譜的基準 Y 值
+        int baseY = startY + lineIndex * offsetPerLine;
+
+        // 計算相對於該行的 Y 偏移
+        int relativeY = y - baseY;
+
+        // 計算音符的索引
+        int noteIndex = relativeY / lineSpacing;
+
+        // 檢查音符索引範圍
+        if (noteIndex < 0 || noteIndex >= pitches.length) {
+            System.out.println("音符索引超出範圍");
+            return null;
+        }
+
+        // 返回對應音符
+        String pitch = pitches[noteIndex];
         System.out.println("y=" + y + " -> pitch: " + pitch);
         return pitch;
     }
+
 
 
     // 初始化按钮
@@ -276,13 +291,14 @@ public class StaffPage extends JScrollPane {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int x = e.getX();
-                int y = e.getY() + StaffPage.this.getVerticalScrollBar().getValue();
+                int y = e.getY(); //+ StaffPage.this.getVerticalScrollBar().getValue();
 
+
+                System.out.println("滑鼠點擊座標: X=" + x + ", Y=" + y);
+                
                 if ((parent.parent.toolbar.inputtype == inputType.Cursor) || (x < STAFF_X_START) || (x > STAFF_X_END) || (y < STAFF_Y_START)) {
                     return;
                 }
-
-                System.out.println("滑鼠點擊座標: X=" + x + ", Y=" + y);
 
                 cldr = this.getClass().getClassLoader();
                 String pitch = getPitchFromYCoordinate(y);  // 根據 y 座標獲取音高
@@ -378,7 +394,7 @@ public class StaffPage extends JScrollPane {
                     case eighth:
                     case sixteenth:
                         // 假設符頭位於音符的中心，因此對y軸進行調整
-                        return new Point(-15, -22); // 假設的偏移值，根據圖片大小調整
+                        return new Point(-16, -33); // 假設的偏移值，根據圖片大小調整
                     case half:
                     case whole:
                         return new Point(-12, -18); // 基於音符的大小調整

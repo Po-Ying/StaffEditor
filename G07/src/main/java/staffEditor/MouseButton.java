@@ -32,6 +32,7 @@ public class MouseButton extends IconButton{
             }
         });
 	}
+	
 		
 	private void disableRightButtons() 
 	{		
@@ -63,6 +64,8 @@ public class MouseButton extends IconButton{
         parent.longtype=longType.non;
 
         parent.topToolbar.setLengthEnable(false);
+        ModuleButton mud=parent.getModuleButton();
+        mud.selectionModeActive = false;
     }
 
 	
