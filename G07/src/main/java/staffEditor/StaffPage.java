@@ -291,7 +291,7 @@ public class StaffPage extends JScrollPane {
             public void mousePressed(MouseEvent e) {
                 // 檢查選取模式是否啟用
                 if (!selectionMode) {
-                    System.out.println("選取模式未啟用，無法選取小節。");
+//                    System.out.println("選取模式未啟用，無法選取小節。");
                     return; // 選取模式未啟用時，直接返回
                 }
 
@@ -365,6 +365,10 @@ public class StaffPage extends JScrollPane {
                         case wholeR:
                             imageURL = cldr.getResource("images/whole_rest.png");
                             break;
+                        //加線
+                        case line:
+                        	imageURL = cldr.getResource("images/minus.png");
+                            break;
                         default:
                             System.out.println("Invalid note type.");
                             return; // 無效的類型，直接退出
@@ -383,6 +387,7 @@ public class StaffPage extends JScrollPane {
                         case sixteenth:
                         case sixteenthR:
                         case half:    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 45, Image.SCALE_DEFAULT));break;
+                        case line: 
                         case whole:   imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));break;
                         case quarterR: 
                         case halfR:
@@ -412,6 +417,7 @@ public class StaffPage extends JScrollPane {
             //  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
+                	case line:      return new Point(-26,-30);
                     case quarter:
                     case eighth:
                     case sixteenth:

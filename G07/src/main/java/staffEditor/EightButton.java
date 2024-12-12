@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class EightButton extends IconButton{
+public class EightButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
 
