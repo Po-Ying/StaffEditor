@@ -15,7 +15,7 @@ public class InsList extends JPanel {
     String[] instrumentIcons = {"images/paino.png", "images/violin.png", "images/flute.png", "images/saxophone.png", "images/clarinet.png"}; // 圖片文件路徑
     JButton selectedButton = null;
     private Player player;
-    
+    private int selectedIndex = -1; // 新增，用於記錄目前選擇的按鈕索引
     
     InsList(InsMenu p) {
         parent = p;
@@ -60,9 +60,10 @@ public class InsList extends JPanel {
                     clickedButton.setBackground(new Color(168, 168, 168));
                     clickedButton.setForeground(new Color(255, 255, 255));
                     selectedButton = clickedButton;
+                    selectedIndex = index;
 
                     // 確認選擇的樂器並使用其八度
-                    String instrumentPattern = getInstrumentPattern(index, instrumentOctaves[index]);
+                    String instrumentPattern = setInstrumentPattern(index, instrumentOctaves[index]);
                     Pattern pattern = new Pattern(instrumentPattern);
                     System.out.println("Selected Instrument: " + instrumentNames[index]);
                     System.out.println("MIDI ID: " + instrumentMIDIIds[index]);
@@ -84,14 +85,21 @@ public class InsList extends JPanel {
         
     }
     
-    private String getInstrumentPattern(int index, int octave) {
+    public String getSelectedInstrumentPattern() {
+        if (selectedIndex >= 0) {
+            return setInstrumentPattern(selectedIndex, instrumentOctaves[selectedIndex]);
+        }
+        return "I[Piano] "; // 默認值
+    }
+
+    public String setInstrumentPattern(int index, int octave) {
         switch (index) {
-            case 0: return "I[Piano] " + "C" + octave + " D" + octave + " E" + octave; // 鋼琴
-            case 1: return "I[Violin] " + "C" + octave + " D" + octave + " E" + octave; // 小提琴
-            case 2: return "I[Flute] " + "C" + octave + " D" + octave + " E" + octave; // 長笛
-            case 3: return "I[Alto_Sax] " + "C" + octave + " D" + octave + " E" + octave; // 薩克斯風
-            case 4: return "I[Clarinet] " + "C" + octave + " D" + octave + " E" + octave; // 豎笛
-            default: return "I[Piano] " + "C" + octave + " D" + octave + " E" + octave;  // 默認鋼琴
+            case 0: return "I[Piano] "; // 鋼琴
+            case 1: return "I[Violin] "; // 小提琴
+            case 2: return "I[Flute] "; // 長笛
+            case 3: return "I[Alto_Sax] "; // 薩克斯風
+            case 4: return "I[Clarinet] "; // 豎笛
+            default: return "I[Piano] ";  // 默認鋼琴
         }
     }
 

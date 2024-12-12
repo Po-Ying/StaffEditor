@@ -14,7 +14,7 @@ public class StaffPage extends JScrollPane {
 	TabbedPane parent; 
 	
     private final int STAFF_X_START = 100;
-    private final int STAFF_Y_START = 128;
+    private final int STAFF_Y_START = 150;
     private final int STAFF_X_END = 1050;
     static int count = -2;
     int id=1;
@@ -364,7 +364,15 @@ public class StaffPage extends JScrollPane {
 
                 // 創建音符圖標
                 icon = new ImageIcon(imageURL);
-                ImageIcon imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
+                ImageIcon imageIcon = new ImageIcon();
+                if(parent.parent.toolbar.longtype == longType.whole)
+                {
+                	imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+                }
+                else
+                {
+                	imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
+                }
 
                 // 創建音符標籤
                 note = new JLabel(imageIcon);
@@ -394,11 +402,11 @@ public class StaffPage extends JScrollPane {
                     case quarter:
                     case eighth:
                     case sixteenth:
+                    case half:
                         // 假設符頭位於音符的中心，因此對y軸進行調整
                         return new Point(-16, -33); // 假設的偏移值，根據圖片大小調整
-                    case half:
                     case whole:
-                        return new Point(-12, -18); // 基於音符的大小調整
+                        return new Point(-12, -20); // 基於音符的大小調整
                     // 休止符的偏移
                     case quarterR:   
                     case eighthR:    

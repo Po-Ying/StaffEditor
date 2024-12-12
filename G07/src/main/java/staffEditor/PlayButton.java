@@ -7,7 +7,7 @@ import org.jfugue.player.Player;
 
 public class PlayButton extends JButton {
     MainWindow parent;
-
+    
     public PlayButton(MainWindow parent) {
         this.parent = parent;
 
@@ -44,7 +44,8 @@ public class PlayButton extends JButton {
         // 獲取音符資料
         List<NoteData> musicData = staffPage.getNotesForPlayback();
         StringBuilder music = new StringBuilder();
-
+        String instrumentPattern = parent.instrumentMenu.instrumentList.getSelectedInstrumentPattern();
+        music.append(instrumentPattern).append(" ");
         // 根據音符資料生成音樂字符串
         for (NoteData note : musicData) {
             String pitch = note.getPitch();
