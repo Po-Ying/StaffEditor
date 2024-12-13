@@ -139,8 +139,7 @@ public class StaffPage extends JScrollPane {
 	        staffTitle.setFont(new Font("標楷體",0,30));
 	        panel.add(staffTitle);
         }
-
-
+        
         authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
         authorTitle.setLocation(750,120);
         authorTitle.setFont(new Font("標楷體",0,17));
