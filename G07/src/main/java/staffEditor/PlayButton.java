@@ -45,7 +45,7 @@ public class PlayButton extends JButton {
         List<NoteData> musicData = staffPage.getNotesForPlayback();
         StringBuilder music = new StringBuilder();
         String instrumentPattern = parent.instrumentMenu.instrumentList.getSelectedInstrumentPattern();
-        String[] pitches;
+        /*String[] pitches;
         switch(instrumentPattern)
         {
         	case "I[Piano] ":
@@ -73,7 +73,7 @@ public class PlayButton extends JButton {
         		System.out.println("55號");
         		break;
         		
-        }
+        }*/
         music.append(instrumentPattern).append(" ");
         // 根據音符資料生成音樂字符串
         for (NoteData note : musicData) {

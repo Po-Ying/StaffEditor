@@ -218,20 +218,20 @@ public class StaffPage extends JScrollPane {
         }
     }
 
-    private int getPitchFromYCoordinate(int y) {
+    private String getPitchFromYCoordinate(int y) {
         // 每行五線譜的基準參數
         int startY = 155;  // 第一行五線譜起始 Y 座標
         int offsetPerLine = 125;  // 每行五線譜的垂直偏移量
         int lineSpacing = 5;  // 每個音符間的像素間隔
         // 每行五線譜對應的固定音符（從高到低）
-        int[] pitches={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        String[] pitches= new String[]{"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};;
         // 計算屬於哪一行五線譜
         int lineIndex = (y - startY) / offsetPerLine;
 
         // 檢查是否在五線譜範圍內（10 行五線譜）
         if (lineIndex < 0 || lineIndex >= 10) {
             System.out.println("超出範圍");
-            return -1;
+            return null;
         }
 
         // 該行五線譜的基準 Y 值
@@ -246,11 +246,11 @@ public class StaffPage extends JScrollPane {
         // 檢查音符索引範圍
         if (noteIndex < 0 || noteIndex >= pitches.length) {
             System.out.println("音符索引超出範圍");
-            return -1;
+            return null;
         }
 
         // 返回對應音符
-        int pitch = pitches[noteIndex];
+        String pitch = pitches[noteIndex];
         System.out.println("y=" + y + " -> pitch: " + pitch);
         return pitch;
     }
@@ -300,12 +300,12 @@ public class StaffPage extends JScrollPane {
                 }
 
                 cldr = this.getClass().getClassLoader();
-                int pitch = getPitchFromYCoordinate(y);  // 根據 y 座標獲取音高
+                String pitch = getPitchFromYCoordinate(y);  // 根據 y 座標獲取音高
                 String duration = "";  // 設定音符的時值
                 // 根據類型載入對應的圖片
                 switch (parent.parent.toolbar.longtype) {
                 	case line:
-                		pitch = -1;
+                		pitch = "rest";
                 		imageURL = cldr.getResource("images/minus.png");
                 		break;
                     case quarter:
@@ -329,27 +329,27 @@ public class StaffPage extends JScrollPane {
                         imageURL = cldr.getResource("images/whole.png");
                         break;
                     case quarterR:
-                        pitch = -1;  // 休止符
+                        pitch = "rest";  // 休止符
                         duration = "quarterR";
                         imageURL = cldr.getResource("images/quarter-note-rest.png");
                         break;
                     case eighthR:
-                        pitch = -1;
+                        pitch = "rest";
                         duration = "eighthR";
                         imageURL = cldr.getResource("images/eight-note-rest.png");
                         break;
                     case sixteenthR:
-                        pitch =-1;
+                        pitch = "rest";
                         duration = "sixteenthR";
                         imageURL = cldr.getResource("images/sixteenth_rest.png");
                         break;
                     case halfR:
-                        pitch = -1;
+                        pitch = "rest";
                         duration = "halfR";
                         imageURL = cldr.getResource("images/half-rest.png");
                         break;
                     case wholeR:
-                        pitch = -1;
+                        pitch = "rest";
                         duration = "wholeR";
                         imageURL = cldr.getResource("images/whole_rest.png");
                         break;
