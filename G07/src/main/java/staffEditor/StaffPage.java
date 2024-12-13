@@ -16,7 +16,7 @@ public class StaffPage extends JScrollPane {
     private final int STAFF_X_START = 100;
     private final int STAFF_Y_START = 150;
     private final int STAFF_X_END = 1050;
-    static int count = -2;
+    static int count = -1;
     int id=1;
     JLabel note;
     Vector<JLabel> notes;
@@ -218,22 +218,20 @@ public class StaffPage extends JScrollPane {
         }
     }
 
-    private String getPitchFromYCoordinate(int y) {
+    private int getPitchFromYCoordinate(int y) {
         // 每行五線譜的基準參數
         int startY = 155;  // 第一行五線譜起始 Y 座標
         int offsetPerLine = 125;  // 每行五線譜的垂直偏移量
         int lineSpacing = 5;  // 每個音符間的像素間隔
-
         // 每行五線譜對應的固定音符（從高到低）
-        String[] pitches = {"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};
-
+        int[] pitches={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         // 計算屬於哪一行五線譜
         int lineIndex = (y - startY) / offsetPerLine;
 
         // 檢查是否在五線譜範圍內（10 行五線譜）
         if (lineIndex < 0 || lineIndex >= 10) {
             System.out.println("超出範圍");
-            return null;
+            return -1;
         }
 
         // 該行五線譜的基準 Y 值
@@ -248,11 +246,11 @@ public class StaffPage extends JScrollPane {
         // 檢查音符索引範圍
         if (noteIndex < 0 || noteIndex >= pitches.length) {
             System.out.println("音符索引超出範圍");
-            return null;
+            return -1;
         }
 
         // 返回對應音符
-        String pitch = pitches[noteIndex];
+        int pitch = pitches[noteIndex];
         System.out.println("y=" + y + " -> pitch: " + pitch);
         return pitch;
     }
@@ -302,12 +300,12 @@ public class StaffPage extends JScrollPane {
                 }
 
                 cldr = this.getClass().getClassLoader();
-                String pitch = getPitchFromYCoordinate(y);  // 根據 y 座標獲取音高
+                int pitch = getPitchFromYCoordinate(y);  // 根據 y 座標獲取音高
                 String duration = "";  // 設定音符的時值
                 // 根據類型載入對應的圖片
                 switch (parent.parent.toolbar.longtype) {
                 	case line:
-                		pitch = "rest";
+                		pitch = -1;
                 		imageURL = cldr.getResource("images/minus.png");
                 		break;
                     case quarter:
@@ -331,27 +329,27 @@ public class StaffPage extends JScrollPane {
                         imageURL = cldr.getResource("images/whole.png");
                         break;
                     case quarterR:
-                        pitch = "rest";  // 休止符
+                        pitch = -1;  // 休止符
                         duration = "quarterR";
                         imageURL = cldr.getResource("images/quarter-note-rest.png");
                         break;
                     case eighthR:
-                        pitch = "rest";
+                        pitch = -1;
                         duration = "eighthR";
                         imageURL = cldr.getResource("images/eight-note-rest.png");
                         break;
                     case sixteenthR:
-                        pitch = "rest";
+                        pitch =-1;
                         duration = "sixteenthR";
                         imageURL = cldr.getResource("images/sixteenth_rest.png");
                         break;
                     case halfR:
-                        pitch = "rest";
+                        pitch = -1;
                         duration = "halfR";
                         imageURL = cldr.getResource("images/half-rest.png");
                         break;
                     case wholeR:
-                        pitch = "rest";
+                        pitch = -1;
                         duration = "wholeR";
                         imageURL = cldr.getResource("images/whole_rest.png");
                         break;

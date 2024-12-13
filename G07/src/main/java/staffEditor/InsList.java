@@ -65,9 +65,9 @@ public class InsList extends JPanel {
                     // 確認選擇的樂器並使用其八度
                     String instrumentPattern = setInstrumentPattern(index, instrumentOctaves[index]);
                     Pattern pattern = new Pattern(instrumentPattern);
-                    System.out.println("Selected Instrument: " + instrumentNames[index]);
+                    /*System.out.println("Selected Instrument: " + instrumentNames[index]);
                     System.out.println("MIDI ID: " + instrumentMIDIIds[index]);
-                    System.out.println("Playing with instrument: " + instrumentPattern);
+                    System.out.println("Playing with instrument: " + instrumentPattern);*/
 
                     player.play(pattern);  // 播放選擇的樂器音色
                 }

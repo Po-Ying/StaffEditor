@@ -46,7 +46,7 @@ public class TopToolbar extends JPanel {
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(Color.DARK_GRAY);
         tabbedPane = new TabbedPane(parent.getMainWindow());
-        page = new StaffPage(tabbedPane);
+
         saveFileBtn = new SaveFileButton(this.parent,this.page);
         openFileBtn = new OpenFileButton(this.parent);
         newPageBtn = new NewPageButton(this.parent);
