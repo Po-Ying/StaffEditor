@@ -14,9 +14,9 @@ public class StaffPage extends JScrollPane {
 	TabbedPane parent; 
 	
     private final int STAFF_X_START = 100;
-    private final int STAFF_Y_START = 128;
+    private final int STAFF_Y_START = 150;
     private final int STAFF_X_END = 1050;
-    static int count = -2;
+    static int count = -1;
     int id=1;
     JLabel note;
     Vector<JLabel> notes;
@@ -222,10 +222,8 @@ public class StaffPage extends JScrollPane {
         int startY = 155;  // 第一行五線譜起始 Y 座標
         int offsetPerLine = 125;  // 每行五線譜的垂直偏移量
         int lineSpacing = 5;  // 每個音符間的像素間隔
-
         // 每行五線譜對應的固定音符（從高到低）
-        String[] pitches = {"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};
-
+        String[] pitches= new String[]{"F5", "E5", "D5", "C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"};;
         // 計算屬於哪一行五線譜
         int lineIndex = (y - startY) / offsetPerLine;
 
@@ -305,6 +303,10 @@ public class StaffPage extends JScrollPane {
                 String duration = "";  // 設定音符的時值
                 // 根據類型載入對應的圖片
                 switch (parent.parent.toolbar.longtype) {
+                	case line:
+                		pitch = "rest";
+                		imageURL = cldr.getResource("images/minus.png");
+                		break;
                     case quarter:
                         duration = "quarter";
                         imageURL = cldr.getResource("images/quarter_note.png");
@@ -363,7 +365,15 @@ public class StaffPage extends JScrollPane {
 
                 // 創建音符圖標
                 icon = new ImageIcon(imageURL);
-                ImageIcon imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
+                ImageIcon imageIcon = new ImageIcon();
+                if(parent.parent.toolbar.longtype == longType.whole)
+                {
+                	imageIcon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+                }
+                else
+                {
+                	imageIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
+                }
 
                 // 創建音符標籤
                 note = new JLabel(imageIcon);
@@ -390,14 +400,15 @@ public class StaffPage extends JScrollPane {
             //  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
-                    case quarter:
+                	case line:
+                	case quarter:
                     case eighth:
                     case sixteenth:
+                    case half:
                         // 假設符頭位於音符的中心，因此對y軸進行調整
                         return new Point(-16, -33); // 假設的偏移值，根據圖片大小調整
-                    case half:
                     case whole:
-                        return new Point(-12, -18); // 基於音符的大小調整
+                        return new Point(-12, -20); // 基於音符的大小調整
                     // 休止符的偏移
                     case quarterR:   
                     case eighthR:    

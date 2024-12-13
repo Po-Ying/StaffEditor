@@ -45,9 +45,9 @@ public class WholeButton extends IconButton{
 	        return;
 	    }
 	    icon = new ImageIcon(imageURL);
-	    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(18, 22, Image.SCALE_DEFAULT));
+	    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
 	    // 創建自定義鼠標
-	    Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "Quarter Note Cursor");
+	    Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(12, 18), "Quarter Note Cursor");
 	    parent.longtype = longType.whole;
 	    // 設置所有 tab 的鼠標
 	    if (parent.parent == null) 
