@@ -18,7 +18,7 @@ public class StaffPage extends JScrollPane {
     private final int STAFF_X_START = 100;
     private final int STAFF_Y_START = 128;
     private final int STAFF_X_END = 1050;
-    private static int count = -2;
+    private static int count = 0;
     private int id = 1;
     JLabel note;
     Vector<JLabel> notes;
@@ -36,7 +36,6 @@ public class StaffPage extends JScrollPane {
     private boolean selectionMode = false; // 初始化為 false
     private boolean pasteSelectionEnabled = false; // 控制貼上選取是否啟用
     private Measure[] measures;
-
     
     backButton back;
     forwardButton forward;
@@ -44,6 +43,9 @@ public class StaffPage extends JScrollPane {
     public URL imageURL;
     public ImageIcon icon ,imageIcon;
     StaffLabel staffTitle,authorTitle,instrumentTitle,pageCount,measure[];
+    
+    // 假设你有一个保存所有文本的集合
+    Map<String, String> labelsData = new HashMap<>();
 
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
@@ -71,7 +73,8 @@ public class StaffPage extends JScrollPane {
         this.getVerticalScrollBar().setUnitIncrement(10);
         
         Toolkit tk = Toolkit.getDefaultToolkit();
-        System.out.print("New StaffPage\n");
+        System.out.print("New StaffPage, id=" + id + "\n");
+        System.out.println("Initialized StaffPage with labelsData: " + labelsData); // 打印检查
     }
     
     public void setSelectionMode(boolean enabled) {
@@ -94,43 +97,49 @@ public class StaffPage extends JScrollPane {
     public void initPanel() {
         panel = new JComponent() {
             @Override
-            protected void paintComponent(Graphics g) {
+            protected void paintComponent(Graphics g) {   
+            	super.paintComponent(g);
                 drawStaff(g);
             }
         };
         panel.setLayout(null);
-        panel.setPreferredSize(new Dimension(0, 1400));
-        this.setViewportView(panel);
+        //panel.setPreferredSize(new Dimension(0, 1400));
+        //this.setViewportView(panel);
 
-	    staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
+	    staffTitle = new StaffLabel(labelsData.getOrDefault("staffTitle", "Title"),SwingConstants.CENTER,this, "staffTitle");
 	    staffTitle.setLocation(340,33);
 	    staffTitle.setFont(new Font("標楷體",0,30));
 	    staffTitle.setSize(new Dimension(500,75));
-	    if(id == 1) panel.add(staffTitle);
+	    labelsData.put("staffTitle", staffTitle.getText()); // 初始化时填充 labelsData
+	    //if(id == 1) 
+	    panel.add(staffTitle);
 
-        authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
+        authorTitle = new StaffLabel(labelsData.getOrDefault("authorTitle", "author"),SwingConstants.RIGHT,this, "authorTitle");
         authorTitle.setLocation(750,120);
         authorTitle.setFont(new Font("標楷體",0,17));
         authorTitle.setSize(new Dimension(300,30));
+        labelsData.put("authorTitle", authorTitle.getText()); // 初始化时填充 labelsData
         if(id == 1) panel.add(authorTitle);
 
-        instrumentTitle = new StaffLabel("Instrument",SwingConstants.LEFT,this);
+        instrumentTitle = new StaffLabel(labelsData.getOrDefault("instrumentTitle", "Instrument"),SwingConstants.LEFT,this, "instrumentTitle");
         instrumentTitle.setLocation(100,100);
         instrumentTitle.setFont(new Font("標楷體",0,20));
         instrumentTitle.setSize(new Dimension(150,30));
+        labelsData.put("instrumentTitle", instrumentTitle.getText()); // 初始化时填充 labelsData
         if(id == 1) panel.add(instrumentTitle);
 
-        pageCount = new StaffLabel("-" + id + "-",SwingConstants.CENTER,this);
+        pageCount = new StaffLabel("-" + id + "-",SwingConstants.CENTER,this, "pageCount");
         pageCount.setLocation(570,1350);
         pageCount.setFont(new Font("標楷體",0,17));
         pageCount.setSize(new Dimension(60,30));
+        labelsData.put("pageCount", pageCount.getText()); // 初始化时填充 labelsData
         panel.add(pageCount);
 
         measure = new StaffLabel[10];
         int g=0;
         for(int i=0;i<10;i++){
 
-            measure[i] = new StaffLabel(m[i],SwingConstants.CENTER,this);
+            measure[i] = new StaffLabel(m[i],SwingConstants.CENTER,this, "measure");
             measure[i].setLocation(95,135+ i*10 + g);
             measure[i].setFont(new Font("標楷體",0,12));
             measure[i].setSize(new Dimension(25,20));
@@ -140,8 +149,7 @@ public class StaffPage extends JScrollPane {
         }
 
         this.panel.setBackground(Color.white);
-        this.panel.setPreferredSize(new Dimension(0,1400));
-
+        this.panel.setPreferredSize(new Dimension(1200,1400));
 
         this.parent.setVisible(true);
 
@@ -155,6 +163,12 @@ public class StaffPage extends JScrollPane {
         forward.setVisible(false);
         forward.setSize(new Dimension(45,45));
         panel.add(forward);
+        
+        System.out.println("Initialized labelsData in initPanel: " + labelsData);
+
+        panel.revalidate();// 强制面板重新布局
+        panel.repaint();     // 强制重绘面板   
+
     }
 
     // 绘制五线谱
@@ -568,58 +582,117 @@ public class StaffPage extends JScrollPane {
         }
         repaint();
     }
-
-    public BufferedImage renderToImage() {
-        // 获取有效的面板尺寸
-        int width = this.getWidth();
-        int height = this.getHeight();
-
-        // 如果尺寸无效，使用默认尺寸
-        if (width <= 0 || height <= 0) {
-            width = 1100;
-            height = 1400;
-        }
-
-        // 创建图像
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = image.createGraphics();
-
-        // 填充白色背景
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, image.getWidth(), image.getHeight());
-
-        // 调整字体和大小
-        Font titleFont = new Font("標楷體", Font.PLAIN, 30);
-        Font authorFont = new Font("標楷體", Font.PLAIN, 17);
-        Font instrumentFont = new Font("標楷體", Font.PLAIN, 20);
-
-        // 绘制曲名（居中对齐）
-        g.setColor(Color.BLACK);
-        g.setFont(titleFont);
-        String title = "Title"; // 曲名
-        FontMetrics titleMetrics = g.getFontMetrics(titleFont);
-        int titleX = (width - titleMetrics.stringWidth(title)) / 2;  // 居中
-        int titleY = 70; // 调整曲名的垂直位置，向下移动
-        g.drawString(title, titleX, titleY);
-
-        // 绘制作曲家（右对齐）
-        String author = "author"; // 作曲家
-        g.setFont(authorFont);
-        FontMetrics authorMetrics = g.getFontMetrics(authorFont);
-        int authorX = width - 50 - authorMetrics.stringWidth(author);  // 右对齐
-        g.drawString(author, authorX, 120);
-
-        // 绘制乐器（左对齐）
-        String instrument = "Instrument"; // 乐器
-        g.setFont(instrumentFont);
-        g.drawString(instrument, 100, 100);  // 乐器
-
-        // 绘制五线谱
-        drawStaff(g);
-
-        g.dispose();
-
-        return image;
+    
+    @Override
+    public Dimension getPreferredSize() {
+    	// 返回 panel 的首選尺寸
+        return panel.getPreferredSize();
+    }
+    
+    // 用来保存更改后的文本
+    public void updateText(String labelName, String updatedText) {
+        labelsData.put(labelName, updatedText);  // 更新指定标签的文本
+        System.out.println("更新后的文本存储在 " + labelName + ": " + updatedText);
+        System.out.println(labelsData);
+        
+        
     }
 
+    // 在渲染或保存时，获取存储的文本
+    public String getTextFromLabels(String labelName) {
+    	System.out.println("lb" + labelName);
+        return labelsData.get(labelName);
+    }
+    
+    public BufferedImage renderToImage() {  
+
+    	panel.revalidate();
+        panel.repaint();
+        
+        // 強制立即重繪面板
+        panel.paintImmediately(0, 0, panel.getWidth(), panel.getHeight());
+    	
+        // 获取并打印面板的尺寸
+        Dimension panelSize = panel.getPreferredSize();
+        
+        // 获取面板的宽度和高度
+        int width = panelSize.width;
+        int height = panelSize.height;
+        
+        // 創建 BufferedImage 来保存渲染的内容
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+        
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width, height);
+        /*
+        if (id < 1) id += 1;
+        String pageCount = Integer.toString(id);
+        labelsData.put("pageCount", "-" + pageCount + "-");
+ 		*/
+        // 把paintComponent的每個組件都在檔案顯示出來
+        for (Component component : panel.getComponents()) {
+        	
+        	if (component.getClass().getSimpleName().equals("backButton") || component.getClass().getSimpleName().equals("forwardButton")) 
+        	{
+        	    continue;  // 這兩個按鈕不用出現在儲存的檔案裡==
+        	}
+        	
+        	if (component instanceof StaffLabel) {
+        		
+                StaffLabel label = (StaffLabel) component;
+
+                //System.out.println(labelsData);
+                
+                String updatedText = labelsData.get(label.labelName);  // 获取更新后的文本
+                //label.updateText(label.labelName, updatedText);  // 更新標籤文本
+                System.out.println("Fetching updated text for " + label.labelName + ": " + updatedText);
+                System.out.println(labelsData);
+
+                if (updatedText != null) {
+                    label.setText(updatedText);  // 设置更新后的文本
+                    label.repaint();  // 强制重绘该标签
+                }
+                
+            }
+        
+        	Graphics subGraphics = g.create(component.getX(), component.getY(), component.getWidth(), component.getHeight());
+            component.paint(subGraphics);
+            subGraphics.dispose();
+        	
+        }
+        
+        drawStaff(g);
+        
+        g.dispose();
+
+        return image; // 返回渲染的圖像
+        
+    }
+
+    /*
+    public void paint()
+    {
+    	
+    }
+    
+    public void paint(Graphics g)
+    {
+    	super.paint(g);
+    	
+    	// 自定义绘制内容
+        Graphics2D g2 = (Graphics2D) g;
+        
+     	// 设置抗锯齿
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        for (Component component : panel.getComponents()) {
+        	Graphics subGraphics = g.create(component.getX(), component.getY(), component.getWidth(), component.getHeight());
+        	component.paint(subGraphics);
+            subGraphics.dispose();
+        }
+    }
+    */
 }

@@ -43,7 +43,12 @@ public class SaveFileButton extends IconButton {
     }
 
     private void saveFile() {
+    	
         SwingUtilities.invokeLater(() -> {
+        	
+        	page.revalidate();
+            page.repaint();
+        	
             int returnValue = fileChooser.showSaveDialog(this);
 
             if (returnValue != JFileChooser.APPROVE_OPTION) {
@@ -77,18 +82,21 @@ public class SaveFileButton extends IconButton {
                 JOptionPane.showMessageDialog(this, "儲存檔案時發生錯誤: " + ex.getMessage(), "錯誤", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
     }
 
     private void saveImage(File file, String format) throws IOException {
+    	//渲染 StaffPage 為圖片
         BufferedImage image = page.renderToImage();
         if (image == null) {
             JOptionPane.showMessageDialog(this, "圖像渲染失敗，無法保存文件。", "錯誤", JOptionPane.ERROR_MESSAGE);
-            throw new IOException("圖像渲染失敗，圖像為 null。");
+            throw new IOException("saveImage圖像渲染失敗，圖像為 null。");
         }
         try {
         	ImageIO.write(image, format, file);
         } catch (IOException ex) {
             ex.printStackTrace();
+            throw new IOException("保存圖像失敗", ex);
         }
         
   

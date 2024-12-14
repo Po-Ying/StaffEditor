@@ -66,6 +66,16 @@ public class TabbedPane extends JTabbedPane{
 	    }
 	    super.removeTabAt(index);
 	}
+	
+	public StaffPage getSelectedStaffPage() {
+	    Component selectedComponent = this.getSelectedComponent();
+	    if (selectedComponent instanceof StaffPage) {
+	        return (StaffPage) selectedComponent;
+	    }
+	    return null; // 如果當前選中的不是 StaffPage
+	}
+
+
 }
 
 class CloseTabBtn extends JButton {
@@ -97,7 +107,6 @@ public CloseTabBtn(TabbedPane p, final Component c) {
 	        }
 	    });
 	}
-
 
 
 	public void doSomething(final Component c) {
