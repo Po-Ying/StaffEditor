@@ -40,7 +40,7 @@ public class SixteenthButton extends IconButton{
 	    icon = new ImageIcon(imageURL);
 	    imageIcon = new ImageIcon(icon.getImage().getScaledInstance(25, 45, Image.SCALE_DEFAULT));
 	    // 創建自定義鼠標
-	    Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 16), "Quarter Note Cursor");
+	    Cursor cu = tk.createCustomCursor(imageIcon.getImage(), new Point(16, 29), "Quarter Note Cursor");
 	    parent.longtype = longType.sixteenth;
 	    // 設置所有 tab 的鼠標
 	    if (parent.parent == null) 

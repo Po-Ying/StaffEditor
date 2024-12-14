@@ -6,10 +6,11 @@ import java.awt.event.ActionListener;
 
 public class PasteButton extends JButton {
     MainWindow parent;
-
-    public PasteButton(MainWindow parent) {
+    public MeasureManager measureManager;
+    
+    public PasteButton(MainWindow parent, MeasureManager measureManager) {
         this.parent = parent;
-
+        this.measureManager = measureManager;
         // 設定按鈕屬性
         this.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/paste.png")));
         this.setToolTipText("貼上");
@@ -35,6 +36,7 @@ public class PasteButton extends JButton {
                         
                         // 清空貼上選取區域
                         staffPage.clearSelectedPasteMeasures();
+
                     } else {
                         System.out.println("Failed to paste content. No measures selected or clipboard is empty.");
                     }

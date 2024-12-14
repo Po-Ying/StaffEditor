@@ -46,6 +46,8 @@ public class MusicButton extends IconButton{
         }
 
         parent.inputtype = inputType.Note; //切換成音符模式
+        ModuleButton mud=parent.getModuleButton();
+        mud.selectionModeActive = false;
     }
 
 	private void enableRightButtons() 

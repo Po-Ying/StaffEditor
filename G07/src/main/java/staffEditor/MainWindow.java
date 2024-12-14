@@ -18,10 +18,11 @@ public class MainWindow extends JFrame {
         parent = p;
 
         this.setSize(size);
+        
+        
+        tabbedPane = new TabbedPane(this);
         toolbar = new Toolbar(this);
         instrumentMenu = new InsMenu(this);
-        tabbedPane = new TabbedPane(this);
-
         this.setLayout(new BorderLayout());
 
         this.add(toolbar, BorderLayout.NORTH);
@@ -59,5 +60,7 @@ public class MainWindow extends JFrame {
     public TabbedPane getTabbedPane() {
         return tabbedPane;
     }
+    
+
 
 }
