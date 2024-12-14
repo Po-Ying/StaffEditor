@@ -5,7 +5,8 @@ import javax.swing.*;
 
 public class TopToolbar extends JPanel {
     Toolbar parent;
-
+    StaffPage page;
+    
     SaveFileButton saveFileBtn;
     OpenFileButton openFileBtn;
     NewPageButton newPageBtn;
@@ -27,7 +28,6 @@ public class TopToolbar extends JPanel {
     QuarterrestButton quarterrestBtn;
     EightrestButton eightrestBtn;
     SixteenthrestButton sixteenthrestBtn;
-    StaffPage page;
     TabbedPane tabbedPane;
     longType longtype;
     inputType inputtype;
@@ -35,6 +35,15 @@ public class TopToolbar extends JPanel {
 
     TopToolbar(Toolbar p) {
         parent = p;
+        if (parent != null && parent.getMainWindow() != null) {
+            tabbedPane = parent.getMainWindow().getTabbedPane();  // 確保 tabbedPane 被正確獲取
+        }
+
+        // 如果 tabbedPane 是 null，則顯示錯誤或進行處理
+        if (tabbedPane == null) {
+            System.out.println("Error: tabbedPane is null.");
+        }
+        page = parent.getMainWindow().getTabbedPane().getSelectedStaffPage();
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
@@ -53,7 +62,7 @@ public class TopToolbar extends JPanel {
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
         musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, this);
         restBtn = new RestButton(this.parent, leftPanel, rightRest, this);
-        tupletBtn = new TupletButton(this.parent);
+        tupletBtn = new TupletButton(this.parent,this.page);
         moduleBtn = new ModuleButton(this.parent);
         ledgerLineBtn = new LedgerLineButton(this.parent);
 

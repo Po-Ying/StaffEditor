@@ -16,7 +16,7 @@ public class StaffPage extends JScrollPane {
     private final int STAFF_X_START = 100;
     private final int STAFF_Y_START = 150;
     private final int STAFF_X_END = 1050;
-    static int count = -1;
+    static int count = 0;
     int id=1;
     JLabel note;
     Vector<JLabel> notes;
@@ -25,6 +25,8 @@ public class StaffPage extends JScrollPane {
     public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
     private Set<Measure> selectedCopyMeasures; // 儲存已選取的小節
     private Set<Measure> selectedPasteMeasures; // 儲存貼上目標的小節
+    private List<TupletLine> tupletLines = new ArrayList<>();  // 用來儲存所有的連音符線條
+    private List<NoteData> tupletNotes; // 儲存目前選中的音符
 
     JButton backButton, forwardButton; 
     JComponent panel;
@@ -33,7 +35,8 @@ public class StaffPage extends JScrollPane {
     String composer="作曲家" ;
     // 用來記錄是否啟用了選擇模式
     public boolean selectionMode = false; // 初始化為 false
-
+    public boolean tupletMode = false;
+    
     private Measure[] measures;
     backButton back;
     forwardButton forward;
@@ -55,8 +58,9 @@ public class StaffPage extends JScrollPane {
         notes = new Vector<>();
         trash_notes = new Vector<>();
         selectedCopyMeasures = new HashSet<>();
-        new ArrayList<>();
         selectedPasteMeasures = new HashSet<>();
+        
+        tupletNotes = new ArrayList<>(); // 初始化連音符的選擇列表
         
         initPanel();
         setupMeasures();  // 初始化小節
@@ -75,11 +79,18 @@ public class StaffPage extends JScrollPane {
             selectedPasteMeasures.clear();
         }
         repaint(); // 更新畫面
-        System.out.println("Selection mode " + (enabled ? "enabled." : "disabled."));
     }
     // 檢查是否啟用了選擇模式
     public boolean isSelectionMode() {
         return selectionMode;
+    }
+    
+    public void setTupletMode(boolean enabled) {
+        this.tupletMode = enabled;
+    }
+    // 檢查是否啟用了選擇模式
+    public boolean isTupletMode() {
+        return tupletMode;
     }
     
     public Vector<JLabel> getNotes() {
@@ -117,13 +128,36 @@ public class StaffPage extends JScrollPane {
             	super.paintComponent(g);
                 staffDrawer.drawStaff(g, 10, new int[]{400, 630, 860, 1090}, 100, 155, 1090); 
                 staffDrawer.drawSelectionBoxes(g, selectionMode, measureManager.getSelectedCopyMeasures(), measureManager.getSelectedPasteMeasures());
+                
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setStroke(new BasicStroke(5));
+                for (TupletLine line : tupletLines) {
+                    JLabel note1 = line.getNote1();
+                    JLabel note2 = line.getNote2();
+
+                    int x1 = note1.getX() + note1.getWidth() / 2+5;
+                    int y1 = note1.getY(); // 符槓略微上移
+                    int x2 = note2.getX() + note2.getWidth() / 2+5;
+                    int y2 = note2.getY();
+
+                    // 根據音符時值進行判斷
+                    String duration1 = (String) note1.getClientProperty("noteDuration");
+                    String duration2 = (String) note2.getClientProperty("noteDuration");
+
+                    if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
+                        // 繪製一條符槓
+                        g2.drawLine(x1, y1, x2, y2);
+                    } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
+                        // 繪製兩條符槓（第二條向下偏移 10px）
+                        g2.drawLine(x1, y1, x2, y2);
+                        g2.drawLine(x1, y1 + 10, x2, y2 + 10);
+                    }
+                }
             }
         };
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
-        this.setViewportView(panel);
-
-        
+        this.setViewportView(panel);       
         if(id==1)
 	    {
 	        staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
@@ -268,6 +302,38 @@ public class StaffPage extends JScrollPane {
         panel.add(forward);
     }
 
+    public JLabel findNoteLabel(NoteData note) {
+        for (JLabel noteLabel : notes) {
+            // 比對 X 和 Y 座標，確保找到對應的音符標籤
+            if (noteLabel.getX() == note.getX() && noteLabel.getY() == note.getY()) {
+                return noteLabel;
+            }
+        }
+        return null; // 如果沒有找到，返回 null
+    }
+
+    
+    public void drawTuplet(List<NoteData> notes) {
+        if (notes.size() != 2) return;
+
+        // 找到兩個音符的 JLabel
+        JLabel noteLabel1 = findNoteLabel(notes.get(0));
+        JLabel noteLabel2 = findNoteLabel(notes.get(1));
+
+        if (noteLabel1 != null && noteLabel2 != null) {
+            // 更新音符圖片為四分音符
+            updateNoteImage(noteLabel1, "quarter", "quarter");
+            updateNoteImage(noteLabel2, "quarter", "quarter");
+
+            // 繪製符槓連線
+            TupletLine tupletLine = new TupletLine(noteLabel1, noteLabel2);
+            tupletLines.add(tupletLine); // 加入符槓連線集合
+            panel.repaint(); // 重繪面板
+        }
+    }
+
+    
+    
     // 初始化鼠标监听器
     public void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
@@ -293,6 +359,43 @@ public class StaffPage extends JScrollPane {
 
 
                 System.out.println("滑鼠點擊座標: X=" + x + ", Y=" + y);
+                
+                // 判斷是否已進入連音符模式
+                if (isTupletMode()) {
+                    for (JLabel noteLabel : notes) {
+                        if (noteLabel.getBounds().contains(x, y)) {
+                            // 從音符標籤提取 NoteData
+                            String pitch = (String) noteLabel.getClientProperty("notePitch");
+                            String duration = (String) noteLabel.getClientProperty("noteDuration");
+                            NoteData note = new NoteData(pitch, duration, noteLabel.getX(), noteLabel.getY());
+
+                            // 將音符加入 tupletNotes
+                            if (!tupletNotes.contains(note)) {
+                                tupletNotes.add(note);
+                            }
+
+                            System.out.println("目前已選擇的音符數量：" + tupletNotes.size());
+                            
+                            // 如果兩個音符的時值符合連音符的條件，更新為四分音符
+                            if (tupletNotes.size() == 2) {
+                                System.out.println("已選擇兩個音符，開始處理連音符邏輯...");
+                                /*pitch = "quarter";
+                                duration = "quarter";
+                                noteLabel.putClientProperty("notePitch", pitch);
+                                noteLabel.putClientProperty("noteDuration", duration);
+                                updateNoteImage(noteLabel, pitch, duration);*/
+
+                                // 清空 tupletNotes，準備下一次選擇
+                                tupletNotes.clear();
+                            }
+
+                            // 通知 TupletButton，將音符選入
+                            parent.parent.toolbar.getTupletButton().addSelectedNote(note);
+                        }
+                    }
+                }
+
+
                 
                 if ((parent.parent.toolbar.inputtype == inputType.Cursor) || (x < STAFF_X_START) || (x > STAFF_X_END) || (y < STAFF_Y_START)) {
                     return;
@@ -493,6 +596,35 @@ public class StaffPage extends JScrollPane {
         }
         repaint();
     }
+    
+    private void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
+        // 根據音高和時值更新音符的圖片
+        // 根據時值設定圖片
+        String imagePath = "images/" + duration + "_note.png";
+        URL imageURL = cldr.getResource(imagePath);
+
+        if (imageURL != null) {
+            ImageIcon icon = new ImageIcon(imageURL);
+            noteLabel.setIcon(new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT)));
+            System.out.println("音符圖像已更新為：" + imagePath);
+        } else {
+            System.out.println("音符圖片加載失敗：" + imagePath);
+        }
+    }
+
+    private String getImagePath(String pitch, String duration) {
+        // 根據音高和時值返回圖片路徑
+        if ("quarter".equals(duration)) {
+            return "images/quarter_note.png";
+        } else if ("eighth".equals(duration)) {
+            return "images/eighth_note.png";
+        } else if ("sixteenth".equals(duration)) {
+            return "images/sixteenth-note.png";
+        } else if ("rest".equals(pitch)) {
+            return "images/minus.png";
+        }
+        return null;
+    }
 
     public BufferedImage renderToImage() {
         // 获取有效的面板尺寸
@@ -550,5 +682,10 @@ public class StaffPage extends JScrollPane {
     public JComponent getPanel()
     {
     	return panel;
+    }
+    
+    // 用來獲取所有連音符線條
+    public List<TupletLine> getTupletLines() {
+        return tupletLines;
     }
 }

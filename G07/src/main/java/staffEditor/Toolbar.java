@@ -29,6 +29,10 @@ public class Toolbar extends JPanel{
         return topToolbar.moduleBtn; // 返回 TopToolbar 中的 moduleBtn 實例
     }
     
+    public TupletButton getTupletButton() {
+        return topToolbar.tupletBtn;  // 返回已創建的 TupletButton 實例
+    }
+    
     public MainWindow getMainWindow() 
     {
         return parent;
