@@ -47,6 +47,7 @@ public class StaffPage extends JScrollPane {
     
     // 放更改的文字
     Map<String, String> labelsData = new HashMap<>();
+    List<StaffPage> allPages;
 
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
@@ -62,6 +63,8 @@ public class StaffPage extends JScrollPane {
         trash_notes = new Vector<>();
         selectedCopyMeasures = new HashSet<>();
         selectedPasteMeasures = new HashSet<>();
+        
+        allPages = parent.getAllStaffPages();
         
         tupletNotes = new ArrayList<>(); // 初始化連音符的選擇列表
         
@@ -715,6 +718,34 @@ public class StaffPage extends JScrollPane {
 
         return image; // 返回渲染的圖像
         
+    }
+    
+    public BufferedImage AllPagesToImage()
+    {
+    	int totalWidth = 0;
+        int totalHeight = 0;
+        
+        // 計算總寬度和高度
+        for (StaffPage page : allPages) {
+            BufferedImage pageImage = page.renderToImage();
+            totalWidth += pageImage.getWidth();
+            totalHeight = Math.max(totalHeight, pageImage.getHeight());
+        }
+
+        // 創建一個空的圖像來放所有頁面
+        BufferedImage combinedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        int xOffset = 0;
+        for (StaffPage page : allPages) {
+            BufferedImage pageImage = page.renderToImage();
+            g.drawImage(pageImage, xOffset, 0, null);
+            xOffset += pageImage.getWidth();
+        }
+
+        g.dispose();
+        return combinedImage;
     }
     
     public JComponent getPanel()
