@@ -79,6 +79,22 @@ public class MouseButton extends IconButton{
             }
         }
 		
+		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
 		this.setBackground(Color.LIGHT_GRAY);
 	}
 	
