@@ -4,28 +4,34 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
-import java.awt.event.ActionListener;
 import java.net.URL; 
 
 public class WholeButton extends IconButton{
     Toolbar parent;
     ImageIcon imageIcon;
+    private JPanel rightPanel;
 
-	public WholeButton(Toolbar p) 
+	public WholeButton(Toolbar p, JPanel rightPanel) 
 	{
 		super(p);
 		parent=p;
+		this.rightPanel = rightPanel; 
         imageURL   = cldr.getResource("images/whole.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("全音符");
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
-
 
 	public void doSomething() {
 	    // 檢查 parent 是否為 null
@@ -69,5 +75,18 @@ public class WholeButton extends IconButton{
 	            tab.setCursor(cu);
 	        }
 	    }
+	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 }

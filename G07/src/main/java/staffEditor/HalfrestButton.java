@@ -7,16 +7,25 @@ import java.awt.event.*;
 public class HalfrestButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
+    private JPanel rightRest;
 
-	public HalfrestButton(Toolbar p) 
+	public HalfrestButton(Toolbar p, JPanel rightRest) 
 	{
 		super(p);
 		parent=p;
+		this.rightRest = rightRest;
         imageURL   = cldr.getResource("images/half-rest.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("二分休止符");
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
 
 
@@ -62,5 +71,18 @@ public class HalfrestButton extends IconButton {
 	            tab.setCursor(cu);
 	        }
 	    }
+	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 }

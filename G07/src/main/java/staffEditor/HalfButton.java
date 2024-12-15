@@ -7,18 +7,26 @@ import java.awt.event.*;
 public class HalfButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
+    private JPanel rightPanel;
 
-	public HalfButton(Toolbar p) 
+	public HalfButton(Toolbar p, JPanel rightPanel) 
 	{
 		super(p);
 		parent=p;
+		this.rightPanel = rightPanel; 
         imageURL   = cldr.getResource("images/half_note.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("二分音符");
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
-
 
 	public void doSomething() {
 	    // 檢查 parent 是否為 null
@@ -62,5 +70,18 @@ public class HalfButton extends IconButton {
 	            tab.setCursor(cu);
 	        }
 	    }
+	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 }
