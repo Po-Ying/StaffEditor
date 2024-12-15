@@ -3,6 +3,7 @@ package staffEditor;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 public class StaffDrawer 
 {
@@ -72,9 +73,7 @@ public class StaffDrawer
             offset += 125; // 下一行的起始偏移
         }
     }
-    public void drawSelectionBoxes(Graphics g, boolean selectionMode, 
-            Set<Measure> selectedCopyMeasures, 
-            Set<Measure> selectedPasteMeasures) 
+    public void drawSelectionBoxes(Graphics g, boolean selectionMode, List<Measure> selectedCopyMeasures, List<Measure> selectedPasteMeasures) 
     {
 		if (selectionMode) 
 		{
