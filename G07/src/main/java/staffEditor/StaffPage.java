@@ -25,7 +25,8 @@ public class StaffPage extends JScrollPane {
     public MeasureManager measureManager;  // 用來管理小節的 MeasureManager
     private Set<Measure> selectedCopyMeasures; // 儲存已選取的小節
     private Set<Measure> selectedPasteMeasures; // 儲存貼上目標的小節
-    private List<TupletLine> tupletLines = new ArrayList<>();  // 用來儲存所有的連音符線條
+    public List<TupletLine> tupletLines = new ArrayList<>();  // 用來儲存所有的連音符線條
+    public List<TupletLine> trash_lines = new ArrayList<>();
     private List<NoteData> tupletNotes; // 儲存目前選中的音符
 
     JButton backButton, forwardButton; 
@@ -499,7 +500,7 @@ public class StaffPage extends JScrollPane {
 
                 // 添加到面板
                 notes.add(note);
-                panel.add(notes.lastElement());
+                panel.add(notes.lastElement()); 
                 panel.repaint();
                 
                 Measure measure = getMeasureForPoint(x, y); // 根據點擊位置找到對應的小節
@@ -561,10 +562,10 @@ public class StaffPage extends JScrollPane {
                     measure[i].setEnabled(false);
                 }
 
-                if (notes.size() != 0) {
+                if (notes.size() != 0 || tupletLines.size()!=0) {
                     back.setVisible(true);
                 }
-                if (trash_notes.size() != 0) {
+                if (trash_notes.size() != 0|| trash_lines.size()!=0) {
                     forward.setVisible(true);
                 }
             }
@@ -718,4 +719,9 @@ public class StaffPage extends JScrollPane {
     public List<TupletLine> getTupletLines() {
         return tupletLines;
     }
+    
+    public List<TupletLine> getTrashTupletLines() {
+        return trash_lines;
+    }
+    
 }
