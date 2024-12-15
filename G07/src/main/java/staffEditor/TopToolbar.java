@@ -60,8 +60,8 @@ public class TopToolbar extends JPanel {
         openFileBtn = new OpenFileButton(this.parent,this.page);
         newPageBtn = new NewPageButton(this.parent);
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
-        musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, this);
-        restBtn = new RestButton(this.parent, leftPanel, rightRest, this);
+        musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, rightRest, this);
+        restBtn = new RestButton(this.parent, leftPanel, rightPanel, rightRest, this);
         tupletBtn = new TupletButton(this.parent,this.page);
         moduleBtn = new ModuleButton(this.parent);
         ledgerLineBtn = new LedgerLineButton(this.parent);
@@ -80,19 +80,19 @@ public class TopToolbar extends JPanel {
 
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setBackground(Color.DARK_GRAY);
-        wholeBtn = new WholeButton(this.parent);
-        halfBtn = new HalfButton(this.parent);
-        quarterBtn = new QuarterButton(this.parent);
-        eighthBtn = new EightButton(this.parent);
-        sixteenthBtn = new SixteenthButton(this.parent);
+        wholeBtn = new WholeButton(this.parent, rightPanel);
+        halfBtn = new HalfButton(this.parent, rightPanel);
+        quarterBtn = new QuarterButton(this.parent, rightPanel);
+        eighthBtn = new EightButton(this.parent, rightPanel);
+        sixteenthBtn = new SixteenthButton(this.parent, rightPanel);
         
         rightRest.setLayout(new FlowLayout(FlowLayout.RIGHT));
         rightRest.setBackground(Color.DARK_GRAY);
-        wholerestBtn = new WholerestButton(this.parent);
-        halfrestBtn = new HalfrestButton(this.parent);
-        quarterrestBtn = new QuarterrestButton(this.parent);
-        eightrestBtn = new EightrestButton(this.parent);
-        sixteenthrestBtn = new SixteenthrestButton(this.parent);
+        wholerestBtn = new WholerestButton(this.parent, rightRest);
+        halfrestBtn = new HalfrestButton(this.parent, rightRest);
+        quarterrestBtn = new QuarterrestButton(this.parent, rightRest);
+        eightrestBtn = new EightrestButton(this.parent, rightRest);
+        sixteenthrestBtn = new SixteenthrestButton(this.parent, rightRest);
 
         rightPanel.add(wholeBtn);
         rightPanel.add(halfBtn);

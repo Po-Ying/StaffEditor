@@ -8,13 +8,15 @@ public class MusicButton extends IconButton{
 	
 	private JPanel leftPanel;
 	private JPanel rightPanel;
+	private JPanel rightRest;
 	private TopToolbar parentTopToolbar;
 
-	public MusicButton(Toolbar p, JPanel leftPanel, JPanel rightPanel, TopToolbar parentTopToolbar) 
+	public MusicButton(Toolbar p, JPanel leftPanel, JPanel rightPanel, JPanel rightRest, TopToolbar parentTopToolbar) 
 	{
 		super(p);
 		this.leftPanel = leftPanel;
 		this.rightPanel = rightPanel; 
+		this.rightRest = rightRest;
 		this.parentTopToolbar = parentTopToolbar;
 		
         imageURL   = cldr.getResource("images/music-note.png");
@@ -76,6 +78,14 @@ public class MusicButton extends IconButton{
 	public void updateBtnColor()
 	{
 		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		for (Component btn : rightRest.getComponents()) 
 		{
             if (btn instanceof JButton) 
             {

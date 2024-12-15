@@ -47,6 +47,7 @@ public class StaffPage extends JScrollPane {
     
     // 放更改的文字
     Map<String, String> labelsData = new HashMap<>();
+    List<StaffPage> allPages;
 
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
@@ -62,6 +63,8 @@ public class StaffPage extends JScrollPane {
         trash_notes = new Vector<>();
         selectedCopyMeasures = new HashSet<>();
         selectedPasteMeasures = new HashSet<>();
+        
+        allPages = parent.getAllStaffPages();
         
         tupletNotes = new ArrayList<>(); // 初始化連音符的選擇列表
         
@@ -132,29 +135,7 @@ public class StaffPage extends JScrollPane {
                 staffDrawer.drawSelectionBoxes(g, selectionMode, measureManager.getSelectedCopyMeasures(), measureManager.getSelectedPasteMeasures());
                 
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setStroke(new BasicStroke(5));
-                for (TupletLine line : tupletLines) {
-                    JLabel note1 = line.getNote1();
-                    JLabel note2 = line.getNote2();
-
-                    int x1 = note1.getX() + note1.getWidth() / 2+5;
-                    int y1 = note1.getY(); // 符槓略微上移
-                    int x2 = note2.getX() + note2.getWidth() / 2+5;
-                    int y2 = note2.getY();
-
-                    // 根據音符時值進行判斷
-                    String duration1 = (String) note1.getClientProperty("noteDuration");
-                    String duration2 = (String) note2.getClientProperty("noteDuration");
-
-                    if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
-                        // 繪製一條符槓
-                        g2.drawLine(x1, y1, x2, y2);
-                    } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
-                        // 繪製兩條符槓（第二條向下偏移 10px）
-                        g2.drawLine(x1, y1, x2, y2);
-                        g2.drawLine(x1, y1 + 10, x2, y2 + 10);
-                    }
-                }
+                drawTupletLines(g2); // 繪製符槓
             }
         };
         panel.setLayout(null);
@@ -640,6 +621,32 @@ public class StaffPage extends JScrollPane {
     	// 返回 panel 的首選尺寸
         return panel.getPreferredSize();
     }
+    
+    public void drawTupletLines(Graphics2D g2) {
+        g2.setStroke(new BasicStroke(5));
+        for (TupletLine line : tupletLines) {
+            JLabel note1 = line.getNote1();
+            JLabel note2 = line.getNote2();
+
+            int x1 = note1.getX() + note1.getWidth() / 2 + 5;
+            int y1 = note1.getY(); // 符槓略微上移
+            int x2 = note2.getX() + note2.getWidth() / 2 + 5;
+            int y2 = note2.getY();
+
+            // 根據音符時值進行判斷
+            String duration1 = (String) note1.getClientProperty("noteDuration");
+            String duration2 = (String) note2.getClientProperty("noteDuration");
+
+            if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
+                // 繪製一條符槓
+                g2.drawLine(x1, y1, x2, y2);
+            } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
+                // 繪製兩條符槓（第二條向下偏移 10px）
+                g2.drawLine(x1, y1, x2, y2);
+                g2.drawLine(x1, y1 + 10, x2, y2 + 10);
+            }
+        }
+    }
    
     public BufferedImage renderToImage() {  
 
@@ -699,13 +706,46 @@ public class StaffPage extends JScrollPane {
         	
         }
         
+        
+        
         // 這是畫五線譜
         staffDrawer.drawStaff(g, 10, new int[]{400, 630, 860, 1090}, 100, 155, 1090); 
+        
+        // 繪製符槓
+        drawTupletLines(g);
         
         g.dispose();
 
         return image; // 返回渲染的圖像
         
+    }
+    
+    public BufferedImage AllPagesToImage()
+    {
+    	int totalWidth = 0;
+        int totalHeight = 0;
+        
+        // 計算總寬度和高度
+        for (StaffPage page : allPages) {
+            BufferedImage pageImage = page.renderToImage();
+            totalWidth += pageImage.getWidth();
+            totalHeight = Math.max(totalHeight, pageImage.getHeight());
+        }
+
+        // 創建一個空的圖像來放所有頁面
+        BufferedImage combinedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        int xOffset = 0;
+        for (StaffPage page : allPages) {
+            BufferedImage pageImage = page.renderToImage();
+            g.drawImage(pageImage, xOffset, 0, null);
+            xOffset += pageImage.getWidth();
+        }
+
+        g.dispose();
+        return combinedImage;
     }
     
     public JComponent getPanel()
