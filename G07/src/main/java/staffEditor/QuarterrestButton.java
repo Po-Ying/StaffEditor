@@ -9,16 +9,25 @@ import java.awt.event.*;
 public class QuarterrestButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
+    private JPanel rightRest;
 
-	public QuarterrestButton(Toolbar p) 
+	public QuarterrestButton(Toolbar p, JPanel rightRest) 
 	{
 		super(p);
 		parent=p;
+		this.rightRest = rightRest;
         imageURL   = cldr.getResource("images/quarter-note-rest.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("四分休止符");
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
 
 
@@ -64,5 +73,18 @@ public class QuarterrestButton extends IconButton {
 	            tab.setCursor(cu);
 	        }
 	    }
+	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 }

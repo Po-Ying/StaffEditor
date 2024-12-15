@@ -7,6 +7,7 @@ public class Toolbar extends JPanel{
 
 	MainWindow parent;
 	TopToolbar topToolbar;
+	private TabbedPane tabbedPane;
 	
 	longType longtype;
 	inputType inputtype;
@@ -20,6 +21,8 @@ public class Toolbar extends JPanel{
 	    //this.setBackground(Color.darkGray);
 	    this.add(topToolbar,BorderLayout.CENTER);
 	    this.setPreferredSize(new Dimension(0,95));
+	    
+	    this.tabbedPane = p.getTabbedPane();
 
 	}
 	
@@ -38,6 +41,9 @@ public class Toolbar extends JPanel{
         return parent;
     }
 
-	
+    //讓其他類別能夠訪問 TabbedPane
+    public TabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
 
 }

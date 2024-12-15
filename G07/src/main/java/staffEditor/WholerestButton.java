@@ -1,22 +1,32 @@
 package staffEditor;
 
 import javax.swing.*;
-import java.awt.*; 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent; 
 
 public class WholerestButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
-
-	public WholerestButton(Toolbar p) 
+    private JPanel rightRest;
+    
+	public WholerestButton(Toolbar p, JPanel rightRest) 
 	{
 		super(p);
 		parent=p;
+		this.rightRest = rightRest;
         imageURL   = cldr.getResource("images/whole_rest.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("全休止符");
         
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
 
 
@@ -62,5 +72,18 @@ public class WholerestButton extends IconButton {
 	            tab.setCursor(cu);
 	        }
 	    }
+	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 }
