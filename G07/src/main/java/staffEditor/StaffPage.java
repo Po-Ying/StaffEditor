@@ -132,29 +132,7 @@ public class StaffPage extends JScrollPane {
                 staffDrawer.drawSelectionBoxes(g, selectionMode, measureManager.getSelectedCopyMeasures(), measureManager.getSelectedPasteMeasures());
                 
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setStroke(new BasicStroke(5));
-                for (TupletLine line : tupletLines) {
-                    JLabel note1 = line.getNote1();
-                    JLabel note2 = line.getNote2();
-
-                    int x1 = note1.getX() + note1.getWidth() / 2+5;
-                    int y1 = note1.getY(); // 符槓略微上移
-                    int x2 = note2.getX() + note2.getWidth() / 2+5;
-                    int y2 = note2.getY();
-
-                    // 根據音符時值進行判斷
-                    String duration1 = (String) note1.getClientProperty("noteDuration");
-                    String duration2 = (String) note2.getClientProperty("noteDuration");
-
-                    if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
-                        // 繪製一條符槓
-                        g2.drawLine(x1, y1, x2, y2);
-                    } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
-                        // 繪製兩條符槓（第二條向下偏移 10px）
-                        g2.drawLine(x1, y1, x2, y2);
-                        g2.drawLine(x1, y1 + 10, x2, y2 + 10);
-                    }
-                }
+                drawTupletLines(g2); // 繪製符槓
             }
         };
         panel.setLayout(null);
@@ -640,6 +618,32 @@ public class StaffPage extends JScrollPane {
     	// 返回 panel 的首選尺寸
         return panel.getPreferredSize();
     }
+    
+    public void drawTupletLines(Graphics2D g2) {
+        g2.setStroke(new BasicStroke(5));
+        for (TupletLine line : tupletLines) {
+            JLabel note1 = line.getNote1();
+            JLabel note2 = line.getNote2();
+
+            int x1 = note1.getX() + note1.getWidth() / 2 + 5;
+            int y1 = note1.getY(); // 符槓略微上移
+            int x2 = note2.getX() + note2.getWidth() / 2 + 5;
+            int y2 = note2.getY();
+
+            // 根據音符時值進行判斷
+            String duration1 = (String) note1.getClientProperty("noteDuration");
+            String duration2 = (String) note2.getClientProperty("noteDuration");
+
+            if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
+                // 繪製一條符槓
+                g2.drawLine(x1, y1, x2, y2);
+            } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
+                // 繪製兩條符槓（第二條向下偏移 10px）
+                g2.drawLine(x1, y1, x2, y2);
+                g2.drawLine(x1, y1 + 10, x2, y2 + 10);
+            }
+        }
+    }
    
     public BufferedImage renderToImage() {  
 
@@ -699,8 +703,13 @@ public class StaffPage extends JScrollPane {
         	
         }
         
+        
+        
         // 這是畫五線譜
         staffDrawer.drawStaff(g, 10, new int[]{400, 630, 860, 1090}, 100, 155, 1090); 
+        
+        // 繪製符槓
+        drawTupletLines(g);
         
         g.dispose();
 
