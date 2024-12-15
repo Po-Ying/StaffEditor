@@ -658,7 +658,7 @@ public class StaffPage extends JScrollPane {
         
         // 改檔案尺寸
         if (width <= 0 || height <= 0) {
-            width = 1200;
+            width = 1100+100;
             height = 1400;
             panel.setSize(width, height); 
             panel.doLayout(); 
@@ -710,7 +710,10 @@ public class StaffPage extends JScrollPane {
     
     public JComponent getPanel()
     {
-    	return panel;
+            if (this.panel == null) {
+                this.panel = new JPanel(); // 初始化面板
+            }
+            return this.panel;
     }
     
     // 用來獲取所有連音符線條
