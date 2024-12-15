@@ -153,7 +153,11 @@ public class StaffPage extends JScrollPane {
                         g2.drawLine(x1, y1 + 10, x2, y2 + 10);
                     }
                 }
+                
+                
+                
             }
+            
         };
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
@@ -497,10 +501,28 @@ public class StaffPage extends JScrollPane {
                 notes.add(note);
                 panel.add(notes.lastElement());
                 panel.repaint();
+                
+                Measure measure = getMeasureForPoint(x, y); // 根據點擊位置找到對應的小節
+                if (measure != null) {
+                    NoteData noteData = new NoteData(pitch, duration, note.getX(), note.getY());
+                    measure.addNoteData(noteData);  // 添加音符到小節
+                    System.out.println("音符已添加到小節: " + measure);
+                }
             }
 
 
-            //  傳回偏移量
+            public Measure getMeasureForPoint(int x, int y) {
+                for (Measure measure : measures) { // 使用 measures 陣列來迭代
+                    if (measure != null && measure.contains(x, y)) {  // 確保 measure 不為 null 並檢查座標
+                        return measure;
+                    }
+                }
+                return null;  // 如果沒有找到對應的小節，則返回 null
+            }
+
+
+
+			//  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
                 	case line:
@@ -582,13 +604,21 @@ public class StaffPage extends JScrollPane {
         return true;
     }
     // 用來啟動貼上選擇的操作
+ // 用來啟動貼上選擇的操作
     public boolean pasteToSelectedMeasures() {
-        if (!measureManager.pasteToSelectedMeasures()) {
+        // 嘗試將剪貼簿中的音符貼到已選擇的小節中
+        boolean result = measureManager.pasteToSelectedMeasures();
+        if (!result) {
             System.out.println("貼上小節失敗");
             return false;
         }
+
+        // 如果貼上成功，重新繪製畫面以顯示貼上的音符
+        panel.repaint();
+        System.out.println("貼上成功");
         return true;
     }
+
     // 清除當前的選取小節
     public void clearSelectedPasteMeasures() {
         if (selectedPasteMeasures != null) {

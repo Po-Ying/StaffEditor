@@ -32,7 +32,7 @@ public class PasteButton extends JButton {
 
                     // 呼叫 StaffPage 的貼上邏輯
                     if (staffPage.pasteToSelectedMeasures()) {
-                        System.out.println("Clipboard content pasted into selected measures.");
+                        
                         
                         // 清空貼上選取區域
                         staffPage.clearSelectedPasteMeasures();
