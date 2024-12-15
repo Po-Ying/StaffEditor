@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set; 
+import java.util.Set;
+import java.util.Vector; 
 
 public class MeasureManager {
     private Measure[] measures; // 小節陣列
@@ -20,14 +21,14 @@ public class MeasureManager {
 
     private JComponent panel; // StaffPage 的面板
 
-    public MeasureManager(JComponent panel, Measure[] measures) {
+    public MeasureManager(JComponent panel, Measure[] measures, Vector<JLabel> notes) {
         this.panel = panel;
         this.measures = measures;
         this.selectedCopyMeasures = new ArrayList<>(); // 使用 List 確保順序
         this.selectedPasteMeasures = new ArrayList<>(); // 使用 List 確保順序
         this.clipboard = new ArrayList<>(); // 改為使用 List
         this.pasteSelectionEnabled = false;
-        this.notes = new ArrayList<>(); // 初始化音符列表
+        this.notes = notes; // 初始化音符列表
     }
 
     // 新增或移除選中的小節
@@ -196,7 +197,7 @@ public class MeasureManager {
 
         // 刷新面板，顯示貼上的音符
         panel.repaint();
-        notes.clear();
+        //notes.clear();
 
         return true;
     }

@@ -64,7 +64,7 @@ public class StaffPage extends JScrollPane {
         
         initPanel();
         setupMeasures();  // 初始化小節
-        measureManager = new MeasureManager(panel, measures); // 初始化 MeasureManager
+        measureManager = new MeasureManager(panel, measures,notes); // 初始化 MeasureManager
         initButtons();
         initMouseListeners();
         
