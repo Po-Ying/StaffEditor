@@ -13,11 +13,13 @@ public class EightButton extends IconButton{
 	{
 		super(p);
 		parent=p;
+		this.rightPanel = rightPanel; 
         imageURL   = cldr.getResource("images/eighth_note.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("八分音符");
+        
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -82,5 +84,4 @@ public class EightButton extends IconButton{
 		
 		this.setBackground(Color.LIGHT_GRAY);
 	}
-
 }

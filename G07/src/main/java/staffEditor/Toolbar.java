@@ -21,6 +21,8 @@ public class Toolbar extends JPanel{
 	    //this.setBackground(Color.darkGray);
 	    this.add(topToolbar,BorderLayout.CENTER);
 	    this.setPreferredSize(new Dimension(0,95));
+	    
+	    this.tabbedPane = p.getTabbedPane();
 
 	    this.tabbedPane = p.getTabbedPane();
 	    

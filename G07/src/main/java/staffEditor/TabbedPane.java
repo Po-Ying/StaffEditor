@@ -2,6 +2,7 @@ package staffEditor;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -56,7 +57,7 @@ public class TabbedPane extends JTabbedPane{
 	public List<StaffPage> getAllStaffPages() {
 	    return staffPages;
 	}
-	
+
 	@Override
 	public void removeTabAt(int index) {
 	    // 在移除標籤頁時，同步更新 staffPages
