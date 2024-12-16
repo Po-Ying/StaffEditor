@@ -12,7 +12,7 @@ public class SixteenthButton extends IconButton{
 	{
 		super(p);
 		parent=p;
-        imageURL   = cldr.getResource("images/sixteenth-note.png");
+        imageURL   = cldr.getResource("images/sixteenth_note.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 

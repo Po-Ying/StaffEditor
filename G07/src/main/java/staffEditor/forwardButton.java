@@ -69,6 +69,16 @@ public class forwardButton extends JButton{
                             parent.tupletLines.add(line); // 將符槓從垃圾桶移回主線條容器
                             iterator.remove(); // 安全地從垃圾桶中移除符槓
                             restoredLine = true; // 設定符槓復原標記
+                            if(line.getType()==1)//得到八分音符時
+                            {
+	                            parent.updateNoteImage(line.getNote1(), "quarter", "quarter");
+	                            parent.updateNoteImage(line.getNote2(), "quarter", "quarter");
+                            }
+                            else if(line.getType()==2)
+                            {
+	                            parent.updateNoteImage(line.getNote1(), "quarter", "quarter");
+	                            parent.updateNoteImage(line.getNote2(), "quarter", "quarter");
+                            }
                             break; // 只復原一條符槓
                         }
                     }

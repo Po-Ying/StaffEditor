@@ -324,14 +324,20 @@ public class StaffPage extends JScrollPane {
         // 找到兩個音符的 JLabel
         JLabel noteLabel1 = findNoteLabel(notes.get(0));
         JLabel noteLabel2 = findNoteLabel(notes.get(1));
+        int whatType = -1;
 
         if (noteLabel1 != null && noteLabel2 != null) {
             // 更新音符圖片為四分音符
             updateNoteImage(noteLabel1, "quarter", "quarter");
             updateNoteImage(noteLabel2, "quarter", "quarter");
-
+            
+            if(notes.get(0).getDuration().equals("eighth")&&notes.get(1).getDuration().equals("eighth"))
+            	whatType = 1;
+            else if(notes.get(0).getDuration().equals("sixteenth")&&notes.get(1).getDuration().equals("sixteenth"))
+            	whatType = 2;
             // 繪製符槓連線
-            TupletLine tupletLine = new TupletLine(noteLabel1, noteLabel2);
+            
+            TupletLine tupletLine = new TupletLine(noteLabel1, noteLabel2,whatType);
             tupletLines.add(tupletLine); // 加入符槓連線集合
             panel.repaint(); // 重繪面板
         }
@@ -425,7 +431,7 @@ public class StaffPage extends JScrollPane {
                         break;
                     case sixteenth:
                         duration = "sixteenth";
-                        imageURL = cldr.getResource("images/sixteenth-note.png");
+                        imageURL = cldr.getResource("images/sixteenth_note.png");
                         break;
                     case half:
                         duration = "half";
@@ -628,7 +634,7 @@ public class StaffPage extends JScrollPane {
         repaint();
     }
     
-    private void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
+    public void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
         // 根據音高和時值更新音符的圖片
         // 根據時值設定圖片
         String imagePath = "images/" + duration + "_note.png";
@@ -650,7 +656,7 @@ public class StaffPage extends JScrollPane {
         } else if ("eighth".equals(duration)) {
             return "images/eighth_note.png";
         } else if ("sixteenth".equals(duration)) {
-            return "images/sixteenth-note.png";
+            return "images/sixteenth_note.png";
         } else if ("rest".equals(pitch)) {
             return "images/minus.png";
         }

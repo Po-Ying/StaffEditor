@@ -94,7 +94,7 @@ public class MeasureManager {
         } else if ("eighth".equals(duration)) {
             return "images/eighth_note.png";
         } else if ("sixteenth".equals(duration)) {
-            return "images/sixteenth-note.png";
+            return "images/sixteenth_note.png";
         } else if ("rest".equals(pitch)) {
             return "images/minus.png";
         }

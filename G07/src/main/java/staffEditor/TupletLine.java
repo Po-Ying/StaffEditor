@@ -4,10 +4,11 @@ import javax.swing.JLabel;
 
 public class TupletLine {
     private JLabel note1, note2; // 關聯的兩個音符標籤
-
-    public TupletLine(JLabel note1, JLabel note2) {
+    private int whatType = 0;
+    public TupletLine(JLabel note1, JLabel note2,int WT) {
         this.note1 = note1;
         this.note2 = note2;
+        whatType = WT;
     }
 
     public JLabel getNote1() {
@@ -32,5 +33,10 @@ public class TupletLine {
 
     public int getY2() {
         return note2.getY() - 10;
+    }
+    
+    public int getType()
+    {
+    	return whatType;
     }
 }

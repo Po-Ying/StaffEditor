@@ -15,6 +15,7 @@ public class backButton extends JButton{
     ClassLoader cldr ;
     URL imageURL;
     public ImageIcon icon ;
+    
 
     backButton(StaffPage p){
 
@@ -49,69 +50,64 @@ public class backButton extends JButton{
     }
     public void doSomething() {
         if ((parent.parent.parent.toolbar.inputtype == inputType.Cursor)) {
-            if (parent.notes.size() > 0 || parent.getTupletLines().size() > 0) {
+            if (parent.notes.size() > 0 || parent.getTupletLines().size() > 0) {               
                 parent.forward.setVisible(true);
-                boolean py = false;
+                boolean lineRemoved = false; // 標記是否處理符槓
 
-                // 取得最後一個音符
-                JLabel lastNote = parent.notes.lastElement();
+                // 優先檢查符槓
+                if (parent.getTupletLines().size() > 0) {
 
-                // 檢查符槓是否與該音符相關
-                Iterator<TupletLine> iterator = parent.getTupletLines().iterator();
-                while (iterator.hasNext()) {
-                    TupletLine line = iterator.next();
-                    if (line.getNote1() == lastNote || line.getNote2() == lastNote) {
-                        // 將符槓移到垃圾桶
-                        parent.trash_lines.add(line);
-                        iterator.remove(); // 安全地從符槓列表移除
-                        
-                        // 恢復符槓相關音符的原始樣式
-                        restoreOriginalNoteImage(line.getNote1());
-                        restoreOriginalNoteImage(line.getNote2());
-
-                        py = true;
+                    Iterator<TupletLine> iterator = parent.getTupletLines().iterator();
+                    while (iterator.hasNext()) {
+                        TupletLine line = iterator.next();
+                        // 如果符槓的音符都存在，則移除符槓並恢復音符樣式
+                        if(parent.notes.lastElement()==line.getNote1()||parent.notes.lastElement()==line.getNote2())
+                        {    
+                        	if (parent.notes.contains(line.getNote1()) && parent.notes.contains(line.getNote2())) {
+	                            System.out.println("找到符槓，音符：" + line.getNote1() + " 和 " + line.getNote2());
+	
+	                            // 將符槓移到垃圾桶
+	                            parent.getTrashTupletLines().add(line);
+	                            iterator.remove(); // 從主符槓列表移除該符槓
+	                            lineRemoved = true;
+	                            // 恢復音符圖片
+	                            if(line.getType()==1)//得到八分音符時
+	                            {
+		                            parent.updateNoteImage(line.getNote1(), "eighth", "eighth");
+		                            parent.updateNoteImage(line.getNote2(), "eighth", "eighth");
+	                            }
+	                            else if(line.getType()==2)
+	                            {
+		                            parent.updateNoteImage(line.getNote1(), "sixteenth", "sixteenth");
+		                            parent.updateNoteImage(line.getNote2(), "sixteenth", "sixteenth");
+	                            }
+	                
+	                            lineRemoved = true; // 設置符槓已被移除
+	                            break; // 處理一條符槓後退出
+	                        }
+                    	}
                     }
                 }
 
-                // 如果沒有符槓，則移除音符
-                if (!py) {
+                // 如果沒有符槓需要處理，則嘗試移除音符
+                if (!lineRemoved && parent.notes.size() > 0) {
+                    JLabel lastNote = parent.notes.lastElement();
                     parent.panel.remove(lastNote);
                     parent.trash_notes.add(lastNote);
                     parent.notes.remove(lastNote);
                 }
 
-                // 重繪五線譜
+                // 更新畫面
+                System.out.println("重繪五線譜...");
                 parent.panel.repaint();
 
-                // 如果音符和符槓都被移除完畢，隱藏按鈕
-                if (parent.notes.size() == 0 && parent.getTupletLines().size() == 0) {
+                // 如果垃圾桶清空，隱藏按鈕
+                if (parent.notes.size() == 0 && parent.getTrashTupletLines().size() == 0) {
+                    System.out.println("垃圾桶清空，隱藏返回按鈕");
                     this.setVisible(false);
                 }
             }
         }
     }
-
-    private void restoreOriginalNoteImage(JLabel note) {
-        String originalDuration = (String) note.getClientProperty("noteDuration");
-        System.out.println(originalDuration);
-        if (originalDuration != null) {
-            String imagePath = null;
-            switch (originalDuration) {
-                case "eighth":
-                    imagePath = "images/eighth_note.png";
-                    break;
-                case "sixteenth":
-                    imagePath = "images/sixteenth_note.png";
-                    break;
-                default:
-                    return; // 如果不是八分或十六分音符，不做任何修改
-            }
-
-            // 更新音符的圖片和時值
-            note.setIcon(new ImageIcon(imagePath));
-            note.putClientProperty("noteDuration", originalDuration);
-        }
-    }
-
 
 }
