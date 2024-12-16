@@ -8,17 +8,25 @@ import java.io.File;
 public class SixteenthrestButton extends IconButton {
     Toolbar parent;
     ImageIcon imageIcon;
+    private JPanel rightRest;
 
-
-	public SixteenthrestButton(Toolbar p) 
+	public SixteenthrestButton(Toolbar p, JPanel rightRest) 
 	{
 		super(p);
 		parent=p;
+		this.rightRest = rightRest;
         imageURL   = cldr.getResource("images/sixteenth_rest.png");
         icon = new ImageIcon(imageURL);
         this.setIcon(icon);
 
         this.setToolTipText("十六分休止符");
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
 
 
@@ -64,5 +72,18 @@ public class SixteenthrestButton extends IconButton {
 	            tab.setCursor(cu);
 	        }
 	    }
+	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightRest.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
 	}
 }

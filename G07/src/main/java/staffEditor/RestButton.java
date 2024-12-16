@@ -7,13 +7,15 @@ import javax.swing.*;
 public class RestButton extends IconButton{
 	
 	private JPanel leftPanel;
+	private JPanel rightPanel;
 	private JPanel rightRest;
 	private TopToolbar parentTopToolbar;
 
-	public RestButton(Toolbar p, JPanel leftPanel, JPanel rightRest, TopToolbar parentTopToolbar) 
+	public RestButton(Toolbar p, JPanel leftPanel, JPanel rightPanel, JPanel rightRest, TopToolbar parentTopToolbar) 
 	{
         super(p);
         this.leftPanel = leftPanel; 
+        this.rightPanel = rightPanel;
         this.rightRest = rightRest;
         this.parentTopToolbar = parentTopToolbar;
         
@@ -78,6 +80,14 @@ public class RestButton extends IconButton{
 	public void updateBtnColor()
 	{
 		for (Component btn : leftPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		for (Component btn : rightPanel.getComponents()) 
 		{
             if (btn instanceof JButton) 
             {

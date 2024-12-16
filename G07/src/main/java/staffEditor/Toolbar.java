@@ -7,6 +7,7 @@ public class Toolbar extends JPanel{
 
 	MainWindow parent;
 	TopToolbar topToolbar;
+	private TabbedPane tabbedPane;
 	
 	longType longtype;
 	inputType inputtype;
@@ -21,6 +22,8 @@ public class Toolbar extends JPanel{
 	    this.add(topToolbar,BorderLayout.CENTER);
 	    this.setPreferredSize(new Dimension(0,95));
 
+	    this.tabbedPane = p.getTabbedPane();
+	    
 	}
 	
     // 返回 ModuleButton 的 getter 方法
@@ -38,6 +41,9 @@ public class Toolbar extends JPanel{
         return parent;
     }
 
-	
+    //讓其他類別能夠訪問 TabbedPane
+    public TabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
 
 }

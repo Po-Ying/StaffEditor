@@ -7,8 +7,9 @@ import java.awt.event.*;
 public class EightButton extends IconButton{
     Toolbar parent;
     ImageIcon imageIcon;
+    private JPanel rightPanel;
 
-	public EightButton(Toolbar p) 
+	public EightButton(Toolbar p, JPanel rightPanel) 
 	{
 		super(p);
 		parent=p;
@@ -17,8 +18,13 @@ public class EightButton extends IconButton{
         this.setIcon(icon);
 
         this.setToolTipText("八分音符");
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateBtnColor();
+            }
+        });
 	}
-
 
 	public void doSomething() {
 	    // 檢查 parent 是否為 null
@@ -63,4 +69,18 @@ public class EightButton extends IconButton{
 	        }
 	    }
 	}
+	
+	private void updateBtnColor()
+	{
+		for (Component btn : rightPanel.getComponents()) 
+		{
+            if (btn instanceof JButton) 
+            {
+                ((JButton) btn).setBackground(Color.WHITE);
+            }
+        }
+		
+		this.setBackground(Color.LIGHT_GRAY);
+	}
+
 }

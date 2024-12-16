@@ -46,6 +46,9 @@ public class StaffPage extends JScrollPane {
     public ImageIcon icon ,imageIcon;
     StaffLabel staffTitle,authorTitle,instrumentTitle,pageCount,measure[];
 
+    // 放更改的文字
+    Map<String, String> labelsData = new HashMap<>();
+    List<StaffPage> allPages;
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
     MouseButton Mouse;   
@@ -60,6 +63,8 @@ public class StaffPage extends JScrollPane {
         trash_notes = new Vector<>();
         selectedCopyMeasures = new HashSet<>();
         selectedPasteMeasures = new HashSet<>();
+        
+        allPages = parent.getAllStaffPages();
         
         tupletNotes = new ArrayList<>(); // 初始化連音符的選擇列表
         
@@ -165,43 +170,47 @@ public class StaffPage extends JScrollPane {
         this.setViewportView(panel);       
         if(id==1)
 	    {
-	        staffTitle = new StaffLabel("Title",SwingConstants.CENTER,this);
+	        staffTitle = new StaffLabel(labelsData.getOrDefault("staffTitle", "Title"),SwingConstants.CENTER, this, "staffTitle");
 	        staffTitle.setLocation(340,33);
 	        staffTitle.setFont(new Font("標楷體",0,30));
 	        staffTitle.setSize(new Dimension(500,75));
+	        labelsData.put("staffTitle", staffTitle.getText()); // 初始化labelsData的"staffTitle"
 	        panel.add(staffTitle);
         }
         else
         {
-	        staffTitle = new StaffLabel("",SwingConstants.CENTER,this);
+	        staffTitle = new StaffLabel("",SwingConstants.CENTER,this, "");
 	        staffTitle.setLocation(340,33);
 	        staffTitle.setFont(new Font("標楷體",0,30));
 	        panel.add(staffTitle);
         }
         
-        authorTitle = new StaffLabel("author",SwingConstants.RIGHT,this);
+        authorTitle = new StaffLabel(labelsData.getOrDefault("authorTitle", "author"),SwingConstants.RIGHT,this, "authorTitle");
         authorTitle.setLocation(750,120);
         authorTitle.setFont(new Font("標楷體",0,17));
         authorTitle.setSize(new Dimension(300,30));
+        labelsData.put("authorTitle", authorTitle.getText()); // 初始化labelsData的"authorTitle"
         panel.add(authorTitle);
 
-        instrumentTitle = new StaffLabel("Instrument",SwingConstants.LEFT,this);
+        instrumentTitle = new StaffLabel(labelsData.getOrDefault("instrumentTitle", "Instrument"),SwingConstants.LEFT,this, "instrumentTitle");
         instrumentTitle.setLocation(100,100);
         instrumentTitle.setFont(new Font("標楷體",0,20));
         instrumentTitle.setSize(new Dimension(150,30));
+        labelsData.put("instrumentTitle", instrumentTitle.getText()); // 初始化labelsData的"instrumentTitle"
         panel.add(instrumentTitle);
 
-        pageCount = new StaffLabel("-" + id + "-",SwingConstants.CENTER,this);
+        pageCount = new StaffLabel("-" + id + "-",SwingConstants.CENTER,this, "pageCount");
         pageCount.setLocation(570,1350);
         pageCount.setFont(new Font("標楷體",0,17));
         pageCount.setSize(new Dimension(60,30));
+        labelsData.put("pageCount", pageCount.getText()); // 初始化labelsData的"pageCount"
         panel.add(pageCount);
 
         measure = new StaffLabel[10];
         int g=0;
         for(int i=0;i<10;i++){
 
-            measure[i] = new StaffLabel(m[i],SwingConstants.CENTER,this);
+            measure[i] = new StaffLabel(m[i],SwingConstants.CENTER,this, "measure");
             measure[i].setLocation(95,135+ i*10 + g);
             measure[i].setFont(new Font("標楷體",0,12));
             measure[i].setSize(new Dimension(25,20));
@@ -222,9 +231,13 @@ public class StaffPage extends JScrollPane {
         forward.setLocation(70,20);
         forward.setVisible(false);
         forward.setSize(new Dimension(45,45));
-        
         panel.add(forward);
+
+        panel.revalidate();// 强制面板重新布局
+        panel.repaint();     // 强制重绘面板   
+
     }
+
 
     private void setupMeasures() 
     {
@@ -649,72 +662,139 @@ public class StaffPage extends JScrollPane {
         }
     }
 
-    private String getImagePath(String pitch, String duration) {
-        // 根據音高和時值返回圖片路徑
-        if ("quarter".equals(duration)) {
-            return "images/quarter_note.png";
-        } else if ("eighth".equals(duration)) {
-            return "images/eighth_note.png";
-        } else if ("sixteenth".equals(duration)) {
-            return "images/sixteenth_note.png";
-        } else if ("rest".equals(pitch)) {
-            return "images/minus.png";
-        }
-        return null;
+    @Override
+    public Dimension getPreferredSize() {
+    	// 返回 panel 的首選尺寸
+        return panel.getPreferredSize();
     }
 
-    public BufferedImage renderToImage() {
-        // 获取有效的面板尺寸
-        int width = this.getWidth();
-        int height = this.getHeight();
+    
+    public void drawTupletLines(Graphics2D g2) {
+        g2.setStroke(new BasicStroke(5));
+        for (TupletLine line : tupletLines) {
+            JLabel note1 = line.getNote1();
+            JLabel note2 = line.getNote2();
 
-        // 如果尺寸无效，使用默认尺寸
-        if (width <= 0 || height <= 0) {
-            width = 1100;
-            height = 1400;
+            int x1 = note1.getX() + note1.getWidth() / 2 + 5;
+            int y1 = note1.getY(); // 符槓略微上移
+            int x2 = note2.getX() + note2.getWidth() / 2 + 5;
+            int y2 = note2.getY();
+
+            // 根據音符時值進行判斷
+            String duration1 = (String) note1.getClientProperty("noteDuration");
+            String duration2 = (String) note2.getClientProperty("noteDuration");
+
+            if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
+                // 繪製一條符槓
+                g2.drawLine(x1, y1, x2, y2);
+            } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
+                // 繪製兩條符槓（第二條向下偏移 10px）
+                g2.drawLine(x1, y1, x2, y2);
+                g2.drawLine(x1, y1 + 10, x2, y2 + 10);
+            }
         }
+    }
+   
+    public BufferedImage renderToImage() {  
 
-        // 创建图像
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    	panel.revalidate();
+        panel.repaint();
+        
+        // 強制立即重繪面板
+        panel.paintImmediately(0, 0, panel.getWidth(), panel.getHeight());
+    	
+        // 獲取面板尺寸
+        Dimension panelSize = panel.getPreferredSize();
+        
+        // 取得寬跟高
+        int width = panelSize.width;
+        int height = panelSize.height;
+        
+        // 改檔案尺寸
+        if (width <= 0 || height <= 0) {
+            width = 1200;
+            height = 1400;
+            panel.setSize(width, height); 
+            panel.doLayout(); 
+        }
+        
+        // 創建 BufferedImage 来保存渲染的内容
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
-
-        // 填充白色背景
+        
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+        g.fillRect(0, 0, width, height);
+        
+        // 把paintComponent的每個組件都在檔案顯示出來
+        for (Component component : panel.getComponents()) {
+        	
+        	if (component.getClass().getSimpleName().equals("backButton") || component.getClass().getSimpleName().equals("forwardButton")) 
+        	{
+        	    continue;  // 這兩個按鈕不用出現在儲存的檔案裡==
+        	}
+        	
+        	if (component instanceof StaffLabel) {
+        		
+                StaffLabel label = (StaffLabel) component;
+                String updatedText = labelsData.get(label.labelName);  // 獲取更新後的文本
 
-        // 调整字体和大小
-        Font titleFont = new Font("標楷體", Font.PLAIN, 30);
-        Font authorFont = new Font("標楷體", Font.PLAIN, 17);
-        Font instrumentFont = new Font("標楷體", Font.PLAIN, 20);
-
-        // 绘制曲名（居中对齐）
-        g.setColor(Color.BLACK);
-        g.setFont(titleFont);
-        String title = "Title"; // 曲名
-        FontMetrics titleMetrics = g.getFontMetrics(titleFont);
-        int titleX = (width - titleMetrics.stringWidth(title)) / 2;  // 居中
-        int titleY = 70; // 调整曲名的垂直位置，向下移动
-        g.drawString(title, titleX, titleY);
-
-        // 绘制作曲家（右对齐）
-        String author = "author"; // 作曲家
-        g.setFont(authorFont);
-        FontMetrics authorMetrics = g.getFontMetrics(authorFont);
-        int authorX = width - 50 - authorMetrics.stringWidth(author);  // 右对齐
-        g.drawString(author, authorX, 120);
-
-        // 绘制乐器（左对齐）
-        String instrument = "Instrument"; // 乐器
-        g.setFont(instrumentFont);
-        g.drawString(instrument, 100, 100);  // 乐器
-
-        // 绘制五线谱
-        //drawStaff(g);
-
+                if (updatedText != null) {
+                    label.setText(updatedText);  // 設置更新後的文本
+                    label.repaint();  
+                }
+                
+            }
+        
+        	Graphics subGraphics = g.create(component.getX(), component.getY(), component.getWidth(), component.getHeight());
+            component.paint(subGraphics);
+            subGraphics.dispose();
+        	
+        }
+        
+        
+        
+        // 這是畫五線譜
+        staffDrawer.drawStaff(g, 10, new int[]{400, 630, 860, 1090}, 100, 155, 1090); 
+        
+        // 繪製符槓
+        drawTupletLines(g);
+        
         g.dispose();
 
-        return image;
+        return image; // 返回渲染的圖像
+        
     }
+    
+    public BufferedImage AllPagesToImage()
+    {
+    	int totalWidth = 0;
+        int totalHeight = 0;
+        
+        // 計算總寬度和高度
+        for (StaffPage page : allPages) {
+            BufferedImage pageImage = page.renderToImage();
+            totalWidth += pageImage.getWidth();
+            totalHeight = Math.max(totalHeight, pageImage.getHeight());
+        }
+
+        // 創建一個空的圖像來放所有頁面
+        BufferedImage combinedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        int xOffset = 0;
+        for (StaffPage page : allPages) {
+            BufferedImage pageImage = page.renderToImage();
+            g.drawImage(pageImage, xOffset, 0, null);
+            xOffset += pageImage.getWidth();
+        }
+
+        g.dispose();
+        return combinedImage;
+    }
+
     
     public JComponent getPanel()
     {
