@@ -37,7 +37,7 @@ public class StaffPage extends JScrollPane {
     // 用來記錄是否啟用了選擇模式
     public boolean selectionMode = false; // 初始化為 false
     public boolean tupletMode = false;
-
+    
     private Measure[] measures;
     backButton back;
     forwardButton forward;
@@ -45,10 +45,6 @@ public class StaffPage extends JScrollPane {
     public URL imageURL;
     public ImageIcon icon ,imageIcon;
     StaffLabel staffTitle,authorTitle,instrumentTitle,pageCount,measure[];
-    
-    // 放更改的文字
-    Map<String, String> labelsData = new HashMap<>();
-    List<StaffPage> allPages;
 
     // 放更改的文字
     Map<String, String> labelsData = new HashMap<>();
@@ -79,6 +75,7 @@ public class StaffPage extends JScrollPane {
         initMouseListeners();
         
         this.getVerticalScrollBar().setUnitIncrement(10);
+
     }
     
     public void setSelectionMode(boolean enabled) {
@@ -162,6 +159,9 @@ public class StaffPage extends JScrollPane {
                         g2.drawLine(x1, y1 + 10, x2, y2 + 10);
                     }
                 }
+                
+                
+                
             }
             
         };
@@ -646,8 +646,8 @@ public class StaffPage extends JScrollPane {
         }
         repaint();
     }
-
-    private void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
+    
+    public void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
         // 根據音高和時值更新音符的圖片
         // 根據時值設定圖片
         String imagePath = "images/" + duration + "_note.png";
@@ -667,12 +667,7 @@ public class StaffPage extends JScrollPane {
     	// 返回 panel 的首選尺寸
         return panel.getPreferredSize();
     }
-    
-    @Override
-    public Dimension getPreferredSize() {
-    	// 返回 panel 的首選尺寸
-        return panel.getPreferredSize();
-    }
+
     
     public void drawTupletLines(Graphics2D g2) {
         g2.setStroke(new BasicStroke(5));
@@ -770,34 +765,6 @@ public class StaffPage extends JScrollPane {
 
         return image; // 返回渲染的圖像
         
-    }
-    
-    public BufferedImage AllPagesToImage()
-    {
-    	int totalWidth = 0;
-        int totalHeight = 0;
-        
-        // 計算總寬度和高度
-        for (StaffPage page : allPages) {
-            BufferedImage pageImage = page.renderToImage();
-            totalWidth += pageImage.getWidth();
-            totalHeight = Math.max(totalHeight, pageImage.getHeight());
-        }
-
-        // 創建一個空的圖像來放所有頁面
-        BufferedImage combinedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = combinedImage.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        int xOffset = 0;
-        for (StaffPage page : allPages) {
-            BufferedImage pageImage = page.renderToImage();
-            g.drawImage(pageImage, xOffset, 0, null);
-            xOffset += pageImage.getWidth();
-        }
-
-        g.dispose();
-        return combinedImage;
     }
     
     public BufferedImage AllPagesToImage()
