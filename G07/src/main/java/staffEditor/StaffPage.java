@@ -37,7 +37,7 @@ public class StaffPage extends JScrollPane {
     // 用來記錄是否啟用了選擇模式
     public boolean selectionMode = false; // 初始化為 false
     public boolean tupletMode = false;
-
+    
     private Measure[] measures;
     backButton back;
     forwardButton forward;
@@ -45,11 +45,10 @@ public class StaffPage extends JScrollPane {
     public URL imageURL;
     public ImageIcon icon ,imageIcon;
     StaffLabel staffTitle,authorTitle,instrumentTitle,pageCount,measure[];
-    
+
     // 放更改的文字
     Map<String, String> labelsData = new HashMap<>();
     List<StaffPage> allPages;
-
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
     MouseButton Mouse;   
@@ -76,6 +75,7 @@ public class StaffPage extends JScrollPane {
         initMouseListeners();
         
         this.getVerticalScrollBar().setUnitIncrement(10);
+
     }
     
     public void setSelectionMode(boolean enabled) {
@@ -159,6 +159,9 @@ public class StaffPage extends JScrollPane {
                         g2.drawLine(x1, y1 + 10, x2, y2 + 10);
                     }
                 }
+                
+                
+                
             }
             
         };
@@ -643,8 +646,8 @@ public class StaffPage extends JScrollPane {
         }
         repaint();
     }
-
-    private void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
+    
+    public void updateNoteImage(JLabel noteLabel, String pitch, String duration) {
         // 根據音高和時值更新音符的圖片
         // 根據時值設定圖片
         String imagePath = "images/" + duration + "_note.png";
@@ -763,7 +766,7 @@ public class StaffPage extends JScrollPane {
         return image; // 返回渲染的圖像
         
     }
-  
+    
     public BufferedImage AllPagesToImage()
     {
     	int totalWidth = 0;
