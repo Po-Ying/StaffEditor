@@ -760,7 +760,6 @@ public class StaffPage extends JScrollPane {
         
         // 繪製符槓
         drawTupletLines(g);
-        
         g.dispose();
 
         return image; // 返回渲染的圖像
