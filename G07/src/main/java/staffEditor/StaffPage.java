@@ -50,9 +50,6 @@ public class StaffPage extends JScrollPane {
     Map<String, String> labelsData = new HashMap<>();
     List<StaffPage> allPages;
 
-    // 放更改的文字
-    Map<String, String> labelsData = new HashMap<>();
-    List<StaffPage> allPages;
     String m[]={"1","5","9","13","17","21","25","29","33","37"};
 
     MouseButton Mouse;   
@@ -667,12 +664,7 @@ public class StaffPage extends JScrollPane {
     	// 返回 panel 的首選尺寸
         return panel.getPreferredSize();
     }
-    
-    @Override
-    public Dimension getPreferredSize() {
-    	// 返回 panel 的首選尺寸
-        return panel.getPreferredSize();
-    }
+
     
     public void drawTupletLines(Graphics2D g2) {
         g2.setStroke(new BasicStroke(5));
@@ -771,35 +763,7 @@ public class StaffPage extends JScrollPane {
         return image; // 返回渲染的圖像
         
     }
-    
-    public BufferedImage AllPagesToImage()
-    {
-    	int totalWidth = 0;
-        int totalHeight = 0;
-        
-        // 計算總寬度和高度
-        for (StaffPage page : allPages) {
-            BufferedImage pageImage = page.renderToImage();
-            totalWidth += pageImage.getWidth();
-            totalHeight = Math.max(totalHeight, pageImage.getHeight());
-        }
-
-        // 創建一個空的圖像來放所有頁面
-        BufferedImage combinedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = combinedImage.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        int xOffset = 0;
-        for (StaffPage page : allPages) {
-            BufferedImage pageImage = page.renderToImage();
-            g.drawImage(pageImage, xOffset, 0, null);
-            xOffset += pageImage.getWidth();
-        }
-
-        g.dispose();
-        return combinedImage;
-    }
-    
+  
     public BufferedImage AllPagesToImage()
     {
     	int totalWidth = 0;
