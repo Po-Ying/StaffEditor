@@ -19,7 +19,7 @@ public class InsList extends JPanel {
     
     InsList(InsMenu p) {
         parent = p;
-        this.setBackground(new Color(255, 255, 255));//255, 220, 150
+        this.setBackground(new Color(255, 220, 150));//255, 220, 150
         this.setPreferredSize(new Dimension(180, 347));
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -31,7 +31,7 @@ public class InsList extends JPanel {
         for (int i = 0; i < instrumentNames.length; i++) {
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-            buttonPanel.setBackground(new Color(255, 255, 255));
+            buttonPanel.setBackground(new Color(255, 220, 150));
 
             // 加載並縮放圖片
             ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(instrumentIcons[i]));
