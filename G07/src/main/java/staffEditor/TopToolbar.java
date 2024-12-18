@@ -143,7 +143,7 @@ public class TopToolbar extends JPanel {
         this.revalidate();
         this.repaint();
         
-    }
+    } 
     
     public void setLengthEnable(boolean b){
         this.halfBtn.setEnabled(b);
