@@ -49,7 +49,7 @@ public class RestButton extends IconButton{
 
         }
 
-        parent.inputtype = inputType.rest; //切換成音符模式
+        parent.inputtype = inputType.rest; //切換成休止符模式
         ModuleButton mud=parent.getModuleButton();
         mud.selectionModeActive = false;
     }
