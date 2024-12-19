@@ -44,7 +44,7 @@ public class TopToolbar extends JPanel {
             System.out.println("Error: tabbedPane is null.");
         }
         page = parent.getMainWindow().getTabbedPane().getSelectedStaffPage();
-        this.setBackground(Color.DARK_GRAY);
+        this.setBackground(new Color(255, 220, 150));
         this.setPreferredSize(new Dimension(0, 45));
         this.setLayout(new BorderLayout());
 
@@ -53,7 +53,7 @@ public class TopToolbar extends JPanel {
         
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        leftPanel.setBackground(Color.DARK_GRAY);
+        leftPanel.setBackground(new Color(255, 220, 150));
         tabbedPane = new TabbedPane(parent.getMainWindow());
 
         saveFileBtn = new SaveFileButton(this.parent,this.page);
@@ -62,7 +62,7 @@ public class TopToolbar extends JPanel {
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
         musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, rightRest, this);
         restBtn = new RestButton(this.parent, leftPanel, rightPanel, rightRest, this);
-        tupletBtn = new TupletButton(this.parent,this.page);
+        tupletBtn = new TupletButton(this.parent);
         moduleBtn = new ModuleButton(this.parent);
         ledgerLineBtn = new LedgerLineButton(this.parent);
 
@@ -79,7 +79,7 @@ public class TopToolbar extends JPanel {
    
 
         rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.setBackground(Color.DARK_GRAY);
+        rightPanel.setBackground(new Color(255, 220, 150));
         wholeBtn = new WholeButton(this.parent, rightPanel);
         halfBtn = new HalfButton(this.parent, rightPanel);
         quarterBtn = new QuarterButton(this.parent, rightPanel);
@@ -87,7 +87,7 @@ public class TopToolbar extends JPanel {
         sixteenthBtn = new SixteenthButton(this.parent, rightPanel);
         
         rightRest.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        rightRest.setBackground(Color.DARK_GRAY);
+        rightRest.setBackground(new Color(255, 220, 150));
         wholerestBtn = new WholerestButton(this.parent, rightRest);
         halfrestBtn = new HalfrestButton(this.parent, rightRest);
         quarterrestBtn = new QuarterrestButton(this.parent, rightRest);
@@ -143,7 +143,7 @@ public class TopToolbar extends JPanel {
         this.revalidate();
         this.repaint();
         
-    }
+    } 
     
     public void setLengthEnable(boolean b){
         this.halfBtn.setEnabled(b);

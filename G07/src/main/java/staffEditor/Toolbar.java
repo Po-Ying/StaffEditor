@@ -24,6 +24,8 @@ public class Toolbar extends JPanel{
 	    
 	    this.tabbedPane = p.getTabbedPane();
 
+	    this.tabbedPane = p.getTabbedPane();
+	    
 	}
 	
     // 返回 ModuleButton 的 getter 方法
