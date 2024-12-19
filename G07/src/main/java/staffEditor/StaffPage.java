@@ -70,7 +70,7 @@ public class StaffPage extends JScrollPane {
         
         initPanel();
         setupMeasures();  // 初始化小節
-        measureManager = new MeasureManager(panel, measures); // 初始化 MeasureManager
+        measureManager = new MeasureManager(panel, measures,notes); // 初始化 MeasureManager
         initButtons();
         initMouseListeners();
         
@@ -135,8 +135,31 @@ public class StaffPage extends JScrollPane {
                 staffDrawer.drawSelectionBoxes(g, selectionMode, measureManager.getSelectedCopyMeasures(), measureManager.getSelectedPasteMeasures());
                 
                 Graphics2D g2 = (Graphics2D) g;
-                drawTupletLines(g2); // 繪製符槓
+                g2.setStroke(new BasicStroke(5));
+                for (TupletLine line : tupletLines) {
+                    JLabel note1 = line.getNote1();
+                    JLabel note2 = line.getNote2();
+
+                    int x1 = note1.getX() + note1.getWidth() / 2+5;
+                    int y1 = note1.getY(); // 符槓略微上移
+                    int x2 = note2.getX() + note2.getWidth() / 2+5;
+                    int y2 = note2.getY();
+
+                    // 根據音符時值進行判斷
+                    String duration1 = (String) note1.getClientProperty("noteDuration");
+                    String duration2 = (String) note2.getClientProperty("noteDuration");
+
+                    if ("eighth".equals(duration1) && "eighth".equals(duration2)) {
+                        // 繪製一條符槓
+                        g2.drawLine(x1, y1, x2, y2);
+                    } else if ("sixteenth".equals(duration1) && "sixteenth".equals(duration2)) {
+                        // 繪製兩條符槓（第二條向下偏移 10px）
+                        g2.drawLine(x1, y1, x2, y2);
+                        g2.drawLine(x1, y1 + 10, x2, y2 + 10);
+                    }
+                }
             }
+            
         };
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(0, 1400));
@@ -488,12 +511,30 @@ public class StaffPage extends JScrollPane {
                 notes.add(note);
                 panel.add(notes.lastElement());
                 panel.repaint();
+                
+                Measure measure = getMeasureForPoint(x, y); // 根據點擊位置找到對應的小節
+                if (measure != null) {
+                    NoteData noteData = new NoteData(pitch, duration, note.getX(), note.getY());
+                    measure.addNoteData(noteData);  // 添加音符到小節
+                    System.out.println("音符已添加到小節: " + measure);
+                }
             }
             
 
 
 
-            //  傳回偏移量
+            public Measure getMeasureForPoint(int x, int y) {
+                for (Measure measure : measures) { // 使用 measures 陣列來迭代
+                    if (measure != null && measure.contains(x, y)) {  // 確保 measure 不為 null 並檢查座標
+                        return measure;
+                    }
+                }
+                return null;  // 如果沒有找到對應的小節，則返回 null
+            }
+
+
+
+			//  傳回偏移量
             private Point getNoteOffset(longType noteType) {
                 switch (noteType) {
                 	case line:
@@ -575,13 +616,21 @@ public class StaffPage extends JScrollPane {
         return true;
     }
     // 用來啟動貼上選擇的操作
+ // 用來啟動貼上選擇的操作
     public boolean pasteToSelectedMeasures() {
-        if (!measureManager.pasteToSelectedMeasures()) {
+        // 嘗試將剪貼簿中的音符貼到已選擇的小節中
+        boolean result = measureManager.pasteToSelectedMeasures();
+        if (!result) {
             System.out.println("貼上小節失敗");
             return false;
         }
+
+        // 如果貼上成功，重新繪製畫面以顯示貼上的音符
+        panel.repaint();
+        System.out.println("貼上成功");
         return true;
     }
+
     // 清除當前的選取小節
     public void clearSelectedPasteMeasures() {
         if (selectedPasteMeasures != null) {

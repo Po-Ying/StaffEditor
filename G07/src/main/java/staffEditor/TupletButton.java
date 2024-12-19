@@ -70,5 +70,5 @@ public class TupletButton extends IconButton {
         staffPage.setTupletMode(false);
         System.out.println("結束連音符模式。");
     }
-
+    
 }
