@@ -339,6 +339,7 @@ public class StaffPage extends JScrollPane {
             updateNoteImage(noteLabel2, "quarter", "quarter");
             
             // 檢查是否已經有符槓連線
+            
            
                 // 繪製符槓連線
                 TupletLine tupletLine = new TupletLine(noteLabel1, noteLabel2);
