@@ -796,7 +796,9 @@ public class StaffPage extends JScrollPane {
             panel.add(note);
             panel.repaint();
         }
-    private Point getNoteOffset(longType noteType) {
+    private Point getNoteOffset(longType noteType) 
+        {
+            
             switch (noteType) {
                 case line:
                 case quarter:
