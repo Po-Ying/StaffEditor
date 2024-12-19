@@ -488,6 +488,8 @@ public class StaffPage extends JScrollPane {
                 panel.add(notes.lastElement());
                 panel.repaint();
             }
+            
+
 
 
             //  傳回偏移量
@@ -647,7 +649,123 @@ public class StaffPage extends JScrollPane {
             }
         }
     }
-   
+    public void addNoteinPanel(int x, int y, longType noteType) {
+            // 使用長類型設置音符的屬性
+            String pitch = "";
+            String duration = "";
+            URL imageURL = null;
+            ClassLoader cldr = this.getClass().getClassLoader();
+            
+            switch (noteType) {
+                case line:
+                    pitch = "rest";
+                    imageURL = cldr.getResource("images/minus.png");
+                    break;
+                case quarter:
+                    duration = "quarter";
+                    imageURL = cldr.getResource("images/quarter_note.png");
+                    break;
+                case eighth:
+                    duration = "eighth";
+                    imageURL = cldr.getResource("images/eighth_note.png");
+                    break;
+                case sixteenth:
+                    duration = "sixteenth";
+                    imageURL = cldr.getResource("images/sixteenth-note.png");
+                    break;
+                case half:
+                    duration = "half";
+                    imageURL = cldr.getResource("images/half_note.png");
+                    break;
+                case whole:
+                    duration = "whole";
+                    imageURL = cldr.getResource("images/whole.png");
+                    break;
+                case quarterR:
+                    pitch = "rest";
+                    duration = "quarterR";
+                    imageURL = cldr.getResource("images/quarter-note-rest.png");
+                    break;
+                case eighthR:
+                    pitch = "rest";
+                    duration = "eighthR";
+                    imageURL = cldr.getResource("images/eight-note-rest.png");
+                    break;
+                case sixteenthR:
+                    pitch = "rest";
+                    duration = "sixteenthR";
+                    imageURL = cldr.getResource("images/sixteenth_rest.png");
+                    break;
+                case halfR:
+                    pitch = "rest";
+                    duration = "halfR";
+                    imageURL = cldr.getResource("images/half-rest.png");
+                    break;
+                case wholeR:
+                    pitch = "rest";
+                    duration = "wholeR";
+                    imageURL = cldr.getResource("images/whole_rest.png");
+                    break;
+                default:
+                    System.out.println("Invalid note type.");
+                    return;
+            }
+
+            if (imageURL == null) {
+                System.out.println("Failed to load image.");
+                return;
+            }
+
+            // 創建音符圖標
+            ImageIcon icon = new ImageIcon(imageURL);
+            ImageIcon imageIcon = noteType == longType.whole
+                ? new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT))
+                : new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
+
+            // 創建音符標籤
+            JLabel note = new JLabel(imageIcon);
+            note.putClientProperty("notePitch", pitch);
+            note.putClientProperty("noteDuration", duration);
+
+            // 設定偏移量
+            /*Point offset = getNoteOffset(noteType);
+            int xOffset = offset.x;
+            int yOffset = offset.y;*/
+
+            // 設定音符位置
+            note.setLocation(x , y);
+            note.setVisible(true);
+            note.setSize(30, 40);
+
+            // 添加到面板
+            notes.add(note);
+            panel.add(note);
+            panel.repaint();
+        }
+//  傳回偏移量
+    private Point getNoteOffset(longType noteType) {
+        switch (noteType) {
+            case line:
+            case quarter:
+            case eighth:
+            case sixteenth:
+            case half:
+                // 假設符頭位於音符的中心，因此對y軸進行調整
+                return new Point(-16, -33); // 假設的偏移值，根據圖片大小調整
+            case whole:
+                return new Point(-12, -20); // 基於音符的大小調整
+            // 休止符的偏移
+            case quarterR:   
+            case eighthR:    
+            case sixteenthR:
+            case halfR:
+            case wholeR:     
+                return new Point(-20, -15); // 根據休止符的大小調整
+            default:         
+                return new Point(0, 0); // 默認偏移量
+        }
+    }
+
     public BufferedImage renderToImage() {  
 
     	panel.revalidate();
