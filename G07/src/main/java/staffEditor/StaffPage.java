@@ -36,7 +36,7 @@ public class StaffPage extends JScrollPane {
     // 用來記錄是否啟用了選擇模式
     public boolean selectionMode = false; // 初始化為 false
     public boolean tupletMode = false;
-
+    public boolean tupletDrawn = false;
     private Measure[] measures;
     backButton back;
     forwardButton forward;
@@ -314,16 +314,17 @@ public class StaffPage extends JScrollPane {
             // 更新音符圖片為四分音符
             updateNoteImage(noteLabel1, "quarter", "quarter");
             updateNoteImage(noteLabel2, "quarter", "quarter");
-
-            // 繪製符槓連線
-            TupletLine tupletLine = new TupletLine(noteLabel1, noteLabel2);
-            tupletLines.add(tupletLine); // 加入符槓連線集合
-            panel.repaint(); // 重繪面板
+            
+            // 檢查是否已經有符槓連線
+           
+                // 繪製符槓連線
+                TupletLine tupletLine = new TupletLine(noteLabel1, noteLabel2);
+                tupletLines.add(tupletLine); // 加入符槓連線集合
+                panel.repaint(); // 重繪面板
+                tupletDrawn = true;
         }
     }
 
-    
-    
     // 初始化鼠标监听器
     public void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
@@ -743,28 +744,7 @@ public class StaffPage extends JScrollPane {
             panel.repaint();
         }
 //  傳回偏移量
-    private Point getNoteOffset(longType noteType) {
-        switch (noteType) {
-            case line:
-            case quarter:
-            case eighth:
-            case sixteenth:
-            case half:
-                // 假設符頭位於音符的中心，因此對y軸進行調整
-                return new Point(-16, -33); // 假設的偏移值，根據圖片大小調整
-            case whole:
-                return new Point(-12, -20); // 基於音符的大小調整
-            // 休止符的偏移
-            case quarterR:   
-            case eighthR:    
-            case sixteenthR:
-            case halfR:
-            case wholeR:     
-                return new Point(-20, -15); // 根據休止符的大小調整
-            default:         
-                return new Point(0, 0); // 默認偏移量
-        }
-    }
+    
 
     public BufferedImage renderToImage() {  
 

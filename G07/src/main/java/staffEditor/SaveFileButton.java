@@ -157,12 +157,14 @@ public class SaveFileButton extends IconButton {
                 }
 
                 // 添加每一页的内容
-                xmlContent.append("  <pages>\n");
+                xmlContent.append("  <pages>\n");  // 开始 <pages> 标签
+
                 for (int i = 0; i < allPages.size(); i++) {
                     StaffPage page = allPages.get(i);
                     xmlContent.append("    <page number=\"").append(i + 1).append("\">\n");
-                    xmlContent.append("      <notes>\n");
 
+                    // 处理页面的音符数据
+                    xmlContent.append("      <notes>\n");
                     List<NoteData> notes = page.getNotesForPlayback(); // 使用 getNotesForPlayback 获取音符数据
                     for (NoteData note : notes) {
                         xmlContent.append("        <note x=\"")
@@ -173,16 +175,31 @@ public class SaveFileButton extends IconButton {
                                   .append(note.getDuration())
                                   .append("\"/>\n");
                     }
-
                     xmlContent.append("      </notes>\n");
+
+                    // 处理符槓线数据
+                    if (!page.getTupletLines().isEmpty()) {
+                        xmlContent.append("      <tuplets>\n");
+                        List<TupletLine> tupletLines = page.getTupletLines(); // 获取当前页的符槓线
+                        for (TupletLine tupletLine : tupletLines) {
+                            xmlContent.append("        <tuplet>\n")
+                                      .append("          <note1 x=\"").append(tupletLine.getX1()).append("\" y=\"").append(tupletLine.getY1()).append("\"/>\n")
+                                      .append("          <note2 x=\"").append(tupletLine.getX2()).append("\" y=\"").append(tupletLine.getY2()).append("\"/>\n")
+                                      .append("        </tuplet>\n");
+                        }
+                        xmlContent.append("      </tuplets>\n");
+                    }
+
                     xmlContent.append("    </page>\n");
                 }
-                xmlContent.append("  </pages>\n");
 
-                xmlContent.append("</music>");
+                xmlContent.append("  </pages>\n");  // 关闭 <pages> 标签
+                xmlContent.append("</music>\n");    // 关闭 <music> 标签
 
+                // 写入文件
                 writer.write(xmlContent.toString());
             }
+
         }
 
 
