@@ -37,7 +37,7 @@ public class StaffPage extends JScrollPane {
     // 用來記錄是否啟用了選擇模式
     public boolean selectionMode = false; // 初始化為 false
     public boolean tupletMode = false;
-    
+    public boolean tupletDrawn = false;
     private Measure[] measures;
     backButton back;
     forwardButton forward;
@@ -355,9 +355,7 @@ public class StaffPage extends JScrollPane {
             panel.repaint(); // 重繪面板
         }
     }
-
-    
-    
+   
     // 初始化鼠标监听器
     public void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {
@@ -529,6 +527,8 @@ public class StaffPage extends JScrollPane {
                     System.out.println("音符已添加到小節: " + measure);
                 }
             }
+            
+
 
 
             public Measure getMeasureForPoint(int x, int y) {
@@ -694,7 +694,102 @@ public class StaffPage extends JScrollPane {
             }
         }
     }
-   
+    public void addNoteinPanel(int x, int y, longType noteType) {
+            // 使用長類型設置音符的屬性
+            String pitch = "";
+            String duration = "";
+            URL imageURL = null;
+            ClassLoader cldr = this.getClass().getClassLoader();
+            
+            switch (noteType) {
+                case line:
+                    pitch = "rest";
+                    imageURL = cldr.getResource("images/minus.png");
+                    break;
+                case quarter:
+                    duration = "quarter";
+                    imageURL = cldr.getResource("images/quarter_note.png");
+                    break;
+                case eighth:
+                    duration = "eighth";
+                    imageURL = cldr.getResource("images/eighth_note.png");
+                    break;
+                case sixteenth:
+                    duration = "sixteenth";
+                    imageURL = cldr.getResource("images/sixteenth-note.png");
+                    break;
+                case half:
+                    duration = "half";
+                    imageURL = cldr.getResource("images/half_note.png");
+                    break;
+                case whole:
+                    duration = "whole";
+                    imageURL = cldr.getResource("images/whole.png");
+                    break;
+                case quarterR:
+                    pitch = "rest";
+                    duration = "quarterR";
+                    imageURL = cldr.getResource("images/quarter-note-rest.png");
+                    break;
+                case eighthR:
+                    pitch = "rest";
+                    duration = "eighthR";
+                    imageURL = cldr.getResource("images/eight-note-rest.png");
+                    break;
+                case sixteenthR:
+                    pitch = "rest";
+                    duration = "sixteenthR";
+                    imageURL = cldr.getResource("images/sixteenth_rest.png");
+                    break;
+                case halfR:
+                    pitch = "rest";
+                    duration = "halfR";
+                    imageURL = cldr.getResource("images/half-rest.png");
+                    break;
+                case wholeR:
+                    pitch = "rest";
+                    duration = "wholeR";
+                    imageURL = cldr.getResource("images/whole_rest.png");
+                    break;
+                default:
+                    System.out.println("Invalid note type.");
+                    return;
+            }
+
+            if (imageURL == null) {
+                System.out.println("Failed to load image.");
+                return;
+            }
+
+            // 創建音符圖標
+            ImageIcon icon = new ImageIcon(imageURL);
+            ImageIcon imageIcon = noteType == longType.whole
+                ? new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT))
+                : new ImageIcon(icon.getImage().getScaledInstance(30, 40, Image.SCALE_DEFAULT));
+
+            // 創建音符標籤
+            JLabel note = new JLabel(imageIcon);
+            note.putClientProperty("notePitch", pitch);
+            note.putClientProperty("noteDuration", duration);
+
+            // 設定偏移量
+            /*Point offset = getNoteOffset(noteType);
+            int xOffset = offset.x;
+            int yOffset = offset.y;*/
+
+            // 設定音符位置
+            note.setLocation(x , y);
+            note.setVisible(true);
+            note.setSize(30, 40);
+
+            // 添加到面板
+            notes.add(note);
+            panel.add(note);
+            panel.repaint();
+        }
+//  傳回偏移量
+    
+
     public BufferedImage renderToImage() {  
 
     	panel.revalidate();
@@ -712,7 +807,7 @@ public class StaffPage extends JScrollPane {
         
         // 改檔案尺寸
         if (width <= 0 || height <= 0) {
-            width = 1200;
+            width = 1100;
             height = 1400;
             panel.setSize(width, height); 
             panel.doLayout(); 
@@ -766,6 +861,18 @@ public class StaffPage extends JScrollPane {
         
     }
     
+    private String getLabelText(StaffPage page, String labelName) {
+            for (Component component : page.getComponents()) {
+                if (component instanceof StaffLabel) {
+                    StaffLabel label = (StaffLabel) component;
+                    if (label.labelName.equals(labelName)) {
+                        return label.getText();
+                    }
+                }
+            }
+            return null; // 如果未找到相應的標籤，返回 null
+        }
+
     public BufferedImage AllPagesToImage()
     {
     	int totalWidth = 0;
@@ -797,7 +904,10 @@ public class StaffPage extends JScrollPane {
     
     public JComponent getPanel()
     {
-    	return panel;
+            if (this.panel == null) {
+                this.panel = new JPanel(); // 初始化面板
+            }
+            return this.panel;
     }
     
     // 用來獲取所有連音符線條

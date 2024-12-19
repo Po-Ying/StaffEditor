@@ -57,7 +57,7 @@ public class TopToolbar extends JPanel {
         tabbedPane = new TabbedPane(parent.getMainWindow());
 
         saveFileBtn = new SaveFileButton(this.parent,this.page);
-        openFileBtn = new OpenFileButton(this.parent);
+        openFileBtn = new OpenFileButton(this.parent,this.page);
         newPageBtn = new NewPageButton(this.parent);
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
         musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, rightRest, this);
