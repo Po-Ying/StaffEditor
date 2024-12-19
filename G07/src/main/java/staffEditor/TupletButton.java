@@ -8,11 +8,11 @@ import javax.swing.ImageIcon;
 
 public class TupletButton extends IconButton {
     private List<NoteData> selectedNotes;
-    private StaffPage staffPage;
+    private Toolbar parent; // 保留 Toolbar 的引用以動態獲取 TabbedPane
 
-    TupletButton(Toolbar p, StaffPage page) {
+    TupletButton(Toolbar p) {
         super(p);
-        this.staffPage = page;
+        this.parent = p; // 初始化 parent
         this.selectedNotes = new ArrayList<>();
 
         imageURL = cldr.getResource("images/drawing.png");
@@ -23,15 +23,24 @@ public class TupletButton extends IconButton {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 啟用選取模式
+                StaffPage staffPage = getStaffPage(); // 動態獲取 staffPage
                 if (staffPage != null) {
-                    staffPage.setTupletMode(true);  // 呼叫 staffPage 的 setTupletMode
+                    staffPage.setTupletMode(true); // 啟用選取模式
                     System.out.println("進入連音符模式，請選擇兩個音符。");
                 } else {
-                    System.out.println("staffPage 為 null，無法進入連音符模式。");
+                    System.out.println("無法找到當前分頁，無法進入連音符模式。");
                 }
             }
         });
+    }
+
+    // 動態獲取當前的 StaffPage
+    private StaffPage getStaffPage() {
+        if (parent.getTabbedPane() == null) {
+            System.out.println("TabbedPane 尚未初始化。");
+            return null;
+        }
+        return parent.getTabbedPane().getSelectedStaffPage();
     }
 
     // 新增方法來處理音符選擇
@@ -49,9 +58,16 @@ public class TupletButton extends IconButton {
 
     // 建立連音符，並結束選擇模式
     private void createTuplet() {
+        StaffPage staffPage = getStaffPage(); // 動態獲取 staffPage
+        if (staffPage == null) {
+            System.out.println("無法找到當前分頁，無法建立連音符。");
+            selectedNotes.clear();
+            return;
+        }
+
         System.out.println("建立連音符，包含音符：" + selectedNotes);
 
-        // 驗證音符是否符合條件（例如都是八分音符）
+        // 驗證音符是否符合條件（例如都是八分音符或十六分音符）
         NoteData note1 = selectedNotes.get(0);
         NoteData note2 = selectedNotes.get(1);
 
@@ -70,5 +86,4 @@ public class TupletButton extends IconButton {
         staffPage.setTupletMode(false);
         System.out.println("結束連音符模式。");
     }
-    
 }

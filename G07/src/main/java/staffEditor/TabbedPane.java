@@ -76,7 +76,7 @@ public class TabbedPane extends JTabbedPane{
 	    return null; // 如果當前選中的不是 StaffPage
 	}
 
-
+	
 }
 
 class CloseTabBtn extends JButton {
