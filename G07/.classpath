@@ -39,5 +39,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="src/main/resources/lib/jfugue-5.0.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Sally/Downloads/opencv/build/java/opencv-4100.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/audiveris.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

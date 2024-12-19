@@ -665,7 +665,7 @@ public class StaffPage extends JScrollPane {
         
         // 改檔案尺寸
         if (width <= 0 || height <= 0) {
-            width = 1100+100;
+            width = 1100;
             height = 1400;
             panel.setSize(width, height); 
             panel.doLayout(); 
@@ -720,6 +720,18 @@ public class StaffPage extends JScrollPane {
         
     }
     
+    private String getLabelText(StaffPage page, String labelName) {
+            for (Component component : page.getComponents()) {
+                if (component instanceof StaffLabel) {
+                    StaffLabel label = (StaffLabel) component;
+                    if (label.labelName.equals(labelName)) {
+                        return label.getText();
+                    }
+                }
+            }
+            return null; // 如果未找到相應的標籤，返回 null
+        }
+
     public BufferedImage AllPagesToImage()
     {
     	int totalWidth = 0;
