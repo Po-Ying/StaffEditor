@@ -792,7 +792,7 @@ public class StaffPage extends JScrollPane {
         }
     private Point getNoteOffset(longType noteType) 
         {
-            
+           
             switch (noteType) {
                 case line:
                 case quarter:
