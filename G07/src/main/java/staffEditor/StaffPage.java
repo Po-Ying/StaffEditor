@@ -324,7 +324,7 @@ public class StaffPage extends JScrollPane {
                 tupletDrawn = true;
         }
     }
-
+   
     // 初始化鼠标监听器
     public void initMouseListeners() {
         panel.addMouseListener(new MouseAdapter() {

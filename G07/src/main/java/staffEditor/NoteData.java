@@ -12,7 +12,11 @@ public class NoteData {
         this.x = x;
         this.y = y;
     }
-   
+    public NoteData(int x, int y, longType type) {
+            this.x = x;
+            this.y = y;
+            this.type = type;
+        }
     public String getPitch() {
         return pitch;
     }

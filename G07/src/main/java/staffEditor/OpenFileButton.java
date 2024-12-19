@@ -97,21 +97,12 @@ public class OpenFileButton extends IconButton {
             
             return new File(parentDir, fileNameWithoutExtension + ".xml").getAbsolutePath();
         }
-    private void openXmlFile(File xmlFile) {
+    private void openXmlFile(File xmlFile) { 
             try {
                 // 解析 XML 文件
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(xmlFile);
-
-                // 解析標題、作者和樂器
-                /*String title = document.getElementsByTagName("title").item(0).getTextContent();
-                String author = document.getElementsByTagName("author").item(0).getTextContent();
-                String instrument = document.getElementsByTagName("instrument").item(0).getTextContent();
-
-                System.out.println("Title: " + title);
-                System.out.println("Author: " + author);
-                System.out.println("Instrument: " + instrument);*/
 
                 // 獲取所有頁面節點
                 NodeList pageList = document.getElementsByTagName("page");
@@ -125,6 +116,8 @@ public class OpenFileButton extends IconButton {
 
                         // 獲取頁面中的音符
                         NodeList notesList = pageElement.getElementsByTagName("note");
+                        List<NoteData> tupletNotes = new ArrayList<>(); // 局部变量
+
                         for (int j = 0; j < notesList.getLength(); j++) {
                             Node noteNode = notesList.item(j);
                             if (noteNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -134,12 +127,25 @@ public class OpenFileButton extends IconButton {
                                 int x = Integer.parseInt(noteElement.getAttribute("x"));
                                 int y = Integer.parseInt(noteElement.getAttribute("y"));
                                 String typeString = noteElement.getAttribute("type");
+                                boolean isTuplet = Boolean.parseBoolean(noteElement.getAttribute("tuplet")); // 判斷是否有符槓
 
                                 try {
                                     // 將 String 轉換為 longType
                                     longType type = longType.valueOf(typeString);
                                     page.addNoteinPanel(x, y, type);
                                     System.out.println("Added note at (" + x + ", " + y + ") with type " + type);
+
+                                    NoteData noteData = new NoteData(x, y, type);
+
+                                    if (isTuplet) {
+                                        tupletNotes.add(noteData);
+                                    }
+
+                                    // 每两个音符调用一次 drawTuplet
+                                    if (tupletNotes.size() == 2) {
+                                        page.drawTuplet(tupletNotes);
+                                        tupletNotes.clear(); // 清空以便下一组符槓音符
+                                    }
                                 } catch (IllegalArgumentException e) {
                                     System.out.println("Invalid note type: " + typeString);
                                 }
@@ -152,6 +158,7 @@ public class OpenFileButton extends IconButton {
                 e.printStackTrace();
             }
         }
+
 
     private void processImageFile(File file) {
         try {
