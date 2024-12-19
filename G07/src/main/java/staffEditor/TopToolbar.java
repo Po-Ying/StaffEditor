@@ -54,7 +54,7 @@ public class TopToolbar extends JPanel {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(Color.DARK_GRAY);
-        tabbedPane = new TabbedPane(parent.getMainWindow());
+        //tabbedPane = new TabbedPane(parent.getMainWindow());
 
         saveFileBtn = new SaveFileButton(this.parent,this.page);
         openFileBtn = new OpenFileButton(this.parent);
@@ -62,7 +62,7 @@ public class TopToolbar extends JPanel {
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
         musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, rightRest, this);
         restBtn = new RestButton(this.parent, leftPanel, rightPanel, rightRest, this);
-        tupletBtn = new TupletButton(this.parent,this.page);
+        tupletBtn = new TupletButton(this.parent);
         moduleBtn = new ModuleButton(this.parent);
         ledgerLineBtn = new LedgerLineButton(this.parent);
 
