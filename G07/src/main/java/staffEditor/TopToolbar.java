@@ -62,7 +62,7 @@ public class TopToolbar extends JPanel {
         mouseBtn = new MouseButton(this.parent, leftPanel, rightPanel, rightRest);
         musicBtn = new MusicButton(this.parent, leftPanel, rightPanel, rightRest, this);
         restBtn = new RestButton(this.parent, leftPanel, rightPanel, rightRest, this);
-        tupletBtn = new TupletButton(this.parent,this.page);
+        tupletBtn = new TupletButton(this.parent);
         moduleBtn = new ModuleButton(this.parent);
         ledgerLineBtn = new LedgerLineButton(this.parent);
 
