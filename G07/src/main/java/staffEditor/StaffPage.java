@@ -696,7 +696,10 @@ public class StaffPage extends JScrollPane {
     }
     public void addNoteinPanel(int x, int y, longType noteType) {
             // 使用長類型設置音符的屬性
-            String pitch = "";
+            Point offset = getNoteOffset(noteType);
+            int xOffset = offset.x;
+            int yOffset = offset.y;
+            String pitch =getPitchFromYCoordinate(y-yOffset) ;
             String duration = "";
             URL imageURL = null;
             ClassLoader cldr = this.getClass().getClassLoader();
@@ -787,7 +790,30 @@ public class StaffPage extends JScrollPane {
             panel.add(note);
             panel.repaint();
         }
-//  傳回偏移量
+    private Point getNoteOffset(longType noteType) 
+        {
+           
+            switch (noteType) {
+                case line:
+                case quarter:
+                case eighth:
+                case sixteenth:
+                case half:
+                    // 假設符頭位於音符的中心，因此對y軸進行調整
+                    return new Point(-16, -33); // 假設的偏移值，根據圖片大小調整
+                case whole:
+                    return new Point(-12, -20); // 基於音符的大小調整
+                // 休止符的偏移
+                case quarterR:   
+                case eighthR:    
+                case sixteenthR:
+                case halfR:
+                case wholeR:     
+                    return new Point(-20, -15); // 根據休止符的大小調整
+                default:         
+                    return new Point(0, 0); // 默認偏移量
+            }
+        }
     
 
     public BufferedImage renderToImage() {  
